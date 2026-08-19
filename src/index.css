@@ -1,7 +1,12 @@
 /* ══════════════════════════════════════════════════════════════
-   리턴컴퍼니 헬스장 구독 랜딩 — 디자인 시스템
-   Tailwind CSS v4 + 커스텀 테마
-   톤: Vantablack Luxe (딥 블랙 + 웜 오렌지 단일 액센트)
+   리턴컴퍼니 헬스장 구독 랜딩 — 디자인 시스템 (2차 정돈)
+   ──────────────────────────────────────────────────────────────
+   원칙
+   1. 모든 섹션은 같은 container(.wrap) 폭·여백을 쓴다.
+   2. 같은 역할의 텍스트는 페이지 어디서나 같은 크기·굵기를 쓴다.
+   3. 같은 종류의 카드는 크기가 절대 달라지지 않는다.
+   4. 장식(그라디언트/글로우/이중 베젤/과한 뱃지)은 쓰지 않는다.
+      완성도는 정렬·여백·반복·위계로 만든다.
    ══════════════════════════════════════════════════════════════ */
 @import "tailwindcss";
 
@@ -9,37 +14,33 @@
   /* ── 뉴트럴 (순수 검정 사용 안 함) ── */
   --color-ink: #0d0d0d;        /* 페이지 바탕 */
   --color-ink-2: #131313;      /* 섹션 교차 바탕 */
-  --color-surface: #1a1a1a;    /* 카드 표면 */
-  --color-surface-2: #212121;  /* 카드 내부 중첩 표면 */
-  --color-line: #2e2e2e;       /* 경계선 */
-  --color-fog: #f5f5f5;        /* 본문 화이트 */
-  --color-mute: #9a9a9a;       /* 보조 텍스트 */
-  --color-mute-2: #6a6a6a;     /* 3차 텍스트 */
-  --color-paper: #f2efe9;      /* 라이트 섹션 바탕 (웜 그레이) */
+  --color-surface: #191919;    /* 카드 표면 */
+  --color-line: #2b2b2b;       /* 경계선 */
+  --color-line-2: #383838;     /* 강조 경계선 */
+  --color-fog: #f4f4f4;        /* 본문 화이트 */
+  --color-mute: #9c9c9c;       /* 보조 텍스트 */
+  --color-mute-2: #6b6b6b;     /* 3차 텍스트 */
+  --color-paper: #f2efe9;      /* 라이트 섹션 바탕 */
 
-  /* ── 단일 액센트 (채도 75% — 과포화 금지) ── */
+  /* ── 단일 액센트 — 월 구독 CTA와 핵심 가격에만 사용 ── */
   --color-accent: #e0562a;
-  --color-accent-soft: #f0794f;
-  --color-accent-deep: #b8421c;
+  --color-accent-soft: #ef7a50;
 
-  /* ── 브랜드 식별용 (지점 라벨 텍스트에만 제한적으로 사용) ── */
-  --color-brand-mf: #d94452;      /* MUSCLE FACTORY */
-  --color-brand-oldgym: #c58c4d;  /* OLD GYM — 브론즈 */
-  --color-brand-gymflex: #cfcfcf; /* GYMFLEX — 확정 브랜드컬러 미확인, 뉴트럴 유지 */
+  /* ── 브랜드 식별용 — 지점 라벨 텍스트에만 소량 사용 ── */
+  --color-brand-mf: #d5606b;
+  --color-brand-oldgym: #c1904f;
+  --color-brand-gymflex: #b8b8b8; /* 확정 브랜드컬러 미확인 → 뉴트럴 */
 
-  /* ── 폰트 페어링 ── */
   --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --font-display: "Outfit", "Pretendard Variable", Pretendard, sans-serif;
 
-  /* ── 스프링 이징 ── */
   --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ══════════════ 기본 ══════════════ */
 html {
   scroll-behavior: smooth;
-  /* sticky CTA + 상단 플로팅 네비 높이만큼 앵커 여백 확보 */
-  scroll-padding-top: 84px;
+  scroll-padding-top: 88px;
   background-color: var(--color-ink);
 }
 
@@ -50,151 +51,221 @@ body {
   word-break: keep-all;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
-  /* 모바일 하단 고정 CTA 에 콘텐츠가 가리지 않도록 */
-  padding-bottom: calc(72px + env(safe-area-inset-bottom));
+  /* 하단 고정 CTA가 콘텐츠를 가리지 않도록 확보 (sticky bar 높이 고정값과 동일) */
+  padding-bottom: calc(76px + env(safe-area-inset-bottom));
 }
-
 @media (min-width: 1024px) {
   body { padding-bottom: 0; }
 }
 
-::selection {
-  background: var(--color-accent);
-  color: #fff;
+::selection { background: var(--color-accent); color: #fff; }
+
+/* ══════════════════════════════════════════════════════════════
+   1. LAYOUT — 모든 섹션 공통 규격
+   ══════════════════════════════════════════════════════════════ */
+
+/* 페이지 컨테이너 — 섹션마다 폭을 다르게 만들지 않는다 */
+.wrap {
+  width: 100%;
+  max-width: 480px;
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+@media (min-width: 768px) {
+  .wrap { max-width: 768px; padding-inline: 28px; }
+}
+@media (min-width: 1024px) {
+  .wrap { max-width: 1080px; padding-inline: 32px; }
 }
 
-.font-display { font-family: var(--font-display); }
+/* 섹션 세로 여백 — 전 섹션 동일 */
+.section { padding-block: 80px; }
+@media (min-width: 1024px) { .section { padding-block: 112px; } }
 
-/* 숫자 정렬 안정화 (가격 표기) */
-.tnum { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+/* 섹션 제목 아래 콘텐츠 간격 */
+.section-body { margin-top: 36px; }
+@media (min-width: 768px) { .section-body { margin-top: 44px; } }
 
-/* ══════════════ 스크롤 진입 애니메이션 ══════════════ */
-/* GPU 안전: transform / opacity 만 사용 */
-.reveal {
-  opacity: 0;
-  transform: translateY(22px);
-  transition:
-    opacity 0.75s var(--ease-spring),
-    transform 0.75s var(--ease-spring);
-  will-change: transform, opacity;
+/* ══════════════════════════════════════════════════════════════
+   2. TYPOGRAPHY — 역할별 단일 규격
+   ══════════════════════════════════════════════════════════════ */
+.t-hero {
+  font-size: clamp(38px, 10vw, 66px);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
 }
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
+.t-hero-price {
+  font-size: clamp(30px, 8vw, 48px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
 }
+.t-section {
+  font-size: clamp(25px, 6vw, 38px);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+.t-card {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.012em;
+}
+.t-price {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+}
+.t-body {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--color-mute);
+}
+.t-caption {
+  font-size: 12.5px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--color-mute-2);
+}
+.t-label {
+  font-family: var(--font-display);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.tnum { font-variant-numeric: tabular-nums; }
 
-/* ══════════════ 배경 앰비언트 (6초 순환 부유) ══════════════ */
-@keyframes drift {
-  0%   { transform: translate3d(0, 0, 0) scale(1); }
-  50%  { transform: translate3d(0, -18px, 0) scale(1.04); }
-  100% { transform: translate3d(0, 0, 0) scale(1); }
-}
-.ambient {
-  animation: drift 6s var(--ease-spring) infinite;
-  will-change: transform;
-}
-
-/* ══════════════ 더블 베젤 카드 ══════════════ */
-.bezel {
-  background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015));
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 22px;
-  padding: 1px;
-}
-.bezel-inner {
+/* ══════════════════════════════════════════════════════════════
+   3. CARD — 단일 스타일. 카드 안의 카드를 만들지 않는다.
+   ══════════════════════════════════════════════════════════════ */
+.card {
   background: var(--color-surface);
-  border: 1px solid rgba(255, 255, 255, 0.045);
-  border-radius: 21px;
+  border: 1px solid var(--color-line);
+  border-radius: 18px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
   height: 100%;
 }
+@media (min-width: 768px) { .card { padding: 24px; } }
 
-/* ══════════════ 버튼 ══════════════ */
+/* 추천 상품 강조 — 크기를 키우지 않고 테두리만 바꾼다 */
+.card-featured { border-color: var(--color-accent); }
+
+/* 선택 상태 — layout shift 없이 테두리만 바뀐다 */
+.card-selected { border-color: var(--color-accent); }
+
+/* 라이트 섹션용 카드 */
+.card-light {
+  background: #fff;
+  border: 1px solid rgba(17, 17, 17, 0.09);
+  border-radius: 18px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+@media (min-width: 768px) { .card-light { padding: 24px; } }
+
+/* 카드 하단 고정 CTA 슬롯 — 텍스트 길이가 달라도 CTA 위치가 흔들리지 않는다 */
+.card-foot { margin-top: auto; padding-top: 20px; }
+
+/* ══════════════════════════════════════════════════════════════
+   4. BUTTON — 높이·radius 단일 규격
+   ══════════════════════════════════════════════════════════════ */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
+  width: 100%;
+  min-height: 52px;
+  padding-inline: 20px;
   border-radius: 9999px;
+  font-size: 15px;
   font-weight: 600;
   letter-spacing: -0.01em;
-  min-height: 52px;
-  padding: 0 22px;
-  transition:
-    transform 0.45s var(--ease-spring),
-    background-color 0.45s var(--ease-spring),
-    border-color 0.45s var(--ease-spring),
-    color 0.45s var(--ease-spring);
-  will-change: transform;
   cursor: pointer;
+  transition:
+    background-color 0.4s var(--ease-spring),
+    border-color 0.4s var(--ease-spring),
+    color 0.4s var(--ease-spring);
 }
-.btn:active { transform: scale(0.975); }
+.btn-auto { width: auto; }
+.btn:active { opacity: 0.9; }
 
-.btn-primary {
-  background: var(--color-accent);
-  color: #fff;
-}
-.btn-primary:hover {
-  background: var(--color-accent-soft);
-  transform: translateY(-2px);
-}
+.btn-primary { background: var(--color-accent); color: #fff; border: 1px solid var(--color-accent); }
+.btn-primary:hover { background: var(--color-accent-soft); border-color: var(--color-accent-soft); }
 
-.btn-ghost {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: var(--color-fog);
-}
-.btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.09);
-  border-color: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
-}
+.btn-line { background: transparent; color: var(--color-fog); border: 1px solid var(--color-line-2); }
+.btn-line:hover { border-color: var(--color-mute); }
 
-.btn-dark {
-  background: var(--color-ink);
-  color: var(--color-fog);
-}
-.btn-dark:hover { transform: translateY(-2px); background: #1f1f1f; }
+.btn-solid { background: var(--color-fog); color: var(--color-ink); border: 1px solid var(--color-fog); }
+.btn-solid:hover { background: #fff; }
 
-/* CTA 내부 원형 아이콘 래퍼 */
-.btn-orb {
+/* 비활성 느낌 (정책 미확정 상품) — 클릭은 가능하되 시각 위계를 낮춘다 */
+.btn-quiet { background: transparent; color: var(--color-mute); border: 1px solid var(--color-line); }
+.btn-quiet:hover { color: var(--color-fog); border-color: var(--color-line-2); }
+
+/* ══════════════════════════════════════════════════════════════
+   5. 기타 요소
+   ══════════════════════════════════════════════════════════════ */
+
+/* 소형 상태 칩 — 뱃지는 이 한 가지 스타일만 쓴다 */
+.chip {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.18);
-  flex-shrink: 0;
-  transition: transform 0.45s var(--ease-spring);
-}
-.btn:hover .btn-orb { transform: translateX(3px); }
-
-/* ══════════════ 섹션 상단 소라벨 ══════════════ */
-.eyebrow {
-  font-family: var(--font-display);
+  height: 22px;
+  padding-inline: 9px;
+  border-radius: 6px;
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-accent);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
 }
-.eyebrow-mute { color: var(--color-mute-2); }
+.chip-accent { background: var(--color-accent); color: #fff; }
+.chip-quiet { background: rgba(255, 255, 255, 0.07); color: var(--color-mute); }
 
-/* 미확정 정보 표시 — 실제 정책 확정 후 데이터만 교체 */
-.pending {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--color-mute-2);
-  background: rgba(255, 255, 255, 0.045);
-  border: 1px dashed rgba(255, 255, 255, 0.16);
-  border-radius: 8px;
-  padding: 4px 10px;
+/* 상품 카드 항목 리스트 — 아이콘 대신 얇은 구분선 */
+.speclist { display: flex; flex-direction: column; gap: 0; }
+.speclist > li {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--color-mute);
+  padding-block: 9px;
+  border-top: 1px solid var(--color-line);
 }
+.speclist > li:first-child { border-top: 0; padding-top: 0; }
 
-/* ══════════════ 가로 스크롤 레일 ══════════════ */
+/* 정보 행 (선택 지점 상세) — 값이 없는 행은 렌더링 자체를 하지 않는다 */
+.inforow {
+  display: flex;
+  gap: 16px;
+  padding-block: 13px;
+  border-top: 1px solid var(--color-line);
+}
+.inforow:first-child { border-top: 0; }
+.inforow dt { flex: 0 0 76px; font-size: 13px; color: var(--color-mute-2); }
+.inforow dd { flex: 1; font-size: 14px; line-height: 1.6; color: var(--color-fog); }
+
+/* 이미지 — 비율 통일. 실제 사진은 변형하지 않는다 (object-fit: cover) */
+.media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #1f1f1f;
+}
+.media > img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* 가로 스크롤 레일 */
 .rail {
   display: flex;
   gap: 12px;
@@ -206,18 +277,28 @@ body {
 .rail::-webkit-scrollbar { display: none; }
 .rail > * { scroll-snap-align: start; flex: 0 0 auto; }
 
-/* ══════════════ 포커스 접근성 ══════════════ */
+/* ══════════════════════════════════════════════════════════════
+   6. MOTION — 진입 페이드만. 과한 애니메이션은 쓰지 않는다.
+   ══════════════════════════════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.6s var(--ease-spring),
+    transform 0.6s var(--ease-spring);
+  will-change: transform, opacity;
+}
+.reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+/* ══════════════ 접근성 ══════════════ */
 :where(a, button, [tabindex]):focus-visible {
   outline: 2px solid var(--color-accent-soft);
   outline-offset: 3px;
   border-radius: 8px;
 }
 
-/* ══════════════ 모션 최소화 배려 ══════════════ */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
-  .ambient { animation: none; }
-  .btn, .btn-orb { transition: none; }
-  .btn:hover, .btn:active { transform: none; }
+  .btn { transition: none; }
 }

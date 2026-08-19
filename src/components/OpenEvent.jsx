@@ -1,63 +1,38 @@
 import Reveal from './Reveal.jsx'
+import Section from './Section.jsx'
 import { EVENT_PRODUCT } from '../data/products.js'
 import { formatNumber } from '../lib/format.js'
 
 /**
- * OPEN EVENT — 12개월 회원권
- * ⚠ HERO 의 월 48,900원보다 시각적으로 강하지 않아야 한다.
- *    액센트 컬러 대신 뉴트럴 톤 밴드로 처리하고, 크기도 한 단계 낮춘다.
+ * OPEN EVENT — 12개월 회원권.
+ * ⚠ 메인 PRICE 영역과 분리하고, HERO 의 월 48,900원보다
+ *    시각적으로 강하게 만들지 않는다. (액센트 컬러 미사용)
  */
 export default function OpenEvent({ onConsult }) {
-  if (!EVENT_PRODUCT) return null
-
   return (
-    <section className="bg-ink-2 pb-24 md:pb-32">
-      <div className="mx-auto max-w-6xl px-5 md:px-8">
-        <Reveal>
-          <div
-            className="overflow-hidden rounded-[26px] border"
-            style={{
-              borderColor: 'rgba(255,255,255,0.09)',
-              background:
-                'linear-gradient(120deg, #191919 0%, #1f1c1a 55%, #171717 100%)',
-            }}
-          >
-            <div className="flex flex-col gap-8 p-7 md:flex-row md:items-center md:justify-between md:p-10">
-              <div>
-                <p className="font-display text-[10px] font-semibold uppercase tracking-[0.2em] text-mute-2">
-                  {EVENT_PRODUCT.badge}
-                </p>
-                <h2
-                  className="mt-3 font-black leading-[1.08] tracking-[-0.025em] text-fog"
-                  style={{ fontSize: 'clamp(26px, 5.2vw, 38px)' }}
-                >
-                  12개월{' '}
-                  <span className="tnum">{formatNumber(EVENT_PRODUCT.price)}원</span>
-                </h2>
-                <p className="mt-3 text-[14px] leading-relaxed text-mute">
-                  {EVENT_PRODUCT.description}
-                </p>
-                {EVENT_PRODUCT.policyNote && (
-                  <p className="mt-2 text-[12.5px] text-mute-2">{EVENT_PRODUCT.policyNote}</p>
-                )}
-              </div>
+    <Section>
+      <Reveal className="card">
+        <span className="t-label text-mute-2">{EVENT_PRODUCT.badge}</span>
 
-              <div className="flex-shrink-0">
-                <button
-                  type="button"
-                  onClick={() => onConsult(EVENT_PRODUCT)}
-                  className="btn btn-ghost w-full md:w-auto"
-                >
-                  {EVENT_PRODUCT.cta.label}
-                  <span className="btn-orb">
-                    <iconify-icon icon="solar:arrow-right-linear" width="14"></iconify-icon>
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-    </section>
+        <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <h2 className="text-[26px] font-bold tracking-[-0.025em] text-fog">12개월</h2>
+          <span className="tnum text-[26px] font-bold tracking-[-0.025em] text-fog">
+            {formatNumber(EVENT_PRODUCT.price)}원
+          </span>
+        </div>
+
+        <p className="mt-2.5 t-caption">{EVENT_PRODUCT.summary}</p>
+
+        <div className="card-foot">
+          <button
+            type="button"
+            onClick={() => onConsult(EVENT_PRODUCT)}
+            className="btn btn-line md:btn-auto md:!px-7"
+          >
+            {EVENT_PRODUCT.ctaLabel}
+          </button>
+        </div>
+      </Reveal>
+    </Section>
   )
 }

@@ -5,10 +5,10 @@ import Hero from './components/Hero.jsx'
 import Problem from './components/Problem.jsx'
 import WhatIsSubscription from './components/WhatIsSubscription.jsx'
 import Pricing from './components/Pricing.jsx'
-import Compare from './components/Compare.jsx'
 import Stores from './components/Stores.jsx'
-import Facility from './components/Facility.jsx'
+import SelectedStore from './components/SelectedStore.jsx'
 import AddOns from './components/AddOns.jsx'
+import Facility from './components/Facility.jsx'
 import Benefits from './components/Benefits.jsx'
 import OpenEvent from './components/OpenEvent.jsx'
 import HowToUse from './components/HowToUse.jsx'
@@ -29,13 +29,28 @@ const SELECTION_KEY = 'rc_gudok_selection'
 /** StrictMode 이중 실행·재마운트로 landing_view 가 중복 집계되지 않게 한 번만 보낸다 */
 let landingTracked = false
 
-/** 앵커로 부드럽게 이동 (고정 네비 높이 보정) */
 const scrollToId = (id) => {
   const el = document.getElementById(id)
   if (!el) return
   window.scrollTo({ top: el.offsetTop - 72, behavior: 'smooth' })
 }
 
+/**
+ * 페이지 정보 위계 (한 화면에 하나의 질문만)
+ *   01 HERO           이게 뭔데? / 얼마인데?
+ *   02 WHY            왜 바꾸는데?
+ *   03 SUBSCRIPTION   구독제가 뭔데?
+ *   04 PRODUCT        어떤 방식으로 이용할 건데?
+ *   05 STORE          어디에서 운동할 건데?
+ *   06 SELECTED STORE 내가 고른 지점은 어떤 곳인데?
+ *   07 OPTIONS        추가로 필요한 게 있나?
+ *   08 FACILITY       시설은 어떤데?
+ *   09 BENEFIT        정리하면?
+ *   10 OPEN EVENT     다른 선택지는?
+ *   11 HOW TO USE     어떻게 시작해?
+ *   12 FAQ            궁금한 건?
+ *   13 FINAL CTA      결정
+ */
 export default function App() {
   useReveal()
 
@@ -43,25 +58,29 @@ export default function App() {
   const [selectedProductId, setSelectedProductId] = useState(null)
   const [sheetOpen, setSheetOpen] = useState(false)
 
-  const selectedStore = useMemo(() => (selectedStoreId ? getStore(selectedStoreId) : null), [selectedStoreId])
+  const selectedStore = useMemo(
+    () => (selectedStoreId ? getStore(selectedStoreId) : null),
+    [selectedStoreId],
+  )
   const selectedProduct = useMemo(
     () => (selectedProductId ? getProduct(selectedProductId) : null),
     [selectedProductId],
   )
 
-  /** 하단 고정 CTA · FINAL CTA 에 노출할 대표 가격 (선택 지점 반영) */
-  const displayPrice = useMemo(
-    () => monthlyPriceFor(selectedStore, BASE_MONTHLY_PRICE),
-    [selectedStore],
-  )
+  /** 하단 고정 CTA · FINAL CTA 대표 가격 */
+  const displayPrice = useMemo(() => {
+    // 월 구독이 아닌 상품을 고른 경우 그 상품 가격을 보여준다
+    if (selectedProduct && selectedProduct.price !== null && !selectedProduct.storePriceAware) {
+      return selectedProduct.price
+    }
+    return monthlyPriceFor(selectedStore, BASE_MONTHLY_PRICE)
+  }, [selectedProduct, selectedStore])
 
-  /** 상담 시트에 넘길 가격 — 선택 상품 기준 */
   const sheetPrice = useMemo(() => {
-    if (!selectedProduct) return displayPrice
+    if (!selectedProduct) return monthlyPriceFor(selectedStore, BASE_MONTHLY_PRICE)
     return productPriceFor(selectedProduct, selectedStore, BASE_MONTHLY_PRICE)
-  }, [selectedProduct, selectedStore, displayPrice])
+  }, [selectedProduct, selectedStore])
 
-  /* ── 초기화: UTM 수집 + 랜딩 조회 이벤트 + 이전 선택 복원 ── */
   useEffect(() => {
     captureUtm()
     if (!landingTracked) {
@@ -69,7 +88,6 @@ export default function App() {
       track(EVENTS.LANDING_VIEW)
       track(EVENTS.PRODUCT_VIEW, { product_id: 'monthly' })
     }
-
     try {
       const saved = JSON.parse(window.sessionStorage.getItem(SELECTION_KEY) || 'null')
       if (saved?.storeId && getStore(saved.storeId)) setSelectedStoreId(saved.storeId)
@@ -79,7 +97,6 @@ export default function App() {
     }
   }, [])
 
-  /* ── 선택 상태 보존 (새로고침·뒤로가기 대비) ── */
   useEffect(() => {
     try {
       window.sessionStorage.setItem(
@@ -95,9 +112,11 @@ export default function App() {
     setSelectedStoreId(store.id)
     track(EVENTS.STORE_SELECT, {
       store_id: store.id,
-      store_name: store.storeName,
+      store_name: store.name,
       brand: store.brand.key,
     })
+    // 선택 즉시 상세 영역으로 이동 — 고른 지점이 어떤 곳인지 바로 확인시킨다
+    window.setTimeout(() => scrollToId('selected-store'), 120)
   }, [])
 
   const handleSelectProduct = useCallback(
@@ -105,12 +124,11 @@ export default function App() {
       setSelectedProductId(product.id)
       track(EVENTS.PRODUCT_SELECT, {
         product_id: product.id,
-        product_name: product.productName,
+        product_name: product.name,
         price: productPriceFor(product, selectedStore, BASE_MONTHLY_PRICE),
       })
 
-      // 상담 문의형 상품은 바로 시트를, 구독형은 지점 선택을 유도한다
-      if (product.cta.intent === 'consult') {
+      if (product.ctaIntent === 'consult') {
         setSheetOpen(true)
         return
       }
@@ -123,7 +141,6 @@ export default function App() {
     [selectedStore, selectedStoreId],
   )
 
-  /** 대표 구독 CTA — 지점이 없으면 지점 선택으로, 있으면 상담 시트로 */
   const handleSubscribe = useCallback(
     (source) => {
       track(EVENTS.SUBSCRIPTION_CTA_CLICK, {
@@ -170,10 +187,10 @@ export default function App() {
           selectedProductId={selectedProductId}
           onSelectProduct={handleSelectProduct}
         />
-        <Compare selectedStore={selectedStore} />
         <Stores selectedStoreId={selectedStoreId} onSelectStore={handleSelectStore} />
-        <Facility selectedStoreId={selectedStoreId} onSelectStore={handleSelectStore} />
+        <SelectedStore store={selectedStore} onSubscribe={() => handleSubscribe('selected-store')} />
         <AddOns />
+        <Facility selectedStore={selectedStore} />
         <Benefits />
         <OpenEvent onConsult={handleConsult} />
         <HowToUse />
@@ -190,7 +207,9 @@ export default function App() {
 
       <StickyCta
         price={displayPrice}
+        priceUnit={selectedProduct?.priceUnit ?? null}
         selectedStore={selectedStore}
+        selectedProduct={selectedProduct}
         onSubscribe={() => handleSubscribe('sticky')}
       />
 
