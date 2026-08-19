@@ -9,7 +9,7 @@ import { HOW_TO_STEPS } from '../data/content.js'
 export default function HowToUse() {
   return (
     <Section tone="ink-2" title="시작은 간단하게.">
-      <ol className="grid gap-3 md:grid-cols-4">
+      <ol className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         {HOW_TO_STEPS.map((step, i) => (
           <Reveal as="li" key={step.no} delay={i * 60} className="h-full">
             <div className="card">

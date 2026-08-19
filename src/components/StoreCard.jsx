@@ -13,7 +13,7 @@ import { formatNumber } from '../lib/format.js'
  * 선택 상태는 테두리·체크로만 표시해 layout shift 를 만들지 않는다.
  */
 export default function StoreCard({ store, price, selected, onSelect }) {
-  const thumb = store.heroImage || null
+  const thumb = store.thumbImage || null
 
   return (
     <button

@@ -9,7 +9,7 @@
       '[정보 입력]' / 'TBD' / '확인중' 같은 개발용 문구를 화면에 쓰지 않는다.
 
    ⚠ 이미지는 실제 센터사진만 사용한다. AI 생성 이미지를 넣지 않는다.
-      없으면 heroImage: null / facilityImages: [] 로 둔다.
+      없으면 thumbImage: null / facilityImages: [] 로 둔다.
    ══════════════════════════════════════════════════════════════ */
 
 export const BRANDS = {
@@ -32,7 +32,7 @@ export const BRANDS = {
  *   threeMonthAvailable / multiClubAvailable    미확정 null
  *   clothingAvailable / lockerAvailable         미확정 null
  *   ctaUrl               지점별 가입/신청 URL. 확정 전이면 null
- *   heroImage            지점 카드 썸네일용 실사진 1장. 없으면 null
+ *   thumbImage           지점 카드 썸네일(400px). 없으면 null
  *   facilityImages       시설 실사진. 없으면 []
  *   links                확인된 외부 채널만
  */
@@ -56,14 +56,18 @@ export const STORES = [
     clothingAvailable: null,
     lockerAvailable: null,
     ctaUrl: null,
-    heroImage: '/images/gymflex-cityhall/04_center_overview.jpg',
+    thumbImage: '/images/gymflex-cityhall/thumb.jpg',
     facilityImages: [
-      { src: '/images/gymflex-cityhall/04_center_overview.jpg', category: '센터 전경' },
-      { src: '/images/gymflex-cityhall/02_weight_zone_machines.jpg', category: '웨이트존' },
-      { src: '/images/gymflex-cityhall/03_freeweight_dumbbell_zone.jpg', category: '프리웨이트존' },
-      { src: '/images/gymflex-cityhall/01_cardio_zone_treadmills.jpg', category: '유산소존' },
-      { src: '/images/gymflex-cityhall/05_bonus_posing_room.jpg', category: '포징룸' },
-      { src: '/images/gymflex-cityhall/06_bonus_healing_zone.jpg', category: '힐링존' },
+      { src: '/images/gymflex-cityhall/08.jpg', category: '센터 전경' },
+      { src: '/images/gymflex-cityhall/09.jpg', category: '웨이트 머신존' },
+      { src: '/images/gymflex-cityhall/07.jpg', category: '프리웨이트존' },
+      { src: '/images/gymflex-cityhall/03.jpg', category: '유산소존' },
+      { src: '/images/gymflex-cityhall/05.jpg', category: '트레드밀존' },
+      { src: '/images/gymflex-cityhall/06.jpg', category: '사이클존' },
+      { src: '/images/gymflex-cityhall/02.jpg', category: '스트레칭존' },
+      { src: '/images/gymflex-cityhall/01.jpg', category: '건식 반신욕기' },
+      { src: '/images/gymflex-cityhall/04.jpg', category: '락커·파우더룸' },
+      { src: '/images/gymflex-cityhall/10.jpg', category: '라운지' },
     ],
     links: {
       naver: 'https://naver.me/GJTi4Npj',
@@ -103,15 +107,24 @@ export const STORES = [
     clothingAvailable: null,
     lockerAvailable: null,
     ctaUrl: null,
-    heroImage: null,
-    facilityImages: [],
+    thumbImage: '/images/oldgym-pyeonggeo/thumb.jpg',
+    facilityImages: [
+      { src: '/images/oldgym-pyeonggeo/07.jpg', category: '센터 전경' },
+      { src: '/images/oldgym-pyeonggeo/05.jpg', category: '머신존' },
+      { src: '/images/oldgym-pyeonggeo/04.jpg', category: '웨이트존' },
+      { src: '/images/oldgym-pyeonggeo/06.jpg', category: '프리웨이트존' },
+      { src: '/images/oldgym-pyeonggeo/08.jpg', category: '유산소존' },
+      { src: '/images/oldgym-pyeonggeo/02.jpg', category: '트레드밀존' },
+      { src: '/images/oldgym-pyeonggeo/01.jpg', category: '스트레칭존' },
+      { src: '/images/oldgym-pyeonggeo/03.jpg', category: '건식 반신욕기' },
+    ],
     links: {},
     subscriptionEnabled: true,
   },
   {
     id: 'mf-bogeondae',
     brand: BRANDS.MUSCLE_FACTORY,
-    name: '머슬팩토리 보건대점',
+    name: '머슬팩토리24 보건대점',
     shortName: '보건대점',
     monthlyPrice: 45000, // 보건대점 전용 월 구독가
     description: null,
@@ -127,7 +140,7 @@ export const STORES = [
     clothingAvailable: null, // 운동복 구독 옵션 적용 여부 최종 확정 전
     lockerAvailable: null,
     ctaUrl: null,
-    heroImage: null,
+    thumbImage: null,
     facilityImages: [],
     links: {},
     subscriptionEnabled: true,
@@ -135,10 +148,10 @@ export const STORES = [
   {
     id: 'mf-samcheonpo',
     brand: BRANDS.MUSCLE_FACTORY,
-    name: '머슬팩토리 삼천포점',
-    shortName: '삼천포점',
+    name: '머슬팩토리24 삼천포 본점',
+    shortName: '삼천포 본점',
     monthlyPrice: 48900,
-    description: '웨이트와 유산소 공간을 갖춘 삼천포 구독 운영 지점.',
+    description: '웨이트와 유산소 공간을 갖춘 삼천포 본점 구독 운영 지점.',
     address: '경남 사천시 주공로 18 2층',
     hours: '24시간 연중무휴',
     parking: '주차 가능',
@@ -151,15 +164,21 @@ export const STORES = [
     clothingAvailable: null,
     lockerAvailable: null,
     ctaUrl: null,
-    heroImage: null,
-    facilityImages: [],
+    thumbImage: '/images/mf-samcheonpo/thumb.jpg',
+    facilityImages: [
+      { src: '/images/mf-samcheonpo/03.jpg', category: '웨이트존' },
+      { src: '/images/mf-samcheonpo/02.jpg', category: '파워랙존' },
+      { src: '/images/mf-samcheonpo/05.jpg', category: '머신존' },
+      { src: '/images/mf-samcheonpo/04.jpg', category: '유산소·머신존' },
+      { src: '/images/mf-samcheonpo/01.jpg', category: '스트레칭존' },
+    ],
     links: {},
     subscriptionEnabled: true,
   },
   {
     id: 'mf-samcheonpo-beolli',
     brand: BRANDS.MUSCLE_FACTORY,
-    name: '머슬팩토리 삼천포 벌리점',
+    name: '머슬팩토리24 삼천포 벌리점',
     shortName: '벌리점',
     monthlyPrice: 48900,
     description: null,
@@ -176,8 +195,15 @@ export const STORES = [
     clothingAvailable: null,
     lockerAvailable: null,
     ctaUrl: null,
-    heroImage: null,
-    facilityImages: [],
+    thumbImage: '/images/mf-samcheonpo-beolli/thumb.jpg',
+    facilityImages: [
+      { src: '/images/mf-samcheonpo-beolli/04.jpg', category: '센터 전경' },
+      { src: '/images/mf-samcheonpo-beolli/01.jpg', category: '웨이트존' },
+      { src: '/images/mf-samcheonpo-beolli/06.jpg', category: '프리웨이트존' },
+      { src: '/images/mf-samcheonpo-beolli/05.jpg', category: '머신 라인' },
+      { src: '/images/mf-samcheonpo-beolli/03.jpg', category: '머신존' },
+      { src: '/images/mf-samcheonpo-beolli/02.jpg', category: '유산소존' },
+    ],
     links: {},
     subscriptionEnabled: true,
   },

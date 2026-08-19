@@ -11,7 +11,7 @@ import { formatNumber } from '../lib/format.js'
  * 배경 사진 교체는 HERO_IMAGE 한 줄이면 된다.
  * (index.html 의 preload 경로도 함께 수정)
  */
-const HERO_IMAGE = '/images/gymflex-cityhall/04_center_overview.jpg'
+const HERO_IMAGE = '/images/gymflex-cityhall/hero.jpg'
 
 export default function Hero({ basePrice, onSubscribe, onViewProducts }) {
   return (

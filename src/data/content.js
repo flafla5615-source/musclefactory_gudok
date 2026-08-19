@@ -53,12 +53,15 @@ export const SUBSCRIPTION_POINTS = [
   },
 ]
 
-/* ── 이용방법 (HOW TO USE) ── */
+/* ── 이용방법 (HOW TO USE) ──
+   구독권은 센터에서 장기 회원권을 따로 결제하는 방식이 아니라
+   바디코디 앱에서 구독권 상품을 구매하는 방식이다. */
 export const HOW_TO_STEPS = [
-  { no: '01', title: '내 지점 선택', description: '구독 운영지점 중 주로 다닐 센터를 고릅니다.' },
-  { no: '02', title: '구독상품 선택', description: '월 구독 · 전지점 구독 중 이용방식을 정합니다.' },
-  { no: '03', title: '결제', description: '결제 방식은 최종 확정 후 안내드립니다.' },
-  { no: '04', title: '센터 이용 시작', description: '선택한 지점에서 바로 운동을 시작합니다.' },
+  { no: '01', title: '바디코디 앱 설치', description: '앱스토어에서 바디코디 앱을 내려받습니다.' },
+  { no: '02', title: '회원가입', description: '앱에서 회원가입을 진행합니다.' },
+  { no: '03', title: '카드 등록', description: '월 정기결제에 사용할 카드를 등록합니다.' },
+  { no: '04', title: '구독권 구매', description: '이용할 센터의 월 구독권 상품을 선택해 구매합니다.' },
+  { no: '05', title: '센터 이용 시작', description: '선택한 지점에서 바로 운동을 시작합니다.' },
 ]
 
 /* ── FAQ ──
