@@ -44,7 +44,7 @@ export const STORES = [
     shortName: '시청점',
     monthlyPrice: 48900,
     description: null,
-    address: '경남 진주시 동진로 183',
+    address: '경남 진주시 동진로 183 현대자동차 건물 2·3층',
     hours: '24시간 연중무휴',
     parking: null,
     phone: '010-5769-6061',
