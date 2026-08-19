@@ -21,8 +21,8 @@ export const PRODUCTS = [
     price: BASE_MONTHLY_PRICE,
     priceLabel: null,
     priceUnit: '월',
-    summary: '등록한 주 이용지점 이용',
-    specs: ['월 단위 이용', '매월 정기결제'],
+    summary: '등록한 주 이용지점을 매월 결제하고 이용하는 기본 구독.',
+    specs: ['매월 정기결제', '등록한 주 이용지점 이용', '지점에 따라 월 구독가가 다를 수 있음'],
     // 선택 지점의 가격 예외를 따르는 상품 (월 구독만 해당)
     storePriceAware: true,
     ctaLabel: '월 구독 선택',

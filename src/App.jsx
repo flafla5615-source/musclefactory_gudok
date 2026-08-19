@@ -20,12 +20,19 @@ import StickyCta from './components/StickyCta.jsx'
 import ConsultSheet from './components/ConsultSheet.jsx'
 
 import { useReveal } from './hooks/useReveal.js'
-import { BASE_MONTHLY_PRICE, getProduct, ADD_ONS } from './data/products.js'
+import { BASE_MONTHLY_PRICE } from './data/products.js'
 import { getStore } from './data/stores.js'
 import { buildQuote, isOptionAvailable } from './lib/pricing.js'
 import { EVENTS, captureUtm, track, withUtm } from './lib/tracking.js'
 
-const SELECTION_KEY = 'rc_gudok_selection'
+/**
+ * ⚠ 선택 상태를 세션에 복원하지 않는다.
+ *
+ * 이전 방문에서 보건대점(45,000원)을 골랐던 브라우저가 페이지를 다시 열었을 때
+ * 월 구독 카드 메인 가격이 45,000원으로 뜨는 문제가 있었다.
+ * 45,000원은 보건대점 한정 예외가이므로, 페이지를 열었을 때의 기본값은
+ * 언제나 48,900원이어야 한다. 그래서 복원 기능을 없앴다.
+ */
 
 /** StrictMode 이중 실행·재마운트로 landing_view 가 중복 집계되지 않게 한 번만 보낸다 */
 let landingTracked = false
@@ -75,33 +82,13 @@ export default function App() {
       track(EVENTS.LANDING_VIEW)
       track(EVENTS.PRODUCT_VIEW, { product_id: 'monthly' })
     }
+    // 이전 방문의 선택을 복원하지 않는다 (위 주석 참고)
     try {
-      const saved = JSON.parse(window.sessionStorage.getItem(SELECTION_KEY) || 'null')
-      if (saved?.storeId && getStore(saved.storeId)) setSelectedStoreId(saved.storeId)
-      if (saved?.productId && getProduct(saved.productId)) setSelectedProductId(saved.productId)
-      if (Array.isArray(saved?.optionIds)) {
-        setSelectedOptionIds(saved.optionIds.filter((id) => ADD_ONS.some((o) => o.id === id)))
-      }
-    } catch {
-      /* storage 차단 환경 — 선택 복원만 생략 */
-    }
-  }, [])
-
-  /* ── 선택 상태 보존 ── */
-  useEffect(() => {
-    try {
-      window.sessionStorage.setItem(
-        SELECTION_KEY,
-        JSON.stringify({
-          storeId: selectedStoreId,
-          productId: selectedProductId,
-          optionIds: selectedOptionIds,
-        }),
-      )
+      window.sessionStorage.removeItem('rc_gudok_selection')
     } catch {
       /* noop */
     }
-  }, [selectedStoreId, selectedProductId, selectedOptionIds])
+  }, [])
 
   /* ── 지점 선택 ── */
   const handleSelectStore = useCallback(
