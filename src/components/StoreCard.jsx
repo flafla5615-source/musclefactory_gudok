@@ -13,7 +13,7 @@ import { formatNumber } from '../lib/format.js'
  * 선택 상태는 테두리·체크로만 표시해 layout shift 를 만들지 않는다.
  */
 export default function StoreCard({ store, price, selected, onSelect }) {
-  const thumb = store.images[0]?.src || null
+  const thumb = store.heroImage || null
 
   return (
     <button
@@ -62,7 +62,7 @@ export default function StoreCard({ store, price, selected, onSelect }) {
             <span className="tnum text-[13.5px] font-semibold text-mute">
               월 {formatNumber(price)}원
             </span>
-            <span className="chip chip-quiet !h-[19px] !text-[10.5px]">구독 운영</span>
+            <span className="chip chip-quiet !h-[19px] !px-2 !text-[10.5px]">구독 운영 지점</span>
           </div>
         </div>
 

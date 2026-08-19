@@ -13,9 +13,9 @@ import { DEFAULT_PHOTO_STORE } from '../data/stores.js'
  *    (사진 자체는 변형하지 않는다)
  */
 export default function Facility({ selectedStore }) {
-  const hasOwnPhotos = selectedStore && selectedStore.images.length > 0
+  const hasOwnPhotos = selectedStore && selectedStore.facilityImages.length > 0
   const source = hasOwnPhotos ? selectedStore : DEFAULT_PHOTO_STORE
-  const images = source ? source.images : []
+  const images = source ? source.facilityImages : []
 
   return (
     <Section
