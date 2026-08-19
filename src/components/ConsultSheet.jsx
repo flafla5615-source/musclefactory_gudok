@@ -9,7 +9,10 @@ import { EVENTS, openChannel, track } from '../lib/tracking.js'
  * 선택 내용을 정리해 확인된 문의 채널로만 연결한다.
  * 채널이 확정되면 data/contact.js 값만 채우면 버튼이 자동으로 생긴다.
  */
-export default function ConsultSheet({ open, onClose, store, product, price }) {
+export default function ConsultSheet({ open, onClose, store, quote }) {
+  const product = quote.product
+  const price = quote.calculable ? quote.total : quote.basePrice
+
   useEffect(() => {
     if (!open) return
     const onKey = (e) => e.key === 'Escape' && onClose()
@@ -43,14 +46,19 @@ export default function ConsultSheet({ open, onClose, store, product, price }) {
   const rows = [
     { label: '지점', value: store ? store.name : '선택 전' },
     { label: '상품', value: product ? product.name : '선택 전' },
+    // 선택한 옵션만 노출
+    quote.options.length > 0 && {
+      label: '추가옵션',
+      value: quote.options.map((o) => `${o.name} +${formatNumber(o.price)}원`).join(', '),
+    },
     {
-      label: '가격',
+      label: quote.calculable ? '월 예상 결제금액' : '가격',
       value:
         typeof price === 'number'
-          ? `${formatNumber(price)}원${product?.priceUnit ? ` / ${product.priceUnit}` : ''}`
+          ? `${formatNumber(price)}원${quote.calculable ? ' / 월' : ''}`
           : '가격 추후 공개',
     },
-  ]
+  ].filter(Boolean)
 
   return (
     <div
@@ -91,8 +99,10 @@ export default function ConsultSheet({ open, onClose, store, product, price }) {
           <dl>
             {rows.map((r) => (
               <div key={r.label} className="inforow">
-                <dt>{r.label}</dt>
-                <dd className={r.label === '가격' ? 'tnum font-semibold' : ''}>{r.value}</dd>
+                <dt className="!flex-[0_0_92px]">{r.label}</dt>
+                <dd className={r.label.includes('가격') || r.label.includes('금액') ? 'tnum font-semibold' : ''}>
+                  {r.value}
+                </dd>
               </div>
             ))}
           </dl>

@@ -50,6 +50,7 @@ export const STORES = [
     multiClubAvailable: null,
     clothingAvailable: null,
     lockerAvailable: null,
+    ctaUrl: null, // 지점별 가입/신청 URL — 확정되면 여기만 채운다
     facilities: [],
     images: [
       { src: '/images/gymflex-cityhall/04_center_overview.jpg', category: '센터 전경' },
@@ -79,6 +80,7 @@ export const STORES = [
     multiClubAvailable: null,
     clothingAvailable: null,
     lockerAvailable: null,
+    ctaUrl: null, // 지점별 가입/신청 URL — 확정되면 여기만 채운다
     facilities: [],
     images: [],
     links: {},
@@ -98,6 +100,7 @@ export const STORES = [
     multiClubAvailable: null,
     clothingAvailable: null, // 운동복 운영 여부·시점 미확정
     lockerAvailable: null,
+    ctaUrl: null, // 지점별 가입/신청 URL — 확정되면 여기만 채운다
     facilities: [],
     images: [],
     links: {},
@@ -117,6 +120,7 @@ export const STORES = [
     multiClubAvailable: null,
     clothingAvailable: null,
     lockerAvailable: null,
+    ctaUrl: null, // 지점별 가입/신청 URL — 확정되면 여기만 채운다
     facilities: [],
     images: [],
     links: {},
@@ -136,6 +140,7 @@ export const STORES = [
     multiClubAvailable: null,
     clothingAvailable: null,
     lockerAvailable: null,
+    ctaUrl: null, // 지점별 가입/신청 URL — 확정되면 여기만 채운다
     facilities: [],
     images: [],
     links: {},

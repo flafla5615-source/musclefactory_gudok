@@ -2,18 +2,17 @@ import { useEffect, useState } from 'react'
 import { formatNumber } from '../lib/format.js'
 
 /**
- * 하단 고정 CTA.
- * 선택 상태를 반영하되, 어떤 조합에서도 bar 전체 높이가 바뀌지 않는다.
- * (좌측 텍스트 블록 높이를 고정하고 지점명은 한 줄로 잘라낸다)
+ * 하단 고정 CTA — 지점·상품·옵션 선택 state 를 그대로 반영한다.
+ * 어떤 조합에서도 bar 전체 높이(76px)가 바뀌지 않는다.
  *
- *   미선택      → 월 48,900원부터        / 내 지점 선택하기
- *   평거점      → 올드짐 평거 · 월 48,900원 / 평거점 구독하기
- *   보건대점    → 보건대점 · 월 45,000원   / 보건대점 구독하기
- *   전지점 상품 → 전지점 구독 · 월 59,900원 / 구독 시작하기
+ *   미선택                    → 월 48,900원부터      / 내 지점 선택하기
+ *   평거 + 월 구독            → 평거점 · 월 48,900원  / 구독 시작하기
+ *   평거 + 월 구독 + 운동복    → 평거점 · 월 59,900원  / 구독 시작하기
+ *   보건대 + 월 구독          → 보건대점 · 월 45,000원 / 구독 시작하기
  */
 const BAR_HEIGHT = 76
 
-export default function StickyCta({ price, priceUnit, selectedStore, selectedProduct, onSubscribe }) {
+export default function StickyCta({ store, quote, onSubscribe }) {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -23,17 +22,15 @@ export default function StickyCta({ price, priceUnit, selectedStore, selectedPro
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // 상단 보조 라인: 선택한 상품 또는 지점
-  const context =
-    selectedProduct && selectedProduct.id !== 'monthly'
-      ? selectedProduct.name
-      : selectedStore
-        ? selectedStore.name
-        : null
+  // 상단 보조 라인 — 지점 + (월 구독이 아닌 상품일 때만) 상품명
+  const context = store
+    ? quote.product.id === 'monthly'
+      ? store.name
+      : `${store.name} · ${quote.product.name}`
+    : null
 
-  const label = selectedStore ? `${selectedStore.shortName} 구독하기` : '내 지점 선택하기'
-  // 지점이 정해지면 그 지점의 확정 가격이므로 '부터'를 붙이지 않는다
-  const suffix = selectedStore || priceUnit ? '' : '부터'
+  const label = store ? '구독 시작하기' : '내 지점 선택하기'
+  const amount = quote.calculable ? quote.total : quote.basePrice
 
   return (
     <div
@@ -56,12 +53,17 @@ export default function StickyCta({ price, priceUnit, selectedStore, selectedPro
           WebkitBackdropFilter: 'blur(16px)',
         }}
       >
-        {/* 좌측 — 높이 고정 */}
         <div className="flex min-w-0 flex-1 flex-col justify-center" style={{ height: '40px' }}>
           <span className="truncate text-[11px] leading-[14px] text-mute-2">{context || ' '}</span>
           <span className="tnum truncate text-[15px] font-bold leading-[20px] text-fog">
-            월 <span style={{ color: 'var(--color-accent-soft)' }}>{formatNumber(price)}원</span>
-            {suffix && <span className="ml-1 text-[12px] font-medium text-mute">{suffix}</span>}
+            {amount === null ? (
+              <span className="text-mute">가격 추후 공개</span>
+            ) : (
+              <>
+                월 <span style={{ color: 'var(--color-accent-soft)' }}>{formatNumber(amount)}원</span>
+                {!store && <span className="ml-1 text-[12px] font-medium text-mute">부터</span>}
+              </>
+            )}
           </span>
         </div>
 

@@ -29,6 +29,7 @@ export const EVENTS = {
   PRODUCT_VIEW: 'product_view',
   PRODUCT_SELECT: 'product_select',
   STORE_SELECT: 'store_select',
+  OPTION_SELECT: 'option_select',
   SUBSCRIPTION_CTA_CLICK: 'subscription_cta_click',
   CONSULTATION_CLICK: 'consultation_click',
   SIGNUP_START: 'signup_start',
