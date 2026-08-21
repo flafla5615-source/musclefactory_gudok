@@ -56,11 +56,20 @@ export const STORES = [
     clothingAvailable: null,
     lockerAvailable: null,
     ctaUrl: null,
-    /* 지점별 이용방법. 확정 전까지 null/[] 유지 → 공통 절차로 표시된다.
-       확정되면 steps 에 { no, title, description } 배열을 넣으면 이 지점만 덮어쓴다. */
     usageGuide: {
-      appName: null,
-      steps: [],
+      appName: '짐서폿',
+      appType: 'gymsupport',
+      entryMethod: 'QR',
+      headline: '짐서폿 앱으로 가입하고 QR로 간편하게 입장하세요.',
+      steps: [
+        '짐서폿 앱 설치',
+        '회원가입',
+        '시청점 구독상품 선택',
+        '결제',
+        'QR로 센터 입장',
+      ],
+      // 실제 앱스토어 URL·QR 이미지 미제공 → 임의 생성 금지
+      appStoreUrl: null,
       qrImage: null,
       signupUrl: null,
       note: null,
@@ -116,11 +125,20 @@ export const STORES = [
     clothingAvailable: null,
     lockerAvailable: null,
     ctaUrl: null,
-    /* 지점별 이용방법. 확정 전까지 null/[] 유지 → 공통 절차로 표시된다.
-       확정되면 steps 에 { no, title, description } 배열을 넣으면 이 지점만 덮어쓴다. */
     usageGuide: {
-      appName: null,
-      steps: [],
+      appName: '바디코디',
+      appType: 'bodycodi',
+      entryMethod: null,
+      headline: '바디코디 앱에서 가입하고 구독상품을 구매하세요.',
+      steps: [
+        '바디코디 앱 설치',
+        '회원가입',
+        '앱에 카드 등록',
+        '평거점 구독상품 구매',
+        '센터 이용 시작',
+      ],
+      // 실제 앱스토어 URL·QR 이미지 미제공 → 임의 생성 금지
+      appStoreUrl: null,
       qrImage: null,
       signupUrl: null,
       note: null,
@@ -158,11 +176,20 @@ export const STORES = [
     clothingAvailable: null, // 운동복 구독 옵션 적용 여부 최종 확정 전
     lockerAvailable: null,
     ctaUrl: null,
-    /* 지점별 이용방법. 확정 전까지 null/[] 유지 → 공통 절차로 표시된다.
-       확정되면 steps 에 { no, title, description } 배열을 넣으면 이 지점만 덮어쓴다. */
     usageGuide: {
-      appName: null,
-      steps: [],
+      appName: '바디코디',
+      appType: 'bodycodi',
+      entryMethod: null,
+      headline: '바디코디 앱에서 가입하고 구독상품을 구매하세요.',
+      steps: [
+        '바디코디 앱 설치',
+        '회원가입',
+        '앱에 카드 등록',
+        '보건대점 구독상품 구매',
+        '센터 이용 시작',
+      ],
+      // 실제 앱스토어 URL·QR 이미지 미제공 → 임의 생성 금지
+      appStoreUrl: null,
       qrImage: null,
       signupUrl: null,
       note: null,
@@ -191,11 +218,20 @@ export const STORES = [
     clothingAvailable: null,
     lockerAvailable: null,
     ctaUrl: null,
-    /* 지점별 이용방법. 확정 전까지 null/[] 유지 → 공통 절차로 표시된다.
-       확정되면 steps 에 { no, title, description } 배열을 넣으면 이 지점만 덮어쓴다. */
     usageGuide: {
-      appName: null,
-      steps: [],
+      appName: '바디코디',
+      appType: 'bodycodi',
+      entryMethod: null,
+      headline: '바디코디 앱에서 가입하고 구독상품을 구매하세요.',
+      steps: [
+        '바디코디 앱 설치',
+        '회원가입',
+        '앱에 카드 등록',
+        '삼천포 본점 구독상품 구매',
+        '센터 이용 시작',
+      ],
+      // 실제 앱스토어 URL·QR 이미지 미제공 → 임의 생성 금지
+      appStoreUrl: null,
       qrImage: null,
       signupUrl: null,
       note: null,
@@ -231,11 +267,20 @@ export const STORES = [
     clothingAvailable: null,
     lockerAvailable: null,
     ctaUrl: null,
-    /* 지점별 이용방법. 확정 전까지 null/[] 유지 → 공통 절차로 표시된다.
-       확정되면 steps 에 { no, title, description } 배열을 넣으면 이 지점만 덮어쓴다. */
     usageGuide: {
-      appName: null,
-      steps: [],
+      appName: '바디코디',
+      appType: 'bodycodi',
+      entryMethod: null,
+      headline: '바디코디 앱에서 가입하고 구독상품을 구매하세요.',
+      steps: [
+        '바디코디 앱 설치',
+        '회원가입',
+        '앱에 카드 등록',
+        '벌리점 구독상품 구매',
+        '센터 이용 시작',
+      ],
+      // 실제 앱스토어 URL·QR 이미지 미제공 → 임의 생성 금지
+      appStoreUrl: null,
       qrImage: null,
       signupUrl: null,
       note: null,
