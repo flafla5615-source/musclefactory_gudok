@@ -56,7 +56,7 @@ export default function Nav({ onSubscribe }) {
           onClick={onSubscribe}
           className="btn btn-primary btn-auto !hidden !min-h-[40px] !px-5 !text-[14px] lg:!inline-flex"
         >
-          구독 시작하기
+          일단 한 달 구독하기
         </button>
 
         <button
