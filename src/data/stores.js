@@ -23,7 +23,7 @@ export const BRANDS = {
  *   id                   public/images/<id>/ 폴더명과 일치
  *   brand                BRANDS 참조
  *   name / shortName     전체 지점명 / 하단 고정 CTA 등에 쓰는 짧은 이름
- *   monthlyPrice         월 구독가 (보건대점만 45,000원 예외)
+ *   monthlyPrice         월 구독가. 현재 전 지점 48,900원 동일
  *   description          한 줄 소개. 없으면 null
  *   address / hours / parking / phone     미확인이면 null
  *   mapUrl               네이버지도 길찾기 URL. 확보 전이면 null (임의 생성 금지)
@@ -168,7 +168,7 @@ export const STORES = [
     brand: BRANDS.MUSCLE_FACTORY,
     name: '머슬팩토리24 보건대점',
     shortName: '보건대점',
-    monthlyPrice: 45000, // 보건대점 전용 월 구독가
+    monthlyPrice: 48900,
     description: null,
     address: '경남 진주시 북장대로 96 2층',
     hours: '24시간 운영',
