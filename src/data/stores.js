@@ -106,7 +106,7 @@ export const STORES = [
     address: '경남 진주시 순환로 539 오승빌딩 6·7층',
     hours: null,
     parking: null,
-    phone: null,
+    phone: '010-6438-7731',
     mapUrl: null,
     // 상세영역에서 앞 6개까지 chip 으로 노출된다 (순서 = 우선순위)
     facilities: [
@@ -173,7 +173,7 @@ export const STORES = [
     address: '경남 진주시 북장대로 96 2층',
     hours: '24시간 운영',
     parking: '주차 가능',
-    phone: null,
+    phone: '010-9678-2550',
     mapUrl: null,
     facilities: ['PT 운영', '샤워시설'],
     floors: [],
@@ -218,7 +218,7 @@ export const STORES = [
     address: '경남 사천시 주공로 18 2층',
     hours: '24시간 연중무휴',
     parking: '주차 가능',
-    phone: '0507-1328-7763',
+    phone: '010-5675-7763',
     mapUrl: null,
     facilities: ['웨이트존', '유산소존', '웨이트 머신', '샤워실', '건식 반신욕기'],
     floors: [],
@@ -270,7 +270,7 @@ export const STORES = [
     // 아래 항목은 확인되지 않아 null 유지 → 화면에서 행 자체가 숨겨진다
     hours: null,
     parking: null,
-    phone: null,
+    phone: '010-9965-6061',
     mapUrl: null,
     facilities: [],
     floors: [],

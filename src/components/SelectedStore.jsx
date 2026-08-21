@@ -4,7 +4,7 @@ import StoreUsageGuide from './StoreUsageGuide.jsx'
 import { formatNumber, monthlyPriceFor } from '../lib/format.js'
 import { BASE_MONTHLY_PRICE, ADD_ONS } from '../data/products.js'
 import { MAX_FACILITY_CHIPS } from '../data/stores.js'
-import { EVENTS, openChannel } from '../lib/tracking.js'
+import { EVENTS, openChannel, track } from '../lib/tracking.js'
 
 /** 가능/불가 여부(boolean)를 소비자 문구로. null 이면 행을 만들지 않는다. */
 const yesNo = (v) => (v === true ? '가능' : v === false ? '미운영' : null)
@@ -40,7 +40,7 @@ export default function SelectedStore({ store, onSubscribe }) {
     { label: '주소', value: store.address },
     { label: '운영시간', value: store.hours },
     { label: '주차', value: store.parking },
-    { label: '전화', value: store.phone, type: 'tel' },
+    { label: '상담문의', value: store.phone, type: 'tel' },
   ].filter((r) => r.value)
 
   const optionRows = [
@@ -167,6 +167,19 @@ export default function SelectedStore({ store, onSubscribe }) {
           <button type="button" onClick={onSubscribe} className="btn btn-primary">
             {store.shortName} 시작하기
           </button>
+
+          {/* 전화 상담 — 번호가 있는 지점만. 모바일에서 바로 연결된다. */}
+          {store.phone && (
+            <a
+              href={`tel:${store.phone.replace(/-/g, '')}`}
+              onClick={() =>
+                track(EVENTS.CONSULTATION_CLICK, { store_id: store.id, channel: 'phone' })
+              }
+              className="btn btn-line"
+            >
+              전화 상담하기
+            </a>
+          )}
 
           {channels.length > 0 && (
             <div className={`grid gap-2.5 ${channels.length > 1 ? 'grid-cols-2' : ''}`}>

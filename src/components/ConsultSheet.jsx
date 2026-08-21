@@ -51,6 +51,8 @@ export default function ConsultSheet({ open, onClose, store, quote }) {
       label: '추가옵션',
       value: quote.options.map((o) => `${o.name} +${formatNumber(o.price)}원`).join(', '),
     },
+    // 선택 지점이 바뀌면 번호도 함께 바뀐다
+    store?.phone && { label: '상담문의', value: store.phone },
     {
       label: quote.calculable ? '월 예상 결제금액' : '가격',
       value:
@@ -108,6 +110,19 @@ export default function ConsultSheet({ open, onClose, store, quote }) {
           </dl>
 
           <div className="mt-6 flex flex-col gap-2.5">
+            {/* 선택 지점 전화 상담 — 번호가 있는 지점만 */}
+            {store?.phone && (
+              <a
+                href={`tel:${store.phone.replace(/-/g, '')}`}
+                onClick={() =>
+                  track(EVENTS.CONSULTATION_CLICK, { store_id: store.id, channel: 'phone' })
+                }
+                className="btn btn-primary"
+              >
+                {store.shortName} 전화하기
+              </a>
+            )}
+
             {channels.length > 0 ? (
               channels.map((c) => (
                 <button
@@ -126,9 +141,12 @@ export default function ConsultSheet({ open, onClose, store, quote }) {
                 </button>
               ))
             ) : (
-              <p className="t-caption">
-                이 지점의 문의 채널은 준비 중입니다. 곧 안내드리겠습니다.
-              </p>
+              // 전화번호도 채널도 없을 때만 안내한다
+              !store?.phone && (
+                <p className="t-caption">
+                  이 지점의 문의 채널은 준비 중입니다. 곧 안내드리겠습니다.
+                </p>
+              )
             )}
 
             {GLOBAL_CONTACT.phone && (
