@@ -2,11 +2,11 @@ import Reveal from './Reveal.jsx'
 import { formatNumber } from '../lib/format.js'
 
 /**
- * STEP 1+2 — 이게 뭔데? / 얼마인데?
+ * HERO
  *
- * 첫 화면에서 전달할 것은 하나뿐이다.
- *   "헬스도 월 48,900원으로 구독할 수 있다."
- * 지점목록 · 옵션 · 여러 가격 · 긴 설명을 넣지 않는다.
+ * 첫 화면 3초 안에 이 세 가지만 읽혀야 한다.
+ *   GYM PASS / 일단 한 달. / 월 48,900원
+ * 지점목록 · 옵션 · 3개월 · 12개월 상품을 여기에 넣지 않는다.
  *
  * 배경 사진 교체는 HERO_IMAGE 한 줄이면 된다.
  * (index.html 의 preload 경로도 함께 수정)
@@ -37,14 +37,14 @@ export default function Hero({ basePrice, onSubscribe, onViewProducts }) {
       <div className="relative flex min-h-[100dvh] flex-col justify-end pb-24 pt-28 lg:justify-center lg:pb-20">
         <div className="wrap lg:!max-w-[1080px]">
           <div className="lg:max-w-xl">
+            {/* 서비스명 */}
             <Reveal as="p" className="t-label" style={{ color: 'var(--color-accent-soft)' }}>
-              Monthly Membership
+              GYM PASS
             </Reveal>
 
+            {/* 캠페인 메시지 */}
             <Reveal as="h1" delay={70} className="mt-5 t-hero text-fog">
-              헬스도 이제
-              <br />
-              구독하세요.
+              일단 한 달.
             </Reveal>
 
             <Reveal
@@ -57,9 +57,9 @@ export default function Hero({ basePrice, onSubscribe, onViewProducts }) {
             </Reveal>
 
             <Reveal as="p" delay={200} className="mt-5 t-body">
-              장기등록 부담 없이
+              1년을 먼저 결정하지 않아도
               <br />
-              매월 이용.
+              운동은 시작할 수 있으니까.
             </Reveal>
 
             <Reveal delay={260} className="mt-9 flex flex-col gap-2.5 sm:flex-row sm:gap-3">
@@ -68,7 +68,7 @@ export default function Hero({ basePrice, onSubscribe, onViewProducts }) {
                 onClick={onSubscribe}
                 className="btn btn-primary sm:btn-auto sm:!px-7"
               >
-                내 지점 구독 시작하기
+                내 지점 선택하기
               </button>
               <button
                 type="button"

@@ -75,7 +75,7 @@ export const EVENT_PRODUCT = {
   name: '12개월 회원권',
   price: 399000,
   priceUnit: '12개월',
-  summary: '구독제 OPEN 기념 별도 회원권',
+  summary: 'GYM PASS 오픈 기념 별도 회원권',
   ctaLabel: '12개월 회원권 문의하기',
   ctaIntent: 'consult',
   status: 'available',

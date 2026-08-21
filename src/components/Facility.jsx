@@ -24,9 +24,9 @@ export default function Facility({ selectedStore }) {
       id="facility"
       title={
         <>
-          매일 다닐 곳이니까,
+          실제 운동할 공간을
           <br />
-          시설도 직접 확인하세요.
+          먼저 확인하세요.
         </>
       }
       description={

@@ -1,102 +1,98 @@
 /* ══════════════════════════════════════════════════════════════
-   카피 · FAQ · 이용방법 · 혜택 텍스트
+   카피 · FAQ · 이용방법 · 회원 인터뷰
    화면 컴포넌트에서 문구를 직접 수정하지 않고 이 파일에서 관리한다.
+
+   서비스명: GYM PASS
+   캠페인 메시지: "일단 한 달."
    ══════════════════════════════════════════════════════════════ */
 
-/* ── 구독 BENEFIT ── */
+/* ── 왜 일단 한 달인가 (CAMPAIGN WHY) — 3개 이하 ── */
+export const CAMPAIGN_POINTS = [
+  { id: 'no-lump-sum', title: '한 번에 큰 금액 부담 감소', description: '1년치를 먼저 결제하지 않습니다.' },
+  { id: 'start-month', title: '한 달부터 시작', description: '이번 달 이용료만 내고 시작합니다.' },
+  { id: 'keep-going', title: '내 생활에 맞춰 이어가기', description: '계속하고 싶을 때 계속합니다.' },
+]
+
+/* ── 혜택 (BENEFIT) — 4개 이하. 상품 설명을 반복하지 않는다 ── */
 export const BENEFITS = [
-  {
-    id: 'monthly-payment',
-    icon: 'solar:calendar-mark-linear',
-    title: '월 단위 결제',
-    description: '목돈 부담 없이.',
-  },
-  {
-    id: 'my-store',
-    icon: 'solar:map-point-linear',
-    title: '내 지점 선택',
-    description: '가까운 센터에서.',
-  },
-  {
-    id: 'multi-club',
-    icon: 'solar:widget-5-linear',
-    title: '전지점 옵션',
-    description: '필요하면 더 넓게.',
-  },
-  {
-    id: 'add-ons',
-    icon: 'solar:checklist-minimalistic-linear',
-    title: '필요한 옵션만',
-    description: '운동복과 락커는 선택.',
-  },
+  { id: 'start-month', icon: 'solar:calendar-mark-linear', title: '한 달부터 시작', description: '기간을 미리 정하지 않아도 됩니다.' },
+  { id: 'no-lump-sum', icon: 'solar:wallet-money-linear', title: '큰 목돈 부담 감소', description: '한 번에 결제하지 않습니다.' },
+  { id: 'my-store', icon: 'solar:map-point-linear', title: '가까운 지점 선택', description: '다닐 센터를 직접 고릅니다.' },
+  { id: 'add-ons', icon: 'solar:checklist-minimalistic-linear', title: '필요한 옵션만 추가', description: '운동복과 락커는 선택입니다.' },
 ]
 
-/* ── 구독제란 무엇인가 (SECTION 03) ── */
-export const SUBSCRIPTION_POINTS = [
-  {
-    id: 'no-lump-sum',
-    icon: 'solar:wallet-money-linear',
-    title: '한 번에 큰 금액 X',
-    description: '처음부터 1년치를 결제하지 않습니다.',
-  },
-  {
-    id: 'recurring',
-    icon: 'solar:card-linear',
-    title: '매월 정기결제',
-    description: '이용하는 달에 이용료를 냅니다.',
-  },
-  {
-    id: 'choose',
-    icon: 'solar:hand-stars-linear',
-    title: '내게 맞는 상품 선택',
-    description: '이용방식을 직접 고릅니다.',
-  },
-]
-
-/* ── 이용방법 (HOW TO USE) ──
+/* ══════════════════════════════════════════════════════════════
+   이용방법
+   ──────────────────────────────────────────────────────────────
    구독권은 센터에서 장기 회원권을 따로 결제하는 방식이 아니라
-   바디코디 앱에서 구독권 상품을 구매하는 방식이다. */
-export const HOW_TO_STEPS = [
-  { no: '01', title: '바디코디 앱 설치', description: '앱스토어에서 바디코디 앱을 내려받습니다.' },
-  { no: '02', title: '회원가입', description: '앱에서 회원가입을 진행합니다.' },
-  { no: '03', title: '카드 등록', description: '월 정기결제에 사용할 카드를 등록합니다.' },
-  { no: '04', title: '구독권 구매', description: '이용할 센터의 월 구독권 상품을 선택해 구매합니다.' },
-  { no: '05', title: '센터 이용 시작', description: '선택한 지점에서 바로 운동을 시작합니다.' },
+   바디코디 앱에서 구독권 상품을 구매하는 방식이다. (확인된 공통 절차)
+
+   ⚠ 지점별 세부 절차(전용 QR·가입링크·특이사항)는 확정 전이므로
+      stores.js 의 usageGuide 에 값이 들어오기 전까지 임의로 만들지 않는다.
+   ══════════════════════════════════════════════════════════════ */
+export const DEFAULT_USAGE_GUIDE = {
+  appName: '바디코디',
+  steps: [
+    { no: '01', title: '앱 설치', description: '앱스토어에서 바디코디 앱을 내려받습니다.' },
+    { no: '02', title: '회원가입', description: '앱에서 회원가입을 진행합니다.' },
+    { no: '03', title: '카드 등록', description: '월 정기결제에 사용할 카드를 등록합니다.' },
+    { no: '04', title: 'GYM PASS 구독권 구매', description: '이용할 지점의 구독권 상품을 선택해 구매합니다.' },
+    { no: '05', title: '센터 이용 시작', description: '구매 후 바로 운동을 시작합니다.' },
+  ],
+}
+
+/* ── 페이지 후반 공통 요약 — 전체 흐름만 짧게 ── */
+export const FLOW_SUMMARY = [
+  { no: '01', title: '지점 선택' },
+  { no: '02', title: '상품 선택' },
+  { no: '03', title: '가입' },
+  { no: '04', title: '이용 시작' },
 ]
 
-/* ── FAQ ──
-   ⚠ 아래 답변 중 '내부 검토안' 표현은 최종 약관 확정 시
-      반드시 실제 약관과 동일한 문장으로 교체해야 한다. */
+/* ══════════════════════════════════════════════════════════════
+   회원 인터뷰
+   ⚠ 실제 답변이 확보되기 전에는 후기 문구를 임의로 만들지 않는다.
+      videoSrc 가 null 이면 가짜 영상·스톡 영상을 쓰지 않고
+      placeholder 만 보여준다.
+   ══════════════════════════════════════════════════════════════ */
+export const MEMBER_INTERVIEW = {
+  videoSrc: null,      // 예: '/videos/cityhall-member.mp4'
+  thumbnail: null,     // 영상 포스터 이미지
+  memberLabel: 'GYM PASS 실제 이용회원',
+  storeName: null,     // 확인되면 예: '짐플릭스 시청점'
+  quote: null,         // 실제 인용문이 확보되기 전까지 null
+  duration: null,      // 예: '1:24'
+  // 영상에 담을 질문 (실제 답변이 아니라 질문 목록이다)
+  questions: [
+    '처음에는 한 달만 해보려고 하셨나요?',
+    '현재 몇 개월째 이용 중이세요?',
+    '한 달씩 결제하는 방식에서 가장 편한 점은 무엇인가요?',
+    '일단 한 달 해보셨는데 어떠셨어요?',
+  ],
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FAQ — GYM PASS 기준
+   ⚠ 정책 미확정 항목은 확정 전까지 단정하지 않는다.
+   ══════════════════════════════════════════════════════════════ */
 export const FAQS = [
   {
+    id: 'what-is',
+    question: 'GYM PASS는 어떤 상품인가요?',
+    answer:
+      '장기 회원권을 한 번에 결제하는 대신, 한 달 단위로 결제하고 이용하는 헬스장 이용방식입니다. 이용할 지점을 고르고 월 구독권을 구매하면 바로 이용할 수 있습니다.',
+  },
+  {
     id: 'auto-payment',
-    question: '구독료는 매달 자동결제되나요?',
+    question: '매달 자동결제되나요?',
     answer:
       '최초 가입일을 기준으로 매월 자동결제되는 방향으로 준비하고 있습니다. 정확한 결제일과 방식은 최종 정책에 맞춰 안내드립니다.',
   },
   {
-    id: 'contract',
-    question: '장기 약정이 있나요?',
+    id: 'store-price',
+    question: '지점마다 가격이 다른가요?',
     answer:
-      '현재 내부안은 최소 유지기간과 별도 해지 위약금이 없는 방향입니다. 최종 약관이 확정되면 정확한 내용을 공개합니다.',
-  },
-  {
-    id: 'cancel',
-    question: '해지는 어떻게 하나요?',
-    answer:
-      '현재 검토 중인 방식은 다음 정기결제일 3일 전까지 신청하면 다음 회차 자동결제가 중단되고, 이미 결제된 이용기간까지는 그대로 이용하는 구조입니다. 최종 약관과 동일한 내용으로 다시 안내드립니다.',
-  },
-  {
-    id: 'pause',
-    question: '구독을 잠시 정지할 수 있나요?',
-    answer:
-      '현재 내부안은 구독 유지 중 1회, 1개월 일시정지입니다. 최종 공개 정책 확인 후 반영해 안내드립니다.',
-  },
-  {
-    id: 'options',
-    question: '운동복과 락커가 포함되나요?',
-    answer:
-      '기본 구독료에는 포함되지 않습니다. 운동복 월 11,000원, 개인락커 월 15,000원으로 필요한 옵션만 추가하실 수 있습니다.',
+      '기본 월 구독가는 48,900원입니다. 머슬팩토리24 보건대점만 월 45,000원이 적용됩니다. 지점을 선택하시면 해당 지점 기준 금액이 화면에 반영됩니다.',
   },
   {
     id: 'other-stores',
@@ -105,15 +101,28 @@ export const FAQS = [
       '전지점 구독 상품을 통해 이용하는 구조입니다. 정확한 이용 가능 지점과 이용 횟수는 최종 정책에 맞춰 안내드립니다.',
   },
   {
-    id: 'pt',
-    question: 'PT도 포함되나요?',
-    answer: 'PT는 구독료와 별도 상품입니다. PT 문의는 각 지점으로 해주세요.',
+    id: 'options',
+    question: '운동복과 락커가 포함되나요?',
+    answer:
+      '기본 구독료에는 포함되지 않습니다. 운동복 월 11,000원, 개인락커 월 15,000원으로 필요한 옵션만 추가하실 수 있습니다. 지점별 운영 여부는 상담 시 안내드립니다.',
+  },
+  {
+    id: 'quarterly',
+    question: '3개월 상품은 언제 이용할 수 있나요?',
+    answer:
+      '3개월 구독권은 가격과 세부 이용조건이 확정되는 대로 공개할 예정입니다. 확정 전까지는 가격을 안내드리지 않습니다.',
   },
   {
     id: 'annual-vs-monthly',
-    question: '12개월권과 월 구독의 차이는 무엇인가요?',
+    question: '12개월 회원권과 월 구독의 차이는 무엇인가요?',
     answer:
-      '월 구독은 매월 정기결제로 이용하는 방식입니다. 12개월 399,000원은 구독제 OPEN 기간에 별도로 운영하는 장기회원권 상품입니다.',
+      '월 구독은 매월 정기결제로 이용하는 방식입니다. 12개월 399,000원은 GYM PASS 오픈 기간에 별도로 운영하는 장기회원권 상품입니다.',
+  },
+  {
+    id: 'signup',
+    question: '가입은 어떻게 하나요?',
+    answer:
+      '바디코디 앱을 설치해 회원가입하고, 카드를 등록한 뒤 이용할 지점의 구독권 상품을 구매하시면 됩니다. 지점별 세부 절차는 지점을 선택하시면 확인하실 수 있습니다.',
   },
 ]
 
@@ -122,8 +131,8 @@ export const FACILITY_CATEGORIES = [
   '센터 전경',
   '웨이트존',
   '프리웨이트존',
+  '머신존',
   '유산소존',
   '스트레칭존',
-  '주요 머신',
   '샤워·락커',
 ]

@@ -12,7 +12,8 @@ import { monthlyPriceFor } from '../lib/format.js'
  */
 export default function Stores({ selectedStoreId, onSelectStore }) {
   return (
-    <Section id="store" title="어디에서 운동하세요?" description="가까운 지점을 선택해주세요.">
+    <Section id="store" title="어디에서 운동할까요?"
+      description="가까운 GYM PASS 지점을 선택해주세요.">
       <div className="grid gap-3 md:grid-cols-2">
         {SUBSCRIPTION_STORES.map((store, i) => (
           <Reveal key={store.id} delay={i * 55} className="h-full">

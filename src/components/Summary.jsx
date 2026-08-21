@@ -11,7 +11,7 @@ export default function Summary({ store, quote, hasProductSelection, onSubscribe
   // 지점을 아직 안 골랐으면 요약 대신 지점 선택으로 유도한다
   if (!store) {
     return (
-      <Section id="summary" tone="ink-2" title="내가 선택한 구독">
+      <Section id="summary" tone="ink-2" title="내가 선택한 GYM PASS">
         <Reveal className="card">
           <p className="t-body">지점을 선택하시면 선택 내용과 월 예상 결제금액을 정리해 드립니다.</p>
           <div className="card-foot">
@@ -25,7 +25,7 @@ export default function Summary({ store, quote, hasProductSelection, onSubscribe
   }
 
   return (
-    <Section id="summary" tone="ink-2" title="내가 선택한 구독">
+    <Section id="summary" tone="ink-2" title="내가 선택한 GYM PASS">
       <Reveal className="card">
         <dl>
           <div className="inforow">

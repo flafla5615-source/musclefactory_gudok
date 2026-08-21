@@ -29,7 +29,7 @@ export default function StickyCta({ store, quote, onSubscribe }) {
       : `${store.name} · ${quote.product.name}`
     : null
 
-  const label = store ? '구독 시작하기' : '내 지점 선택하기'
+  const label = store ? `${store.shortName} 시작하기` : '일단 한 달 시작하기'
   const amount = quote.calculable ? quote.total : quote.basePrice
 
   return (

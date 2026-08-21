@@ -1,5 +1,6 @@
 import Reveal from './Reveal.jsx'
 import Section from './Section.jsx'
+import StoreUsageGuide from './StoreUsageGuide.jsx'
 import { formatNumber, monthlyPriceFor } from '../lib/format.js'
 import { BASE_MONTHLY_PRICE, ADD_ONS } from '../data/products.js'
 import { MAX_FACILITY_CHIPS } from '../data/stores.js'
@@ -164,7 +165,7 @@ export default function SelectedStore({ store, onSubscribe }) {
         {/* CTA */}
         <div className="card-foot flex flex-col gap-2.5">
           <button type="button" onClick={onSubscribe} className="btn btn-primary">
-            {store.shortName} 구독하기
+            {store.shortName} 시작하기
           </button>
 
           {channels.length > 0 && (
@@ -187,6 +188,11 @@ export default function SelectedStore({ store, onSubscribe }) {
             </div>
           )}
         </div>
+      </Reveal>
+
+      {/* 지점 상세 바로 아래 — 이 지점 GYM PASS 이용방법 */}
+      <Reveal delay={80}>
+        <StoreUsageGuide store={store} />
       </Reveal>
     </Section>
   )

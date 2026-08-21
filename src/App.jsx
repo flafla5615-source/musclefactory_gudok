@@ -2,13 +2,13 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import Nav from './components/Nav.jsx'
 import Hero from './components/Hero.jsx'
-import Problem from './components/Problem.jsx'
-import WhatIsSubscription from './components/WhatIsSubscription.jsx'
+import CampaignWhy from './components/CampaignWhy.jsx'
 import Pricing from './components/Pricing.jsx'
 import Stores from './components/Stores.jsx'
 import SelectedStore from './components/SelectedStore.jsx'
 import AddOns from './components/AddOns.jsx'
 import Facility from './components/Facility.jsx'
+import MemberInterview from './components/MemberInterview.jsx'
 import Benefits from './components/Benefits.jsx'
 import OpenEvent from './components/OpenEvent.jsx'
 import HowToUse from './components/HowToUse.jsx'
@@ -198,8 +198,7 @@ export default function App() {
           onSubscribe={() => handleSubscribe('hero')}
           onViewProducts={() => scrollToId('price')}
         />
-        <Problem />
-        <WhatIsSubscription />
+        <CampaignWhy />
         <Pricing
           selectedStore={selectedStore}
           selectedProductId={selectedProductId}
@@ -214,6 +213,7 @@ export default function App() {
           onToggleOption={handleToggleOption}
         />
         <Facility selectedStore={selectedStore} />
+        <MemberInterview />
         <Benefits />
         <OpenEvent onConsult={handleConsult} />
         <HowToUse />

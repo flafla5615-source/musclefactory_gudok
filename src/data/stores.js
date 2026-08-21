@@ -56,6 +56,15 @@ export const STORES = [
     clothingAvailable: null,
     lockerAvailable: null,
     ctaUrl: null,
+    /* 지점별 이용방법. 확정 전까지 null/[] 유지 → 공통 절차로 표시된다.
+       확정되면 steps 에 { no, title, description } 배열을 넣으면 이 지점만 덮어쓴다. */
+    usageGuide: {
+      appName: null,
+      steps: [],
+      qrImage: null,
+      signupUrl: null,
+      note: null,
+    },
     thumbImage: '/images/gymflex-cityhall/thumb.jpg',
     facilityImages: [
       { src: '/images/gymflex-cityhall/08.jpg', category: '센터 전경' },
@@ -107,6 +116,15 @@ export const STORES = [
     clothingAvailable: null,
     lockerAvailable: null,
     ctaUrl: null,
+    /* 지점별 이용방법. 확정 전까지 null/[] 유지 → 공통 절차로 표시된다.
+       확정되면 steps 에 { no, title, description } 배열을 넣으면 이 지점만 덮어쓴다. */
+    usageGuide: {
+      appName: null,
+      steps: [],
+      qrImage: null,
+      signupUrl: null,
+      note: null,
+    },
     thumbImage: '/images/oldgym-pyeonggeo/thumb.jpg',
     facilityImages: [
       { src: '/images/oldgym-pyeonggeo/07.jpg', category: '센터 전경' },
@@ -140,6 +158,15 @@ export const STORES = [
     clothingAvailable: null, // 운동복 구독 옵션 적용 여부 최종 확정 전
     lockerAvailable: null,
     ctaUrl: null,
+    /* 지점별 이용방법. 확정 전까지 null/[] 유지 → 공통 절차로 표시된다.
+       확정되면 steps 에 { no, title, description } 배열을 넣으면 이 지점만 덮어쓴다. */
+    usageGuide: {
+      appName: null,
+      steps: [],
+      qrImage: null,
+      signupUrl: null,
+      note: null,
+    },
     thumbImage: null,
     facilityImages: [],
     links: {},
@@ -164,6 +191,15 @@ export const STORES = [
     clothingAvailable: null,
     lockerAvailable: null,
     ctaUrl: null,
+    /* 지점별 이용방법. 확정 전까지 null/[] 유지 → 공통 절차로 표시된다.
+       확정되면 steps 에 { no, title, description } 배열을 넣으면 이 지점만 덮어쓴다. */
+    usageGuide: {
+      appName: null,
+      steps: [],
+      qrImage: null,
+      signupUrl: null,
+      note: null,
+    },
     thumbImage: '/images/mf-samcheonpo/thumb.jpg',
     facilityImages: [
       { src: '/images/mf-samcheonpo/03.jpg', category: '웨이트존' },
@@ -195,6 +231,15 @@ export const STORES = [
     clothingAvailable: null,
     lockerAvailable: null,
     ctaUrl: null,
+    /* 지점별 이용방법. 확정 전까지 null/[] 유지 → 공통 절차로 표시된다.
+       확정되면 steps 에 { no, title, description } 배열을 넣으면 이 지점만 덮어쓴다. */
+    usageGuide: {
+      appName: null,
+      steps: [],
+      qrImage: null,
+      signupUrl: null,
+      note: null,
+    },
     thumbImage: '/images/mf-samcheonpo-beolli/thumb.jpg',
     facilityImages: [
       { src: '/images/mf-samcheonpo-beolli/04.jpg', category: '센터 전경' },
