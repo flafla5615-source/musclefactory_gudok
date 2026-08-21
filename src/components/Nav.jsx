@@ -31,12 +31,10 @@ export default function Nav({ onSubscribe }) {
       }}
     >
       <div className="wrap flex h-[64px] items-center justify-between">
-        <a href="#top" className="flex flex-col leading-[1.1]" aria-label="리턴컴퍼니 홈">
-          <span className="font-display text-[11.5px] font-bold tracking-[0.16em] text-fog">
-            RETURN
-          </span>
-          <span className="font-display text-[11.5px] font-bold tracking-[0.16em] text-mute-2">
-            COMPANY
+        {/* 서비스명 = GYM PASS (운영사 표기는 푸터에서 유지) */}
+        <a href="#top" className="flex items-center" aria-label="GYM PASS 홈">
+          <span className="font-display text-[15px] font-bold tracking-[0.14em] text-fog">
+            GYM PASS
           </span>
         </a>
 
