@@ -57,19 +57,22 @@ export const STORES = [
     lockerAvailable: null,
     ctaUrl: null,
     usageGuide: {
-      appName: '짐서폿',
-      appType: 'gymsupport',
+      appName: '짐구독',
+      appType: 'gymgudok',
       entryMethod: 'QR',
-      headline: '짐서폿 앱으로 가입하고 QR로 간편하게 입장하세요.',
+      headline: '짐구독 앱으로 가입하고 QR로 간편하게 입장하세요.',
       steps: [
-        '짐서폿 앱 설치',
+        '짐구독 앱 설치',
         '회원가입',
         '시청점 구독상품 선택',
         '결제',
         'QR로 센터 입장',
       ],
-      // 실제 앱스토어 URL·QR 이미지 미제공 → 임의 생성 금지
-      appStoreUrl: null,
+      // 앱스토어 링크는 검증 완료. QR · 가입링크는 미제공 → 임의 생성 금지
+      appStore: {
+        ios: 'https://apps.apple.com/kr/app/id6497406116',
+        android: 'https://play.google.com/store/apps/details?id=com.gymsupport',
+      },
       qrImage: null,
       signupUrl: null,
       note: null,
@@ -137,8 +140,11 @@ export const STORES = [
         '평거점 구독상품 구매',
         '센터 이용 시작',
       ],
-      // 실제 앱스토어 URL·QR 이미지 미제공 → 임의 생성 금지
-      appStoreUrl: null,
+      // 앱스토어 링크는 검증 완료. QR · 가입링크는 미제공 → 임의 생성 금지
+      appStore: {
+        ios: 'https://apps.apple.com/kr/app/id1557408918',
+        android: 'https://play.google.com/store/apps/details?id=com.bodycodi.bpay',
+      },
       qrImage: null,
       signupUrl: null,
       note: null,
@@ -188,8 +194,11 @@ export const STORES = [
         '보건대점 구독상품 구매',
         '센터 이용 시작',
       ],
-      // 실제 앱스토어 URL·QR 이미지 미제공 → 임의 생성 금지
-      appStoreUrl: null,
+      // 앱스토어 링크는 검증 완료. QR · 가입링크는 미제공 → 임의 생성 금지
+      appStore: {
+        ios: 'https://apps.apple.com/kr/app/id1557408918',
+        android: 'https://play.google.com/store/apps/details?id=com.bodycodi.bpay',
+      },
       qrImage: null,
       signupUrl: null,
       note: null,
@@ -230,8 +239,11 @@ export const STORES = [
         '삼천포 본점 구독상품 구매',
         '센터 이용 시작',
       ],
-      // 실제 앱스토어 URL·QR 이미지 미제공 → 임의 생성 금지
-      appStoreUrl: null,
+      // 앱스토어 링크는 검증 완료. QR · 가입링크는 미제공 → 임의 생성 금지
+      appStore: {
+        ios: 'https://apps.apple.com/kr/app/id1557408918',
+        android: 'https://play.google.com/store/apps/details?id=com.bodycodi.bpay',
+      },
       qrImage: null,
       signupUrl: null,
       note: null,
@@ -279,8 +291,11 @@ export const STORES = [
         '벌리점 구독상품 구매',
         '센터 이용 시작',
       ],
-      // 실제 앱스토어 URL·QR 이미지 미제공 → 임의 생성 금지
-      appStoreUrl: null,
+      // 앱스토어 링크는 검증 완료. QR · 가입링크는 미제공 → 임의 생성 금지
+      appStore: {
+        ios: 'https://apps.apple.com/kr/app/id1557408918',
+        android: 'https://play.google.com/store/apps/details?id=com.bodycodi.bpay',
+      },
       qrImage: null,
       signupUrl: null,
       note: null,

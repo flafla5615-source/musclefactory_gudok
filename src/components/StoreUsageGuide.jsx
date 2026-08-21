@@ -26,6 +26,12 @@ export default function StoreUsageGuide({ store }) {
   const entryMethod = guide.entryMethod || DEFAULT_USAGE_GUIDE.entryMethod
   const headline = guide.headline || DEFAULT_USAGE_GUIDE.headline
 
+  // 앱 다운로드 링크 — 값이 있는 플랫폼만
+  const appStoreLinks = [
+    guide.appStore?.ios && { key: 'ios', label: 'App Store', url: guide.appStore.ios },
+    guide.appStore?.android && { key: 'android', label: 'Google Play', url: guide.appStore.android },
+  ].filter(Boolean)
+
   return (
     <div className="mt-3">
       <div className="card">
@@ -68,23 +74,32 @@ export default function StoreUsageGuide({ store }) {
 
         {guide.note && <p className="mt-4 t-caption">{guide.note}</p>}
 
-        {/* 앱스토어 · 가입 링크 — 값이 있을 때만 (임의 URL 생성 금지) */}
-        {(guide.appStoreUrl || guide.signupUrl) && (
+        {/* 앱 다운로드 · 가입 링크 — 값이 있을 때만 (임의 URL 생성 금지) */}
+        {(appStoreLinks.length > 0 || guide.signupUrl) && (
           <div className="card-foot flex flex-col gap-2.5">
-            {guide.appStoreUrl && (
-              <button
-                type="button"
-                onClick={() =>
-                  openChannel(guide.appStoreUrl, EVENTS.SIGNUP_START, {
-                    store_id: store.id,
-                    channel: 'app_store',
-                    app: guide.appType,
-                  })
-                }
-                className="btn btn-line"
-              >
-                {appName} 앱 다운로드
-              </button>
+            {appStoreLinks.length > 0 && (
+              <>
+                <p className="t-caption">{appName} 앱 다운로드</p>
+                <div className={`grid gap-2.5 ${appStoreLinks.length > 1 ? 'grid-cols-2' : ''}`}>
+                  {appStoreLinks.map((link) => (
+                    <button
+                      key={link.key}
+                      type="button"
+                      onClick={() =>
+                        openChannel(link.url, EVENTS.SIGNUP_START, {
+                          store_id: store.id,
+                          channel: 'app_store',
+                          platform: link.key,
+                          app: guide.appType,
+                        })
+                      }
+                      className="btn btn-line"
+                    >
+                      {link.label}
+                    </button>
+                  ))}
+                </div>
+              </>
             )}
             {guide.signupUrl && (
               <button
