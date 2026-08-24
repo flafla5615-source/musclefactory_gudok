@@ -45,8 +45,8 @@ export default function Pricing({ selectedStore, selectedProductId, onSelectProd
       title="매월, 부담 없이."
       description="이용방식을 직접 고를 수 있습니다."
     >
-      {/* 3열 동일 규격 — grid 라 카드 높이가 자동으로 같아진다 */}
-      <div className="grid gap-4 md:grid-cols-3">
+      {/* 동일 규격 — auto-rows-fr 로 1열(모바일)에서도 카드 높이가 같아진다 */}
+      <div className="grid auto-rows-fr gap-4 md:grid-cols-3">
         {MAIN_PRODUCTS.map((product, i) => (
           <Reveal key={product.id} delay={i * 70} className="h-full">
             <ProductCard

@@ -44,38 +44,48 @@ export default function Hero({ basePrice, onSubscribe, onViewProducts }) {
 
             {/* 캠페인 메시지 */}
             <Reveal as="h1" delay={70} className="mt-5 t-hero text-fog">
-              일단 한 달.
+              헬스장,
+              <br />한 달만 등록해도 됩니다.
+            </Reveal>
+
+            <Reveal as="p" delay={140} className="mt-5 t-body">
+              장기 회원권 없이
+              <br />
+              매월 결제하고 필요한 만큼 이용하세요.
             </Reveal>
 
             <Reveal
               as="p"
-              delay={140}
-              className="mt-5 t-hero-price"
+              delay={200}
+              className="mt-6 t-hero-price"
               style={{ color: 'var(--color-accent-soft)' }}
             >
-              월 {formatNumber(basePrice)}원
+              월 {formatNumber(basePrice)}원부터
             </Reveal>
 
-            <Reveal as="p" delay={200} className="mt-5 t-body">
-              1년을 먼저 결정하지 않아도
-              <br />
-              운동은 시작할 수 있으니까.
+            {/* 약정 없음을 한 줄로 못박는다 */}
+            <Reveal delay={250} className="mt-5 flex flex-wrap gap-1.5">
+              {['약정 없이', '매월 자동결제', '언제든 정지'].map((t) => (
+                <span key={t} className="chip chip-quiet">
+                  {t}
+                </span>
+              ))}
             </Reveal>
 
-            <Reveal delay={260} className="mt-9 flex flex-col gap-2.5 sm:flex-row sm:gap-3">
+            <Reveal delay={300} className="mt-8 flex flex-col gap-2.5 sm:flex-row sm:gap-3">
               <button
                 type="button"
                 onClick={onSubscribe}
                 className="btn btn-primary sm:btn-auto sm:!px-7"
               >
-                내 지점 선택하기
+                내 주변 지점 보기
               </button>
               <button
                 type="button"
                 onClick={onViewProducts}
                 className="btn btn-line sm:btn-auto sm:!px-7"
               >
-                구독 상품 보기
+                이용방법 보기
               </button>
             </Reveal>
           </div>

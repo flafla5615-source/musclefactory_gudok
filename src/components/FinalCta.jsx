@@ -1,40 +1,63 @@
 import Reveal from './Reveal.jsx'
-import { formatNumber } from '../lib/format.js'
+import { SUBSCRIPTION_STORES } from '../data/stores.js'
+import { EVENTS, track } from '../lib/tracking.js'
 
-/** FINAL CTA — 마지막까지 메시지는 '일단 한 달. 월 48,900원부터'. */
-export default function FinalCta({ price, selectedStore, onSubscribe, onConsult }) {
+/**
+ * FINAL CTA
+ * 정보를 다시 길게 반복하지 않는다. 지점을 바로 고를 수 있게만 한다.
+ * 전화번호가 있는 지점은 tel: 링크로 바로 연결한다.
+ */
+export default function FinalCta({ selectedStoreId, onSelectStore }) {
   return (
     <section className="section bg-ink">
       <div className="wrap">
-        <Reveal as="p" className="t-label" style={{ color: 'var(--color-accent-soft)' }}>
-          GYM PASS
-        </Reveal>
-
-        <Reveal as="h2" delay={70} className="mt-4 t-section text-fog">
-          고민은 길게 말고.
+        <Reveal as="h2" className="t-section text-fog">
+          일단 한 달,
           <br />
-          일단 한 달.
+          운동부터 시작하세요.
         </Reveal>
 
-        <Reveal delay={140} className="mt-4 flex flex-wrap items-baseline gap-x-2">
-          <span className="tnum text-[17px] font-bold text-mute">
-            월 {formatNumber(price)}원부터
-          </span>
-          {selectedStore && <span className="t-caption">{selectedStore.name} 기준</span>}
+        <Reveal as="p" delay={70} className="mt-4 t-body">
+          내 주변 지점을 선택하고 바로 시작할 수 있습니다.
         </Reveal>
 
-        <Reveal delay={200} className="mt-8 flex flex-col gap-2.5 sm:flex-row sm:gap-3">
-          <button
-            type="button"
-            onClick={onSubscribe}
-            className="btn btn-primary sm:btn-auto sm:!px-7"
-          >
-            내 GYM PASS 시작하기
-          </button>
-          <button type="button" onClick={onConsult} className="btn btn-line sm:btn-auto sm:!px-7">
-            상담하기
-          </button>
-        </Reveal>
+        <div className="section-body flex flex-col gap-2.5">
+          {SUBSCRIPTION_STORES.map((store, i) => {
+            const selected = selectedStoreId === store.id
+            return (
+              <Reveal key={store.id} delay={i * 50}>
+                <div className="flex gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => onSelectStore(store)}
+                    className={`btn flex-1 !justify-between !px-5 ${selected ? 'btn-primary' : 'btn-line'}`}
+                  >
+                    <span className="truncate text-left">{store.name}</span>
+                    <iconify-icon icon="solar:alt-arrow-right-linear" width="16"></iconify-icon>
+                  </button>
+
+                  {store.phone && (
+                    <a
+                      href={`tel:${store.phone.replace(/-/g, '')}`}
+                      onClick={() =>
+                        track(EVENTS.CONSULTATION_CLICK, {
+                          store_id: store.id,
+                          channel: 'phone',
+                          source: 'final',
+                        })
+                      }
+                      aria-label={`${store.name} 전화 문의`}
+                      className="btn btn-line btn-auto flex-shrink-0 !px-4"
+                    >
+                      <iconify-icon icon="solar:phone-linear" width="18"></iconify-icon>
+                      <span className="hidden sm:inline">전화 문의</span>
+                    </a>
+                  )}
+                </div>
+              </Reveal>
+            )
+          })}
+        </div>
       </div>
     </section>
   )

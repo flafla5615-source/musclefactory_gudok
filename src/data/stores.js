@@ -25,7 +25,8 @@ export const BRANDS = {
  *   name / shortName     전체 지점명 / 하단 고정 CTA 등에 쓰는 짧은 이름
  *   monthlyPrice         월 구독가. 현재 전 지점 48,900원 동일
  *   description          한 줄 소개. 없으면 null
- *   address / hours / parking / phone     미확인이면 null
+ *   address / locationNote / hours / parking / phone   미확인이면 null
+ *   locationNote         랜드마크 기준 위치 안내 (예: 「○○건물 2층」)
  *   mapUrl               네이버지도 길찾기 URL. 확보 전이면 null (임의 생성 금지)
  *   facilities           확인된 시설만. 상세영역에서 최대 6개까지 chip 으로 노출
  *   floors               층별 안내. 없으면 []
@@ -45,6 +46,7 @@ export const STORES = [
     monthlyPrice: 48900,
     description: null,
     address: '경남 진주시 동진로 183 현대자동차 건물 2·3층',
+    locationNote: null,
     hours: '24시간 연중무휴',
     parking: null,
     phone: '010-5769-6061',
@@ -57,16 +59,15 @@ export const STORES = [
     lockerAvailable: null,
     ctaUrl: null,
     usageGuide: {
-      appName: '짐구독',
-      appType: 'gymgudok',
+      appName: '짐서폿',
+      appType: 'gymsupport',
       entryMethod: 'QR',
-      headline: '짐구독 앱으로 가입하고 QR로 간편하게 입장하세요.',
+      headline: '짐서폿 앱으로 가입하고 QR로 간편하게 입장하세요.',
       steps: [
-        '짐구독 앱 설치',
+        '짐서폿 앱 설치',
         '회원가입',
-        '시청점 구독상품 선택',
-        '결제',
-        'QR로 센터 입장',
+        '구독권 구매',
+        '앱 QR로 입장',
       ],
       // 앱스토어 링크는 검증 완료. QR · 가입링크는 미제공 → 임의 생성 금지
       appStore: {
@@ -75,7 +76,7 @@ export const STORES = [
       },
       qrImage: null,
       signupUrl: null,
-      note: null,
+      note: '앱스토어에는 「짐구독」 으로 등록되어 있습니다.',
     },
     thumbImage: '/images/gymflex-cityhall/thumb.jpg',
     facilityImages: [
@@ -104,6 +105,7 @@ export const STORES = [
     monthlyPrice: 48900,
     description: null,
     address: '경남 진주시 순환로 539 오승빌딩 6·7층',
+    locationNote: null,
     hours: null,
     parking: null,
     phone: '010-6438-7731',
@@ -136,9 +138,8 @@ export const STORES = [
       steps: [
         '바디코디 앱 설치',
         '회원가입',
-        '앱에 카드 등록',
-        '평거점 구독상품 구매',
-        '센터 이용 시작',
+        '구독권 구매',
+        'QR로 입장',
       ],
       // 앱스토어 링크는 검증 완료. QR · 가입링크는 미제공 → 임의 생성 금지
       appStore: {
@@ -171,8 +172,9 @@ export const STORES = [
     monthlyPrice: 48900,
     description: null,
     address: '경남 진주시 북장대로 96 2층',
+    locationNote: '상봉동 바다마트 건물 2층',
     hours: '24시간 운영',
-    parking: '주차 가능',
+    parking: '건물 옆 도로 주차',
     phone: '010-9678-2550',
     mapUrl: null,
     facilities: ['PT 운영', '샤워시설'],
@@ -190,9 +192,8 @@ export const STORES = [
       steps: [
         '바디코디 앱 설치',
         '회원가입',
-        '앱에 카드 등록',
-        '보건대점 구독상품 구매',
-        '센터 이용 시작',
+        '구독권 구매',
+        'QR로 입장',
       ],
       // 앱스토어 링크는 검증 완료. QR · 가입링크는 미제공 → 임의 생성 금지
       appStore: {
@@ -203,8 +204,14 @@ export const STORES = [
       signupUrl: null,
       note: null,
     },
-    thumbImage: null,
-    facilityImages: [],
+    thumbImage: '/images/mf-bogeondae/thumb.jpg',
+    facilityImages: [
+      { src: '/images/mf-bogeondae/10.jpg', category: '센터 전경' },
+      { src: '/images/mf-bogeondae/01.jpg', category: '유산소존' },
+      { src: '/images/mf-bogeondae/02.jpg', category: '머신존' },
+      { src: '/images/mf-bogeondae/03.jpg', category: '프리웨이트존' },
+      { src: '/images/mf-bogeondae/05.jpg', category: '웨이트존' },
+    ],
     links: {},
     subscriptionEnabled: true,
   },
@@ -216,6 +223,7 @@ export const STORES = [
     monthlyPrice: 48900,
     description: '웨이트와 유산소 공간을 갖춘 삼천포 본점 구독 운영 지점.',
     address: '경남 사천시 주공로 18 2층',
+    locationNote: null,
     hours: '24시간 연중무휴',
     parking: '주차 가능',
     phone: '010-5675-7763',
@@ -235,9 +243,8 @@ export const STORES = [
       steps: [
         '바디코디 앱 설치',
         '회원가입',
-        '앱에 카드 등록',
-        '삼천포 본점 구독상품 구매',
-        '센터 이용 시작',
+        '구독권 구매',
+        'QR로 입장',
       ],
       // 앱스토어 링크는 검증 완료. QR · 가입링크는 미제공 → 임의 생성 금지
       appStore: {
@@ -267,6 +274,7 @@ export const STORES = [
     monthlyPrice: 48900,
     description: null,
     address: '경남 사천시 신항로 116',
+    locationNote: '벌리동 김밥천국 건물 2·3층',
     // 아래 항목은 확인되지 않아 null 유지 → 화면에서 행 자체가 숨겨진다
     hours: null,
     parking: null,
@@ -287,9 +295,8 @@ export const STORES = [
       steps: [
         '바디코디 앱 설치',
         '회원가입',
-        '앱에 카드 등록',
-        '벌리점 구독상품 구매',
-        '센터 이용 시작',
+        '구독권 구매',
+        'QR로 입장',
       ],
       // 앱스토어 링크는 검증 완료. QR · 가입링크는 미제공 → 임의 생성 금지
       appStore: {

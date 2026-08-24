@@ -38,6 +38,7 @@ export default function SelectedStore({ store, onSubscribe }) {
   // 값이 있는 행만 (우선순위 순서 그대로)
   const infoRows = [
     { label: '주소', value: store.address },
+    { label: '위치 안내', value: store.locationNote },
     { label: '운영시간', value: store.hours },
     { label: '주차', value: store.parking },
     { label: '상담문의', value: store.phone, type: 'tel' },

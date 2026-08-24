@@ -9,6 +9,7 @@ import SelectedStore from './components/SelectedStore.jsx'
 import AddOns from './components/AddOns.jsx'
 import Facility from './components/Facility.jsx'
 import MemberInterview from './components/MemberInterview.jsx'
+import ComingSoon from './components/ComingSoon.jsx'
 import Benefits from './components/Benefits.jsx'
 import OpenEvent from './components/OpenEvent.jsx'
 import HowToUse from './components/HowToUse.jsx'
@@ -194,7 +195,7 @@ export default function App() {
         <Hero
           basePrice={BASE_MONTHLY_PRICE}
           onSubscribe={() => handleSubscribe('hero')}
-          onViewProducts={() => scrollToId('price')}
+          onViewProducts={() => scrollToId(selectedStoreId ? 'selected-store' : 'store')}
         />
         <CampaignWhy />
         <Pricing
@@ -212,6 +213,7 @@ export default function App() {
         />
         <Facility selectedStore={selectedStore} />
         <MemberInterview />
+        <ComingSoon />
         <Benefits />
         <OpenEvent onConsult={handleConsult} />
         <HowToUse />
@@ -223,12 +225,7 @@ export default function App() {
           onSubscribe={() => handleSubscribe('summary')}
           onPickStore={() => scrollToId('store')}
         />
-        <FinalCta
-          price={quote.total ?? quote.basePrice}
-          selectedStore={selectedStore}
-          onSubscribe={() => handleSubscribe('final')}
-          onConsult={() => handleConsult(null)}
-        />
+        <FinalCta selectedStoreId={selectedStoreId} onSelectStore={handleSelectStore} />
       </main>
 
       <Footer />
