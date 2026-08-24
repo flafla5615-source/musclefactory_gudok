@@ -63,9 +63,14 @@ export default function Hero({ basePrice, onSubscribe, onViewProducts }) {
               월 {formatNumber(basePrice)}원부터
             </Reveal>
 
-            {/* 약정 없음을 한 줄로 못박는다 */}
-            <Reveal delay={250} className="mt-5 flex flex-wrap gap-1.5">
-              {['약정 없이', '매월 자동결제', '언제든 정지'].map((t) => (
+            {/* 1회성 한 달 이용권으로 오해되지 않게 정기결제 상품임을 명시 */}
+            <Reveal as="p" delay={230} className="mt-2 t-caption">
+              월 정기결제 상품
+            </Reveal>
+
+            {/* ⚠ 구독상품에는 이용 일시정지 제도가 없다. '정지' 표현을 쓰지 않는다. */}
+            <Reveal delay={250} className="mt-4 flex flex-wrap gap-1.5">
+              {['장기 회원권 없이', '매월 정기결제', '구독 해지 가능'].map((t) => (
                 <span key={t} className="chip chip-quiet">
                   {t}
                 </span>

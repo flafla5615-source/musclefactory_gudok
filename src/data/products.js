@@ -57,14 +57,14 @@ export const PRODUCTS = [
     price: 59900,
     priceLabel: null,
     priceUnit: '월',
-    summary: '여러 구독 운영지점을 이용하고 싶은 회원용',
-    specs: ['주 이용지점', '타 구독 운영지점 이용'],
+    summary: '주 이용지점에 더해 다른 구독 운영지점도 이용하는 상품',
+    specs: ['주 이용지점 이용', '타 지점 월 합산 10회', '미사용 횟수 이월 불가'],
     storePriceAware: false,
     ctaLabel: '전지점 구독 선택',
     ctaIntent: 'subscribe',
     recommended: false,
     status: 'available',
-    compare: { duration: '월 단위', scope: '주 지점 + 타 구독지점', payment: '정기결제' },
+    compare: { duration: '월 단위', scope: '주 지점 + 타 지점 월 10회', payment: '정기결제' },
   },
 ]
 
