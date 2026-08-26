@@ -20,9 +20,20 @@ const hasOwnPrice = (store) =>
   Boolean(store) && typeof store.monthlyPrice === 'number' && store.monthlyPrice !== BASE_MONTHLY_PRICE
 
 /**
+ * 노출 중인 상품 수에 맞춰 열 수를 정한다.
+ * 상품 하나를 비노출 처리해도 빈 칸이 남지 않고, 다시 열면 자동으로 되돌아온다.
+ * (Tailwind 가 스캔할 수 있도록 클래스는 문자열 그대로 둔다)
+ */
+const GRID_COLS = {
+  1: 'md:grid-cols-1',
+  2: 'md:grid-cols-2',
+  3: 'md:grid-cols-3',
+}
+
+/**
  * STEP 3 — 어떤 방식으로 이용할 건데?
- * 상품 3종만 나란히 비교한다. 12개월 회원권은 여기 넣지 않는다.
- * 모바일은 세로 스택(가독성 우선), md 이상에서 3열 동일 규격.
+ * 판매 중인 상품만 나란히 비교한다. 12개월 회원권은 여기 넣지 않는다.
+ * 모바일은 세로 스택(가독성 우선), md 이상에서 동일 규격 다열.
  */
 export default function Pricing({ selectedStore, selectedProductId, onSelectProduct }) {
   const storeNoteFor = (product) => {
@@ -46,7 +57,9 @@ export default function Pricing({ selectedStore, selectedProductId, onSelectProd
       description="이용방식을 직접 고를 수 있습니다."
     >
       {/* 동일 규격 — auto-rows-fr 로 1열(모바일)에서도 카드 높이가 같아진다 */}
-      <div className="grid auto-rows-fr gap-4 md:grid-cols-3">
+      <div
+        className={`grid auto-rows-fr gap-4 ${GRID_COLS[MAIN_PRODUCTS.length] || 'md:grid-cols-3'}`}
+      >
         {MAIN_PRODUCTS.map((product, i) => (
           <Reveal key={product.id} delay={i * 70} className="h-full">
             <ProductCard

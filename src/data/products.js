@@ -50,6 +50,12 @@ export const PRODUCTS = [
     compare: { duration: '3개월', scope: '정책 추후 공개', payment: '정책 추후 공개' },
   },
   {
+    /* ⚠ 전지점 구독 — 가격·운영정책 변경 가능성이 있어 현재 전체 비노출.
+       삭제하지 않고 status 로만 감춘다.
+       다시 판매할 때: status 를 'available' 로 되돌리고
+                      price / specs / compare 가 확정 정책과 맞는지 먼저 확인할 것.
+                      content.js 의 'multiclub' FAQ 5개와 카테고리도 함께 되살린다.
+       비노출 경로: MAIN_PRODUCTS 필터 → 상품 카드 · COMPARISON_ROWS(비교표) 모두 제외 */
     id: 'multiclub',
     rank: 3,
     badge: 'MULTI CLUB',
@@ -63,7 +69,7 @@ export const PRODUCTS = [
     ctaLabel: '전지점 구독 선택',
     ctaIntent: 'subscribe',
     recommended: false,
-    status: 'available',
+    status: 'hidden',
     compare: { duration: '월 단위', scope: '주 지점 + 타 지점 월 10회', payment: '정기결제' },
   },
 ]

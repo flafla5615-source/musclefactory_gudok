@@ -46,7 +46,9 @@ export default function SelectedStore({ store, onSubscribe }) {
 
   const optionRows = [
     { label: '3개월 구독권', value: yesNo(store.threeMonthAvailable) },
-    { label: '전지점 구독', value: yesNo(store.multiClubAvailable) },
+    // 전지점 구독 상품 비노출 기간 — 지점 상세에도 표시하지 않는다.
+    // 상품이 다시 열리면 아래 한 줄의 주석만 해제하면 된다.
+    // { label: '전지점 구독', value: yesNo(store.multiClubAvailable) },
     {
       label: '운동복',
       value:

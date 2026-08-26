@@ -105,16 +105,17 @@ export const MEMBER_INTERVIEW = {
    ⚠ 일반 월 구독과 전지점 구독의 이용범위를 섞어서 설명하지 않는다.
       전지점 관련 답변에는 반드시 '전지점 구독 회원' 조건을 명시한다.
    ══════════════════════════════════════════════════════════════ */
-export const FAQ_CATEGORIES = [
+const ALL_FAQ_CATEGORIES = [
   { id: 'all', label: '전체' },
   { id: 'subscribe', label: '구독·결제' },
   { id: 'use', label: '이용·입장' },
-  { id: 'multiclub', label: '전지점 이용' },
+  // 전지점 구독 상품 비노출에 맞춰 카테고리도 숨긴다 (products.js multiclub 참고)
+  { id: 'multiclub', label: '전지점 이용', hidden: true },
   { id: 'refund', label: '환불·해지' },
   { id: 'locker', label: '락커' },
 ]
 
-export const FAQS = [
+const ALL_FAQS = [
   /* ── 가입 전 가장 많이 오해하는 4가지 ── */
   {
     id: 'one-month',
@@ -216,8 +217,12 @@ export const FAQS = [
       '회원의 주 이용지점이 폐점하거나 구독서비스 운영을 종료하여 정상적인 이용이 어려운 경우, 대체 지점 이용, 상품 변경 또는 관계 법령에 따른 환급 등의 처리방법을 안내합니다.',
   },
 
-  /* ── 전지점 이용 (전지점 구독 회원 한정) ── */
+  /* ── 전지점 이용 (전지점 구독 회원 한정)
+       ⚠ 전지점 구독 상품 비노출 기간 동안 아래 5개는 hidden 으로 감춘다.
+          상품을 다시 판매할 때 hidden 을 지우면 그대로 살아난다.
+          답변 문구는 이용약관 기준이므로 임의로 수정하지 않는다. ── */
   {
+    hidden: true,
     id: 'multiclub-unlimited',
     category: 'multiclub',
     question: '전지점 구독이면 다른 지점을 무제한으로 이용할 수 있나요?',
@@ -225,6 +230,7 @@ export const FAQS = [
       '아닙니다. 전지점 구독 회원은 등록한 주 이용지점은 정상적으로 이용할 수 있으며, 주 이용지점 외 다른 구독 운영지점 이용은 월 합산 10회로 제한됩니다.',
   },
   {
+    hidden: true,
     id: 'multiclub-each',
     category: 'multiclub',
     question: '다른 지점 10회는 지점마다 각각 10회인가요?',
@@ -232,6 +238,7 @@ export const FAQS = [
       '아닙니다. 전지점 구독 회원의 경우 주 이용지점을 제외한 다른 구독 운영지점의 이용횟수를 모두 합산하여 월 10회입니다.',
   },
   {
+    hidden: true,
     id: 'multiclub-count',
     category: 'multiclub',
     question: '타 지점 이용횟수는 어떻게 계산되나요?',
@@ -239,6 +246,7 @@ export const FAQS = [
       '전지점 구독 회원의 경우 회사의 출입시스템 또는 게이트를 정상적으로 통과한 1회를 이용 1회로 계산합니다.',
   },
   {
+    hidden: true,
     id: 'multiclub-carry',
     category: 'multiclub',
     question: '사용하지 않은 타 지점 이용횟수는 다음 달로 넘어가나요?',
@@ -246,6 +254,7 @@ export const FAQS = [
       '아닙니다. 전지점 구독 회원의 타 지점 이용횟수는 매월 1일 초기화되며, 사용하지 않은 횟수는 다음 달로 이월되지 않습니다.',
   },
   {
+    hidden: true,
     id: 'multiclub-scope',
     category: 'multiclub',
     question: '일반 월 구독도 다른 지점을 이용할 수 있나요?',
@@ -281,6 +290,14 @@ export const FAQS = [
     ],
   },
 ]
+
+/**
+ * 화면에는 hidden 이 아닌 항목만 내보낸다.
+ * 비노출 항목을 지우지 않는 이유 — 상품이 다시 열릴 때 문구를 새로 쓰지 않고
+ * hidden 한 줄만 지우면 그대로 복구되게 하기 위함.
+ */
+export const FAQ_CATEGORIES = ALL_FAQ_CATEGORIES.filter((c) => !c.hidden)
+export const FAQS = ALL_FAQS.filter((f) => !f.hidden)
 
 /* ── 시설 카테고리 (지점 사진 태깅용 참고 목록) ── */
 export const FACILITY_CATEGORIES = [

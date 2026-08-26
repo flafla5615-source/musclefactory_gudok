@@ -31,7 +31,7 @@ export function isOptionAvailable(store, optionId) {
   return field ? store[field] !== false : true
 }
 
-/** 월 단위로 결제되는 상품인지 (월 구독 / 전지점 구독) */
+/** 월 단위로 결제되는 상품인지 (현재는 월 구독) */
 export function isMonthlyProduct(product) {
   return Boolean(product) && product.price !== null && product.priceUnit === '월'
 }
