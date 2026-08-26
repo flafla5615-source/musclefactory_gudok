@@ -102,7 +102,8 @@ export default function SelectedStore({ store, onSubscribe }) {
                 {infoRows.map((row) => (
                   <div key={row.label} className="inforow">
                     <dt>{row.label}</dt>
-                    <dd>
+                    {/* whitespace-pre-line — 운영시간처럼 여러 줄인 값을 그대로 보여준다 */}
+                    <dd className="whitespace-pre-line">
                       {row.type === 'tel' ? (
                         <a
                           href={`tel:${String(row.value).replace(/-/g, '')}`}

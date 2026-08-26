@@ -22,13 +22,15 @@ export default function MemberInterview() {
       </Reveal>
 
       <Reveal as="h2" delay={70} className="mt-4 t-section text-fog">
-        일단 한 달 해보셨는데,
+        먼저 시작한
         <br />
-        어떠셨어요?
+        회원들의 이야기
       </Reveal>
 
       <Reveal as="p" delay={140} className="mt-3 t-body">
-        실제 GYM PASS 이용회원에게 물어봤습니다.
+        장기 회원권 대신,
+        <br />
+        매월 필요한 만큼 운동하는 사람들의 이야기.
       </Reveal>
 
       <div className="section-body">

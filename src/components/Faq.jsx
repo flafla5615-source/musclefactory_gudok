@@ -129,7 +129,7 @@ export default function Faq() {
             onClick={() => openChannel(TERMS_URL, EVENTS.CONSULTATION_CLICK, { channel: 'terms' })}
             className="btn btn-line"
           >
-            이용약관 전체보기
+            구독 이용약관 전체보기
           </button>
         ) : (
           <p className="t-caption">
