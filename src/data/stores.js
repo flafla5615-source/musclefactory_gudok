@@ -23,7 +23,19 @@ export const BRANDS = {
  *   id                   public/images/<id>/ 폴더명과 일치
  *   brand                BRANDS 참조
  *   name / shortName     전체 지점명 / 하단 고정 CTA 등에 쓰는 짧은 이름
+ *   status               'open' 운영 중 | 'coming_soon' 오픈 예정
  *   monthlyPrice         월 구독가. 현재 전 지점 48,900원 동일
+ *   highlights           오픈 예정 지점의 대표 특징 3개 이하. 운영 지점은 없어도 된다
+ *   longTermOffer        선착순 장기권. 이 페이지의 장기권 가격은 전부 여기서만 온다.
+ *                        { months, price, active, upcoming? }
+ *                        · 가격이 바뀌면 이 객체의 price 한 곳만 고치면
+ *                          지점 상세 · 오픈 예정 카드에 동시에 반영된다.
+ *                          (JSX 어디에도 장기권 금액을 하드코딩하지 않는다)
+ *                        · active: false 면 선착순 마감으로 보고 영역을 숨긴다
+ *                        · upcoming: true 면 '오픈 시 예정가' 로 표기한다
+ *                        · 가격 미확정 지점은 null. 임의 생성 금지 → 영역 자체가 사라진다
+ *   ⚠ 장기권은 월 구독보다 시각적 우선순위를 낮춘다. 지점 목록 카드에는 넣지 않고
+ *      지점을 선택했을 때 상세영역에서만 보여준다.
  *   description          한 줄 소개. 없으면 null
  *   address / locationNote / hours / parking / phone   미확인이면 null
  *   locationNote         랜드마크 기준 위치 안내 (예: 「○○건물 2층」)
@@ -44,6 +56,9 @@ export const STORES = [
     name: '짐플릭스 시청점',
     shortName: '시청점',
     monthlyPrice: 48900,
+    status: 'open',
+    // 장기권 가격 미확정 → null. 임의 생성 금지. 확정되면 아래 형태로 채운다.
+    longTermOffer: null,
     description: null,
     address: '경남 진주시 동진로 183 현대자동차 건물 2·3층',
     locationNote: null,
@@ -103,6 +118,8 @@ export const STORES = [
     name: '올드짐 평거점',
     shortName: '평거점',
     monthlyPrice: 48900,
+    status: 'open',
+    longTermOffer: { months: 10, price: 428000, active: true },
     description: null,
     address: '경남 진주시 순환로 539 오승빌딩 6·7층',
     locationNote: null,
@@ -170,6 +187,8 @@ export const STORES = [
     name: '머슬팩토리24 보건대점',
     shortName: '보건대점',
     monthlyPrice: 48900,
+    status: 'open',
+    longTermOffer: { months: 10, price: 399000, active: true },
     description: null,
     address: '경남 진주시 북장대로 96 2층',
     locationNote: '상봉동 바다마트 건물 2층',
@@ -223,6 +242,9 @@ export const STORES = [
     name: '머슬팩토리24 신진주역점',
     shortName: '신진주역점',
     monthlyPrice: 48900,
+    status: 'open',
+    // 장기권 가격 미확정 → null (장기권 영역 자체가 렌더링되지 않는다)
+    longTermOffer: null,
     description: null,
     address: '경남 진주시 개양로 112, 신진주역세권 줌테라스 2층',
     locationNote: null,
@@ -278,6 +300,9 @@ export const STORES = [
     name: '머슬팩토리24 삼천포 본점',
     shortName: '삼천포 본점',
     monthlyPrice: 48900,
+    status: 'open',
+    // ⚠ 다음 달 428,000원으로 변경 예정. 그때 price 만 고치면 전 화면에 반영된다.
+    longTermOffer: { months: 10, price: 499000, active: true },
     description: '웨이트와 유산소 공간을 갖춘 삼천포 본점 구독 운영 지점.',
     address: '경남 사천시 주공로 18 2층',
     locationNote: null,
@@ -329,6 +354,9 @@ export const STORES = [
     name: '머슬팩토리24 삼천포 벌리점',
     shortName: '벌리점',
     monthlyPrice: 48900,
+    status: 'open',
+    // ⚠ 다음 달 399,000원으로 변경 예정. 그때 price 만 고치면 전 화면에 반영된다.
+    longTermOffer: { months: 10, price: 499000, active: true },
     description: null,
     address: '경남 사천시 신항로 116',
     locationNote: '벌리동 김밥천국 건물 2·3층',
@@ -376,12 +404,92 @@ export const STORES = [
     links: {},
     subscriptionEnabled: true,
   },
+  /* ══════════════════════════════════════════════════════════
+     오픈 예정 지점 (status: 'coming_soon')
+     ──────────────────────────────────────────────────────────
+     subscriptionEnabled: false 이므로 SUBSCRIPTION_STORES 에 들어가지 않는다.
+       → 지점 선택 목록 · 선택 상세 · 결제 CTA · 시설 섹션에 나타나지 않는다.
+       → ComingSoon 섹션에서만 안내용으로 렌더링된다.
+
+     ⚠ 실제 센터 사진 미확보. 다른 지점 사진이나 AI 이미지를 넣지 않는다.
+        thumbImage: null / facilityImages: [] 를 유지하면
+        카드가 사진 대기 placeholder 로 표시된다.
+     ⚠ longTermOffer.upcoming: true 는 '오픈 시 적용 예정가' 라는 뜻이다.
+        현재 판매 중인 가격이 아니므로 화면에 '예정' 표기가 함께 나간다.
+
+     오픈이 확정되면 이 객체에서
+       status: 'open' / subscriptionEnabled: true 로 바꾸고
+       longTermOffer 의 upcoming 을 지운 뒤
+       주소·운영시간·주차·전화·시설·사진을 채우면
+       그대로 정식 구독 운영지점 목록으로 올라간다.
+     ══════════════════════════════════════════════════════════ */
+  {
+    id: 'mf-jinju-gangnam',
+    brand: BRANDS.MUSCLE_FACTORY,
+    name: '머슬팩토리24 진주강남점',
+    shortName: '진주강남점',
+    status: 'coming_soon',
+    monthlyPrice: 48900,
+    description: null,
+    highlights: ['약 500평대 대형 프리미엄 헬스장', '다양한 외산 프리미엄 머신 구성', '넓은 주차공간'],
+    longTermOffer: { months: 10, price: 428000, active: true, upcoming: true },
+    address: null,
+    locationNote: null,
+    hours: null,
+    parking: null,
+    phone: null,
+    mapUrl: null,
+    facilities: [],
+    floors: [],
+    threeMonthAvailable: null,
+    multiClubAvailable: null,
+    clothingAvailable: null,
+    lockerAvailable: null,
+    ctaUrl: null,
+    usageGuide: null,
+    thumbImage: null,
+    facilityImages: [],
+    links: {},
+    subscriptionEnabled: false,
+  },
+  {
+    id: 'mf-hyeoksin',
+    brand: BRANDS.MUSCLE_FACTORY,
+    name: '머슬팩토리24 혁신점',
+    shortName: '혁신점',
+    status: 'coming_soon',
+    monthlyPrice: 48900,
+    description: null,
+    highlights: ['약 500평대 대형 프리미엄 헬스장', '다양한 외산 프리미엄 머신 구성'],
+    longTermOffer: { months: 10, price: 428000, active: true, upcoming: true },
+    address: null,
+    locationNote: null,
+    hours: null,
+    parking: null,
+    phone: null,
+    mapUrl: null,
+    facilities: [],
+    floors: [],
+    threeMonthAvailable: null,
+    multiClubAvailable: null,
+    clothingAvailable: null,
+    lockerAvailable: null,
+    ctaUrl: null,
+    usageGuide: null,
+    thumbImage: null,
+    facilityImages: [],
+    links: {},
+    subscriptionEnabled: false,
+  },
 ]
 
 /** 상세영역에 노출할 시설 chip 최대 개수 — UI 가 복잡해지지 않게 제한한다 */
 export const MAX_FACILITY_CHIPS = 6
 
 export const SUBSCRIPTION_STORES = STORES.filter((s) => s.subscriptionEnabled)
+
+/** 오픈 예정 지점 — 운영 지점 목록 뒤에 안내용으로만 노출한다 */
+export const COMING_SOON_STORES = STORES.filter((s) => s.status === 'coming_soon')
 
 export const getStore = (id) => STORES.find((s) => s.id === id) || null
 

@@ -65,6 +65,9 @@ export default function SelectedStore({ store, onSubscribe }) {
     },
   ].filter((r) => r.value)
 
+  // 선착순 장기권 — 가격 미확정(null)이거나 마감(active:false)이면 영역 자체를 만들지 않는다
+  const offer = store.longTermOffer?.active ? store.longTermOffer : null
+
   const facilities = store.facilities.slice(0, MAX_FACILITY_CHIPS)
   const hasAnyDetail =
     infoRows.length > 0 || facilities.length > 0 || store.floors.length > 0 || optionRows.length > 0
@@ -164,6 +167,31 @@ export default function SelectedStore({ store, onSubscribe }) {
           </>
         ) : (
           <p className="mt-5 t-caption">지점 상세 정보는 순차적으로 공개됩니다.</p>
+        )}
+
+        {/* 선착순 장기권 — 이 지점에 확정 가격이 있을 때만.
+            ⚠ 메인은 어디까지나 월 구독이다. 액센트 컬러를 쓰지 않고
+               월 구독가(19px)보다 작은 크기로 서브 옵션처럼 보여준다.
+            ⚠ 금액은 stores.js 의 longTermOffer.price 에서만 온다. 하드코딩 금지. */}
+        {offer && (
+          <div
+            className="mt-6 rounded-[12px] px-4 py-4"
+            style={{ background: 'var(--color-ink)', border: '1px solid var(--color-line)' }}
+          >
+            <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+              <span className="text-[13px] font-semibold text-mute">
+                선착순 장기권{offer.upcoming ? ' (예정)' : ''}
+              </span>
+              <span className="tnum text-[15px] font-bold text-fog">
+                {offer.months}개월 {formatNumber(offer.price)}원
+              </span>
+            </div>
+            <p className="mt-2 t-caption">
+              {offer.upcoming
+                ? '오픈 시 적용 예정 가격이며 변경될 수 있습니다.'
+                : '선착순 인원 마감 시 혜택이 종료될 수 있습니다.'}
+            </p>
+          </div>
         )}
 
         {/* CTA */}

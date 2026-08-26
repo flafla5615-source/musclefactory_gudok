@@ -215,7 +215,11 @@ export default function App() {
         <MemberInterview />
         <ComingSoon />
         <Benefits />
-        <OpenEvent onConsult={handleConsult} />
+        {/* ⚠ 12개월 회원권 비노출 — 지점별 선착순 장기권(stores.js longTermOffer)과
+            같은 금액(399,000원)이 기간만 다르게 겹쳐 가격 모순이 생긴다.
+            다시 팔려면 products.js EVENT_PRODUCT.status 를 'available' 로 바꾸고
+            아래 한 줄의 주석을 해제하면 된다. */}
+        {/* <OpenEvent onConsult={handleConsult} /> */}
         <HowToUse />
         <Faq />
         <Summary

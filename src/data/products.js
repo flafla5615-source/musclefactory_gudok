@@ -74,7 +74,13 @@ export const PRODUCTS = [
   },
 ]
 
-/** 12개월 회원권 — 메인 PRICE 영역에서 경쟁시키지 않고 별도 영역에서만 노출 */
+/* 12개월 회원권
+   ⚠ 현재 전체 비노출 (status: 'hidden').
+      장기권을 지점별 선착순 장기권(stores.js longTermOffer)으로 옮기면서
+      같은 페이지에 '12개월 399,000원' 과 '보건대 10개월 399,000원' 이
+      동시에 뜨는 가격 모순이 생겨 내렸다.
+      다시 팔려면 status 를 'available' 로 바꾸고
+      App.jsx 의 <OpenEvent /> 주석을 해제하면 된다. */
 export const EVENT_PRODUCT = {
   id: 'annual',
   badge: 'SUBSCRIPTION OPEN EVENT',
@@ -84,14 +90,17 @@ export const EVENT_PRODUCT = {
   summary: 'GYM PASS 오픈 기념 별도 회원권',
   ctaLabel: '12개월 회원권 문의하기',
   ctaIntent: 'consult',
-  status: 'available',
+  status: 'hidden',
   compare: { duration: '12개월', scope: '정책 추후 공개', payment: '일시결제' },
 }
 
 export const MAIN_PRODUCTS = PRODUCTS.filter((p) => p.status !== 'hidden').sort((a, b) => a.rank - b.rank)
 
-/** 비교표 — 메인 3종 + 12개월 */
-export const COMPARISON_ROWS = [...MAIN_PRODUCTS, EVENT_PRODUCT]
+/** 비교표 — 노출 중인 상품만. hidden 상품은 표에서도 빠진다 */
+export const COMPARISON_ROWS = [
+  ...MAIN_PRODUCTS,
+  ...(EVENT_PRODUCT.status === 'hidden' ? [] : [EVENT_PRODUCT]),
+]
 
 export const getProduct = (id) =>
   id === EVENT_PRODUCT.id ? EVENT_PRODUCT : PRODUCTS.find((p) => p.id === id) || null
