@@ -195,7 +195,7 @@ export default function App() {
         <Hero
           basePrice={BASE_MONTHLY_PRICE}
           onSubscribe={() => handleSubscribe('hero')}
-          onViewProducts={() => scrollToId(selectedStoreId ? 'selected-store' : 'store')}
+          onViewUsage={() => scrollToId(selectedStoreId ? 'selected-store' : 'how-to-use')}
         />
         <CampaignWhy />
         <Pricing

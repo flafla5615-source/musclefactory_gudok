@@ -4,61 +4,175 @@ import { formatNumber } from '../lib/format.js'
 /**
  * HERO
  *
- * 첫 화면 3초 안에 이 세 가지만 읽혀야 한다.
- *   GYM PASS / 일단 한 달. / 월 48,900원
+ * 첫 화면에서 스크롤 없이 이 네 가지가 읽혀야 한다.
+ *   ① GYM PASS 가 무엇인지
+ *   ② 올드짐 + 머슬팩토리24 의 월 구독 서비스라는 것
+ *   ③ 장기 회원권이 아니라 한 달 단위라는 것
+ *   ④ 월 48,900원부터
+ *
+ * 시각 위계(의도적으로 이 순서로 읽히게 한다)
+ *   1. 메인 카피  2. 월 48,900원부터  3. GYM PASS  4. OLDGYM × MUSCLE FACTORY24
+ *
  * 지점목록 · 옵션 · 3개월 · 12개월 상품을 여기에 넣지 않는다.
  *
- * 배경 사진 교체는 HERO_IMAGE 한 줄이면 된다.
- * (index.html 의 preload 경로도 함께 수정)
+ * ⚠ 배경은 실제 지점 사진 2장(브랜드당 1장)이다.
+ *    crop(object-fit: cover) 과 dark overlay 외의 가공을 하지 않는다.
+ *    두 사진을 합성해 하나의 공간처럼 보이게 만들지 않는다 —
+ *    가운데 seam 그라디언트는 경계를 부드럽게 할 뿐 공간을 잇지 않는다.
+ *    배경 사진 교체 시 index.html 의 preload 경로도 함께 수정한다.
  */
-const HERO_IMAGE = '/images/gymflex-cityhall/hero.jpg'
+const BRAND_SHOTS = {
+  // 왼쪽(데스크톱) / 위쪽(모바일)
+  oldgym: {
+    src: '/images/oldgym-pyeonggeo/04.jpg',
+    credit: 'OLDGYM 평거점',
+  },
+  // 오른쪽(데스크톱) / 아래쪽(모바일)
+  muscleFactory: {
+    src: '/images/mf-sinjinju/sinjinju-09.jpg',
+    credit: 'MUSCLE FACTORY 24 신진주역점',
+  },
+}
 
-export default function Hero({ basePrice, onSubscribe, onViewProducts }) {
+const INK = '13,13,13'
+
+export default function Hero({ basePrice, onSubscribe, onViewUsage }) {
   return (
     <section id="top" className="relative min-h-[100dvh] overflow-hidden bg-ink">
-      <div className="absolute inset-0">
-        <img
-          src={HERO_IMAGE}
-          alt=""
-          aria-hidden="true"
-          fetchpriority="high"
-          decoding="async"
-          className="h-full w-full object-cover"
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(180deg, rgba(13,13,13,0.9) 0%, rgba(13,13,13,0.62) 40%, rgba(13,13,13,0.96) 100%)',
-          }}
-        />
+      {/* ── 배경: 두 브랜드 실사 ─────────────────────────────
+          모바일 상/하 45:55, 데스크톱 좌/우 50:50 */}
+      <div className="absolute inset-0 flex flex-col lg:flex-row">
+        <div className="relative h-[45%] w-full lg:h-full lg:w-1/2">
+          <img
+            src={BRAND_SHOTS.oldgym.src}
+            alt=""
+            aria-hidden="true"
+            fetchpriority="high"
+            decoding="async"
+            className="h-full w-full object-cover"
+          />
+        </div>
+        <div className="relative h-[55%] w-full lg:h-full lg:w-1/2">
+          <img
+            src={BRAND_SHOTS.muscleFactory.src}
+            alt=""
+            aria-hidden="true"
+            fetchpriority="high"
+            decoding="async"
+            className="h-full w-full object-cover"
+          />
+        </div>
       </div>
 
-      <div className="relative flex min-h-[100dvh] flex-col justify-end pb-24 pt-28 lg:justify-center lg:pb-20">
+      {/* seam — 콜라주처럼 딱 잘려 보이지 않게 경계만 어둡게 눌러준다 */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-[45%] h-36 -translate-y-1/2 lg:hidden"
+        style={{
+          background: `linear-gradient(180deg, rgba(${INK},0) 0%, rgba(${INK},0.92) 50%, rgba(${INK},0) 100%)`,
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-y-0 left-1/2 hidden w-56 -translate-x-1/2 lg:block"
+        style={{
+          background: `linear-gradient(90deg, rgba(${INK},0) 0%, rgba(${INK},0.94) 50%, rgba(${INK},0) 100%)`,
+        }}
+      />
+
+      {/* 가독성 확보용 다크 오버레이
+          모바일: 카피가 아래쪽에 있으므로 세로 그라디언트 하나로 충분하다.
+          데스크톱: 카피가 왼쪽에 있으므로 왼쪽만 눌러 오른쪽(머슬팩토리24) 사진이
+                    실제로 보이게 한다. 두 브랜드가 모두 보여야 하는 것이 이번 수정의 핵심. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 lg:hidden"
+        style={{
+          background: `linear-gradient(180deg, rgba(${INK},0.86) 0%, rgba(${INK},0.58) 30%, rgba(${INK},0.82) 66%, rgba(${INK},0.97) 100%)`,
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 hidden lg:block"
+        style={{
+          background: `linear-gradient(180deg, rgba(${INK},0.52) 0%, rgba(${INK},0.04) 24%, rgba(${INK},0.04) 70%, rgba(${INK},0.62) 100%)`,
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 hidden lg:block"
+        style={{
+          background: `linear-gradient(90deg, rgba(${INK},0.8) 0%, rgba(${INK},0.74) 42%, rgba(${INK},0.62) 58%, rgba(${INK},0.3) 78%, rgba(${INK},0.2) 100%)`,
+        }}
+      />
+
+      {/* 어느 쪽이 어느 브랜드 사진인지 — 데스크톱에서만 (모바일은 가독성 우선) */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-6 hidden lg:block"
+      >
         <div className="wrap lg:!max-w-[1080px]">
-          <div className="lg:max-w-xl">
-            {/* 서비스명 */}
-            <Reveal as="p" className="t-label" style={{ color: 'var(--color-accent-soft)' }}>
-              GYM PASS
+          <div className="flex items-center justify-between text-[10.5px] font-semibold uppercase tracking-[0.14em] text-mute-2">
+            <span>{BRAND_SHOTS.oldgym.credit}</span>
+            <span>{BRAND_SHOTS.muscleFactory.credit}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* ── 콘텐츠 ───────────────────────────────────────── */}
+      <div className="relative flex min-h-[100dvh] flex-col justify-end pb-20 pt-28 lg:justify-center lg:pb-24">
+        <div className="wrap lg:!max-w-[1080px]">
+          <div className="lg:max-w-2xl">
+            {/* 서비스명 + 운영 브랜드 — GYM PASS 가 무엇인지 먼저 밝힌다 */}
+            <Reveal>
+              <p
+                className="font-display text-[15px] font-bold leading-none tracking-[0.16em] sm:text-[17px]"
+                style={{ color: 'var(--color-accent-soft)' }}
+              >
+                GYM PASS
+              </p>
+              <p
+                className="mt-2.5 font-display text-[11px] font-semibold leading-none tracking-[0.14em] sm:text-[12px]"
+                style={{ color: 'rgba(244,244,244,0.6)' }}
+              >
+                OLDGYM <span style={{ color: 'rgba(244,244,244,0.34)' }}>×</span> MUSCLE FACTORY24
+              </p>
             </Reveal>
 
-            {/* 캠페인 메시지 */}
-            <Reveal as="h1" delay={70} className="mt-5 t-hero text-fog">
-              헬스장,
-              <br />한 달만 등록해도 됩니다.
+            {/* 메인 카피 — 하나의 질문으로 읽혀야 한다.
+                문장이 기존보다 길어 t-hero 보다 한 단계 낮춘 크기를 쓴다. */}
+            <Reveal
+              as="h1"
+              delay={70}
+              className="mt-6 text-fog"
+              style={{
+                fontSize: 'clamp(29px, 7.8vw, 56px)',
+                fontWeight: 800,
+                lineHeight: 1.13,
+                letterSpacing: '-0.035em',
+              }}
+            >
+              넷플릭스도 한 달인데,
+              <br />왜 헬스장은 1년일까요?
             </Reveal>
 
             <Reveal as="p" delay={140} className="mt-5 t-body">
-              장기 회원권 없이
+              그래서 바꿨습니다.
               <br />
-              매월 결제하고 필요한 만큼 이용하세요.
+              올드짐과 머슬팩토리24,
+              <br />
+              이제 한 달부터.
             </Reveal>
 
             <Reveal
               as="p"
               delay={200}
               className="mt-6 t-hero-price"
-              style={{ color: 'var(--color-accent-soft)' }}
+              style={{
+                color: 'var(--color-accent-soft)',
+                // 메인 카피보다 항상 한 단계 작게 — 위계 1순위는 카피, 2순위가 가격
+                fontSize: 'clamp(25px, 6.5vw, 44px)',
+              }}
             >
               월 {formatNumber(basePrice)}원부터
             </Reveal>
@@ -77,7 +191,7 @@ export default function Hero({ basePrice, onSubscribe, onViewProducts }) {
               ))}
             </Reveal>
 
-            <Reveal delay={300} className="mt-8 flex flex-col gap-2.5 sm:flex-row sm:gap-3">
+            <Reveal delay={300} className="mt-7 flex flex-col gap-2.5 sm:flex-row sm:gap-3">
               <button
                 type="button"
                 onClick={onSubscribe}
@@ -87,7 +201,7 @@ export default function Hero({ basePrice, onSubscribe, onViewProducts }) {
               </button>
               <button
                 type="button"
-                onClick={onViewProducts}
+                onClick={onViewUsage}
                 className="btn btn-line sm:btn-auto sm:!px-7"
               >
                 이용방법 보기

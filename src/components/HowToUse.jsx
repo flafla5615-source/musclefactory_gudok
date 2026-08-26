@@ -10,7 +10,7 @@ import { FLOW_SUMMARY } from '../data/content.js'
  */
 export default function HowToUse() {
   return (
-    <Section tone="ink-2" title="시작은 간단하게.">
+    <Section id="how-to-use" tone="ink-2" title="시작은 간단하게.">
       <ol className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {FLOW_SUMMARY.map((step, i) => (
           <Reveal as="li" key={step.no} delay={i * 60} className="h-full">
