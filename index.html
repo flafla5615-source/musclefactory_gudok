@@ -17,21 +17,42 @@
     />
     <link rel="canonical" href="https://musclefactory-gudok.vercel.app/" />
 
-    <!-- Open Graph -->
+    <!-- ══════════════════════════════════════════════════════════
+         공유 미리보기 (카카오톡 · 네이버 · 페이스북 · X)
+         ⚠ og:image 는 반드시 절대 URL 이어야 한다.
+            카카오톡 크롤러는 상대경로를 읽지 못해 썸네일이 비어 보인다.
+         ⚠ 대표 이미지 교체 시 public/gympass-og.png 만 갈아끼우고
+            카카오 디버거에서 캐시 초기화를 해야 반영된다.
+            https://developers.kakao.com/tool/debugger/sharing
+         ══════════════════════════════════════════════════════════ -->
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ko_KR" />
     <meta property="og:site_name" content="GYM PASS" />
-    <meta property="og:title" content="헬스장, 한 달만 등록해도 됩니다. | 월 48,900원" />
+    <meta property="og:url" content="https://musclefactory-gudok.vercel.app/" />
+    <meta property="og:title" content="올드짐 · 머슬팩토리24 | 헬스도 이제 한 달부터" />
     <meta
       property="og:description"
-      content="장기 회원권 없이 매월 결제하고 필요한 만큼. 내 주변 지점을 선택하고 바로 시작하세요."
+      content="1년 등록 부담 없이, 필요한 만큼. 올드짐 · 머슬팩토리24 구독 지점을 확인해보세요."
     />
-    <meta property="og:image" content="/images/mf-sinjinju/sinjinju-09.jpg" />
+    <meta
+      property="og:image"
+      content="https://musclefactory-gudok.vercel.app/gympass-og.png"
+    />
+    <meta property="og:image:secure_url" content="https://musclefactory-gudok.vercel.app/gympass-og.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1536" />
+    <meta property="og:image:height" content="1024" />
+    <meta property="og:image:alt" content="올드짐 · 머슬팩토리24 GYM PASS — 헬스도 이제 한 달부터" />
+
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="헬스장, 한 달만 등록해도 됩니다. | 월 48,900원" />
+    <meta name="twitter:title" content="올드짐 · 머슬팩토리24 | 헬스도 이제 한 달부터" />
     <meta
       name="twitter:description"
-      content="장기 회원권 없이 헬스장을 한 달부터. 월 48,900원."
+      content="1년 등록 부담 없이, 필요한 만큼. 올드짐 · 머슬팩토리24 구독 지점을 확인해보세요."
+    />
+    <meta
+      name="twitter:image"
+      content="https://musclefactory-gudok.vercel.app/gympass-og.png"
     />
 
     <!-- HERO 배경 실사진 선로딩 (LCP) — 사진 교체 시 src/components/Hero.jsx 의 BRAND_SHOTS 와 함께 수정 -->
