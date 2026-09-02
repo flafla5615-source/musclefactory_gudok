@@ -27,11 +27,12 @@ export const BRANDS = {
  *   monthlyPrice         월 구독가. 현재 전 지점 48,900원 동일
  *   highlights           오픈 예정 지점의 대표 특징 3개 이하. 운영 지점은 없어도 된다
  *   longTermOffer        선착순 장기권. 이 페이지의 장기권 가격은 전부 여기서만 온다.
- *                        { months, price, active, upcoming? }
+ *                        { months, price, active, label?, upcoming? }
  *                        · 가격이 바뀌면 이 객체의 price 한 곳만 고치면
  *                          지점 상세 · 오픈 예정 카드에 동시에 반영된다.
  *                          (JSX 어디에도 장기권 금액을 하드코딩하지 않는다)
  *                        · active: false 면 선착순 마감으로 보고 영역을 숨긴다
+ *                        · label 을 주면 '{label} 장기권' 으로 표기한다 (예: '오픈 선착순')
  *                        · upcoming: true 면 '오픈 시 예정가' 로 표기한다
  *                        · 가격 미확정 지점은 null. 임의 생성 금지 → 영역 자체가 사라진다
  *   ⚠ 장기권은 월 구독보다 시각적 우선순위를 낮춘다. 지점 목록 카드에는 넣지 않고
@@ -404,6 +405,40 @@ export const STORES = [
     links: {},
     subscriptionEnabled: true,
   },
+  {
+    /* 2026-09 COMING SOON → 정식 오픈 전환.
+       ⚠ 아직 채워지지 않은 항목은 임의로 만들지 않는다 (null 유지 → 행 자체가 안 보인다).
+          주소 · 운영시간 · 전화 · 시설 · 실사진 · 구독 결제링크(ctaUrl) 미확보.
+          ctaUrl 이 null 이면 CTA 가 잘못된 페이지로 가지 않고 상담 시트를 연다.
+       ⚠ usageGuide 도 확정 전이라 null 이다. 머슬팩토리24 라는 이유만으로
+          바디코디를 단정하지 않는다 → 앱 중립 기본 안내(DEFAULT_USAGE_GUIDE)가 표시된다. */
+    id: 'mf-jinju-gangnam',
+    brand: BRANDS.MUSCLE_FACTORY,
+    name: '머슬팩토리24 진주강남점',
+    shortName: '진주강남점',
+    status: 'open',
+    monthlyPrice: 48900,
+    description: '약 500평대 규모의 진주 대형 프리미엄 헬스장. 다양한 외산 프리미엄 머신을 갖췄습니다.',
+    longTermOffer: { months: 10, price: 428000, active: true, label: '오픈 선착순' },
+    address: null,
+    locationNote: null,
+    hours: null,
+    parking: '넓은 주차공간',
+    phone: null,
+    mapUrl: null,
+    facilities: [],
+    floors: [],
+    threeMonthAvailable: null,
+    multiClubAvailable: null,
+    clothingAvailable: null,
+    lockerAvailable: null,
+    ctaUrl: null,
+    usageGuide: null,
+    thumbImage: null,
+    facilityImages: [],
+    links: {},
+    subscriptionEnabled: true,
+  },
   /* ══════════════════════════════════════════════════════════
      오픈 예정 지점 (status: 'coming_soon')
      ──────────────────────────────────────────────────────────
@@ -423,35 +458,6 @@ export const STORES = [
        주소·운영시간·주차·전화·시설·사진을 채우면
        그대로 정식 구독 운영지점 목록으로 올라간다.
      ══════════════════════════════════════════════════════════ */
-  {
-    id: 'mf-jinju-gangnam',
-    brand: BRANDS.MUSCLE_FACTORY,
-    name: '머슬팩토리24 진주강남점',
-    shortName: '진주강남점',
-    status: 'coming_soon',
-    monthlyPrice: 48900,
-    description: null,
-    highlights: ['약 500평대 대형 프리미엄 헬스장', '다양한 외산 프리미엄 머신 구성', '넓은 주차공간'],
-    longTermOffer: { months: 10, price: 428000, active: true, upcoming: true },
-    address: null,
-    locationNote: null,
-    hours: null,
-    parking: null,
-    phone: null,
-    mapUrl: null,
-    facilities: [],
-    floors: [],
-    threeMonthAvailable: null,
-    multiClubAvailable: null,
-    clothingAvailable: null,
-    lockerAvailable: null,
-    ctaUrl: null,
-    usageGuide: null,
-    thumbImage: null,
-    facilityImages: [],
-    links: {},
-    subscriptionEnabled: false,
-  },
   {
     id: 'mf-hyeoksin',
     brand: BRANDS.MUSCLE_FACTORY,

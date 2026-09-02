@@ -180,7 +180,8 @@ export default function SelectedStore({ store, onSubscribe }) {
           >
             <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
               <span className="text-[13px] font-semibold text-mute">
-                선착순 장기권{offer.upcoming ? ' (예정)' : ''}
+                {offer.label ? `${offer.label} 장기권` : '선착순 장기권'}
+                {offer.upcoming ? ' (예정)' : ''}
               </span>
               <span className="tnum text-[15px] font-bold text-fog">
                 {offer.months}개월 {formatNumber(offer.price)}원
