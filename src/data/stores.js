@@ -359,8 +359,8 @@ export const STORES = [
     // ⚠ 다음 달 399,000원으로 변경 예정. 그때 price 만 고치면 전 화면에 반영된다.
     longTermOffer: { months: 10, price: 499000, active: true },
     description: null,
-    address: '경남 사천시 신항로 116',
-    locationNote: '벌리동 김밥천국 건물 2·3층',
+    address: '경남 사천시 신항로 116 라움빌딩 3층',
+    locationNote: null,
     // 아래 항목은 확인되지 않아 null 유지 → 화면에서 행 자체가 숨겨진다
     hours: null,
     parking: null,
@@ -410,8 +410,7 @@ export const STORES = [
        ⚠ 아직 채워지지 않은 항목은 임의로 만들지 않는다 (null 유지 → 행 자체가 안 보인다).
           주소 · 운영시간 · 전화 · 시설 · 실사진 · 구독 결제링크(ctaUrl) 미확보.
           ctaUrl 이 null 이면 CTA 가 잘못된 페이지로 가지 않고 상담 시트를 연다.
-       ⚠ usageGuide 도 확정 전이라 null 이다. 머슬팩토리24 라는 이유만으로
-          바디코디를 단정하지 않는다 → 앱 중립 기본 안내(DEFAULT_USAGE_GUIDE)가 표시된다. */
+       ⚠ 이용 앱은 바디코디로 확정 (본사 확인). 시청점만 짐서폿을 쓴다. */
     id: 'mf-jinju-gangnam',
     brand: BRANDS.MUSCLE_FACTORY,
     name: '머슬팩토리24 진주강남점',
@@ -419,7 +418,7 @@ export const STORES = [
     status: 'open',
     monthlyPrice: 48900,
     description: '약 500평대 규모의 진주 대형 프리미엄 헬스장. 다양한 외산 프리미엄 머신을 갖췄습니다.',
-    longTermOffer: { months: 10, price: 428000, active: true, label: '오픈 선착순' },
+    longTermOffer: { months: 10, price: 428000, active: true },
     address: null,
     locationNote: null,
     hours: null,
@@ -433,41 +432,53 @@ export const STORES = [
     clothingAvailable: null,
     lockerAvailable: null,
     ctaUrl: null,
-    usageGuide: null,
+    usageGuide: {
+      appName: '바디코디',
+      appType: 'bodycodi',
+      entryMethod: null,
+      headline: '바디코디 앱에서 가입하고 구독상품을 구매하세요.',
+      steps: ['바디코디 앱 설치', '회원가입', '구독권 구매', 'QR로 입장'],
+      // 다른 바디코디 지점과 동일한 검증된 링크. 새 URL 임의 생성 금지
+      appStore: {
+        ios: 'https://apps.apple.com/kr/app/id1557408918',
+        android: 'https://play.google.com/store/apps/details?id=com.bodycodi.bpay',
+      },
+      qrImage: null,
+      signupUrl: null,
+      note: null,
+    },
+    // ⚠ 실사진 미제공 → placeholder 유지. 다른 지점 사진·AI 이미지 사용 금지.
+    //    사진을 받으면 public/images/mf-jinju-gangnam/ 에 넣고 아래 두 줄만 채운다.
     thumbImage: null,
     facilityImages: [],
     links: {},
     subscriptionEnabled: true,
   },
   /* ══════════════════════════════════════════════════════════
-     오픈 예정 지점 (status: 'coming_soon')
+     현재 오픈 예정(status: 'coming_soon') 지점은 없다.
      ──────────────────────────────────────────────────────────
-     subscriptionEnabled: false 이므로 SUBSCRIPTION_STORES 에 들어가지 않는다.
-       → 지점 선택 목록 · 선택 상세 · 결제 CTA · 시설 섹션에 나타나지 않는다.
-       → ComingSoon 섹션에서만 안내용으로 렌더링된다.
-
-     ⚠ 실제 센터 사진 미확보. 다른 지점 사진이나 AI 이미지를 넣지 않는다.
-        thumbImage: null / facilityImages: [] 를 유지하면
-        카드가 사진 대기 placeholder 로 표시된다.
-     ⚠ longTermOffer.upcoming: true 는 '오픈 시 적용 예정가' 라는 뜻이다.
-        현재 판매 중인 가격이 아니므로 화면에 '예정' 표기가 함께 나간다.
-
-     오픈이 확정되면 이 객체에서
-       status: 'open' / subscriptionEnabled: true 로 바꾸고
-       longTermOffer 의 upcoming 을 지운 뒤
-       주소·운영시간·주차·전화·시설·사진을 채우면
-       그대로 정식 구독 운영지점 목록으로 올라간다.
+     새 지점을 오픈 예정으로 올릴 때는 아래를 지키면 된다.
+       status: 'coming_soon' / subscriptionEnabled: false
+       → SUBSCRIPTION_STORES 에서 빠져 지점 선택 목록 · 선택 상세 ·
+         결제 CTA · 시설 섹션에 나타나지 않고, ComingSoon 섹션에만 노출된다.
+       longTermOffer 에 upcoming: true 를 주면 '오픈 시 예정가' 로 표기된다.
+       highlights 에 대표 특징을 3개 이하로 넣는다.
+     COMING_SOON_STORES 가 비면 ComingSoon 섹션은 통째로 렌더링되지 않는다.
+     가짜 다음 지점을 임의로 만들지 않는다.
      ══════════════════════════════════════════════════════════ */
   {
+    /* COMING SOON → 정식 오픈 전환.
+       ⚠ 주소 · 운영시간 · 전화 · 세부 주차정책 · 시설 · 실사진 미확보 → null 유지.
+          임의 생성 금지. null 항목은 상세에서 행 자체가 렌더링되지 않는다.
+       ⚠ ctaUrl 이 null 이면 CTA 가 잘못된 페이지로 가지 않고 상담 시트를 연다. */
     id: 'mf-hyeoksin',
     brand: BRANDS.MUSCLE_FACTORY,
     name: '머슬팩토리24 혁신점',
     shortName: '혁신점',
-    status: 'coming_soon',
+    status: 'open',
     monthlyPrice: 48900,
-    description: null,
-    highlights: ['약 500평대 대형 프리미엄 헬스장', '다양한 외산 프리미엄 머신 구성'],
-    longTermOffer: { months: 10, price: 428000, active: true, upcoming: true },
+    description: '약 500평대 규모의 대형 프리미엄 헬스장. 다양한 외산 프리미엄 머신을 갖췄습니다.',
+    longTermOffer: { months: 10, price: 428000, active: true },
     address: null,
     locationNote: null,
     hours: null,
@@ -481,11 +492,27 @@ export const STORES = [
     clothingAvailable: null,
     lockerAvailable: null,
     ctaUrl: null,
-    usageGuide: null,
+    usageGuide: {
+      appName: '바디코디',
+      appType: 'bodycodi',
+      entryMethod: null,
+      headline: '바디코디 앱에서 가입하고 구독상품을 구매하세요.',
+      steps: ['바디코디 앱 설치', '회원가입', '구독권 구매', 'QR로 입장'],
+      // 다른 바디코디 지점과 동일한 검증된 링크. 새 URL 임의 생성 금지
+      appStore: {
+        ios: 'https://apps.apple.com/kr/app/id1557408918',
+        android: 'https://play.google.com/store/apps/details?id=com.bodycodi.bpay',
+      },
+      qrImage: null,
+      signupUrl: null,
+      note: null,
+    },
+    // ⚠ 실사진 미제공 → placeholder 유지. 다른 지점 사진·AI 이미지 사용 금지.
+    //    사진을 받으면 public/images/mf-hyeoksin/ 에 넣고 아래 두 줄만 채운다.
     thumbImage: null,
     facilityImages: [],
     links: {},
-    subscriptionEnabled: false,
+    subscriptionEnabled: true,
   },
 ]
 
