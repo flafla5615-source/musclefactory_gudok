@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { GLOBAL_CONTACT } from '../data/contact.js'
 import { formatNumber } from '../lib/format.js'
 import { EVENTS, openChannel, track } from '../lib/tracking.js'
+import AppCta from './AppCta.jsx'
 
 /**
  * 구독 신청 / 상담 시트.
@@ -51,8 +52,6 @@ export default function ConsultSheet({ open, onClose, store, quote }) {
       label: '추가옵션',
       value: quote.options.map((o) => `${o.name} +${formatNumber(o.price)}원`).join(', '),
     },
-    // 선택 지점이 바뀌면 번호도 함께 바뀐다
-    store?.phone && { label: '상담문의', value: store.phone },
     {
       label: quote.calculable ? '월 예상 결제금액' : '가격',
       value:
@@ -110,18 +109,8 @@ export default function ConsultSheet({ open, onClose, store, quote }) {
           </dl>
 
           <div className="mt-6 flex flex-col gap-2.5">
-            {/* 선택 지점 전화 상담 — 번호가 있는 지점만 */}
-            {store?.phone && (
-              <a
-                href={`tel:${store.phone.replace(/-/g, '')}`}
-                onClick={() =>
-                  track(EVENTS.CONSULTATION_CLICK, { store_id: store.id, channel: 'phone' })
-                }
-                className="btn btn-primary"
-              >
-                {store.shortName} 전화하기
-              </a>
-            )}
+            {/* 선택 지점의 앱으로 바로 — 전화 CTA 는 두지 않는다 */}
+            {store && <AppCta store={store} />}
 
             {channels.length > 0 ? (
               channels.map((c) => (
@@ -141,29 +130,14 @@ export default function ConsultSheet({ open, onClose, store, quote }) {
                 </button>
               ))
             ) : (
-              // 전화번호도 채널도 없을 때만 안내한다
-              !store?.phone && (
+              // 앱 CTA 도 채널도 없을 때만 안내한다
+              !store?.usageGuide?.appStore && (
                 <p className="t-caption">
-                  이 지점의 문의 채널은 준비 중입니다. 곧 안내드리겠습니다.
+                  이 지점의 안내 채널은 준비 중입니다. 곧 안내드리겠습니다.
                 </p>
               )
             )}
 
-            {GLOBAL_CONTACT.phone && (
-              <a
-                href={`tel:${GLOBAL_CONTACT.phone.replace(/-/g, '')}`}
-                onClick={() =>
-                  track(EVENTS.CONSULTATION_CLICK, {
-                    store_id: store?.id ?? null,
-                    product_id: product?.id ?? null,
-                    channel: 'phone',
-                  })
-                }
-                className="btn btn-primary"
-              >
-                전화 문의 {GLOBAL_CONTACT.phone}
-              </a>
-            )}
           </div>
 
           <p className="mt-5 t-caption">

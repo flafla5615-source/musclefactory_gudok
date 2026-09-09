@@ -1,14 +1,25 @@
 import { useEffect, useState } from 'react'
 import { formatNumber } from '../lib/format.js'
+import {
+  appCtaShortLabel,
+  detectPlatform,
+  getAppInfo,
+  storeUrlFor,
+} from '../lib/appstore.js'
+import { EVENTS, openChannel } from '../lib/tracking.js'
 
 /**
  * 하단 고정 CTA — 지점·상품·옵션 선택 state 를 그대로 반영한다.
  * 어떤 조합에서도 bar 전체 높이(76px)가 바뀌지 않는다.
  *
- *   미선택                    → 월 48,900원부터      / 내 지점 선택하기
- *   평거 + 월 구독            → 평거점 · 월 48,900원  / 구독 시작하기
- *   평거 + 월 구독 + 개인락커  → 평거점 · 월 63,900원  / 구독 시작하기
- *   보건대 + 월 구독          → 보건대점 · 월 48,900원 / 보건대점 시작하기
+ *   미선택      → 월 48,900원부터        / 내 지점 선택하기
+ *   시청점      → 시청점 · 월 48,900원    / 짐서폿에서 시작하기
+ *   평거점      → 평거점 · 월 48,900원    / 바디코디에서 시작하기
+ *   + 개인락커  → 평거점 · 월 63,900원    / 바디코디에서 시작하기
+ *
+ * 버튼 문구는 선택 지점의 앱(stores.js usageGuide)에서 온다. 하드코딩하지 않는다.
+ * 모바일 바(lg:hidden)이므로 기기 감지 결과대로 해당 스토어로 바로 보낸다.
+ * 데스크톱 폭에서 열렸을 때만 상세영역의 스토어 선택 UI 로 안내한다.
  */
 const BAR_HEIGHT = 76
 
@@ -29,8 +40,27 @@ export default function StickyCta({ store, quote, onSubscribe }) {
       : `${store.name} · ${quote.product.name}`
     : null
 
-  const label = store ? `${store.shortName} 시작하기` : '일단 한 달 시작하기'
+  const appInfo = getAppInfo(store)
+  const label = store
+    ? appInfo
+      ? appCtaShortLabel(appInfo)
+      : `${store.shortName} 시작하기`
+    : '내 지점 선택하기'
   const amount = quote.calculable ? quote.total : quote.basePrice
+
+  const handleClick = () => {
+    if (!appInfo) return onSubscribe()
+    const url = storeUrlFor(appInfo, detectPlatform())
+    if (url) {
+      return openChannel(url, EVENTS.SIGNUP_START, {
+        store_id: store.id,
+        app: appInfo.appType,
+        source: 'sticky',
+      })
+    }
+    // 스토어를 특정할 수 없으면(데스크톱) 상세영역의 선택 UI 로 보낸다
+    document.getElementById('selected-store')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   return (
     <div
@@ -69,7 +99,7 @@ export default function StickyCta({ store, quote, onSubscribe }) {
 
         <button
           type="button"
-          onClick={onSubscribe}
+          onClick={handleClick}
           tabIndex={visible ? 0 : -1}
           className="btn btn-primary btn-auto flex-shrink-0 !px-5 !text-[14px]"
         >

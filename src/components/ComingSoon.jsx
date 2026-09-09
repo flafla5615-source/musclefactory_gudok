@@ -133,10 +133,10 @@ export default function ComingSoon() {
                       >
                         <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
                           <span className="text-[13px] font-semibold text-mute">
-                            선착순 장기권 (예정)
+                            선착순 {offer.months}개월권 (예정)
                           </span>
                           <span className="tnum text-[15px] font-bold text-fog">
-                            {offer.months}개월 {formatNumber(offer.price)}원
+                            {formatNumber(offer.price)}원
                           </span>
                         </div>
                         <p className="mt-2 t-caption">

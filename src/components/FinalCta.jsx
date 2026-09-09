@@ -1,11 +1,12 @@
 import Reveal from './Reveal.jsx'
 import { SUBSCRIPTION_STORES } from '../data/stores.js'
-import { EVENTS, track } from '../lib/tracking.js'
 
 /**
  * FINAL CTA
  * 정보를 다시 길게 반복하지 않는다. 지점을 바로 고를 수 있게만 한다.
- * 전화번호가 있는 지점은 tel: 링크로 바로 연결한다.
+ * ⚠ 전화 문의 버튼을 두지 않는다. 상주 직원이 없는 지점이 있어
+ *    랜딩을 전화문의 중심으로 운영하지 않는다.
+ *    지점을 고르면 상세영역에서 앱 설치 CTA 로 이어진다.
  */
 export default function FinalCta({ selectedStoreId, onSelectStore }) {
   return (
@@ -26,34 +27,14 @@ export default function FinalCta({ selectedStoreId, onSelectStore }) {
             const selected = selectedStoreId === store.id
             return (
               <Reveal key={store.id} delay={i * 50}>
-                <div className="flex gap-2.5">
-                  <button
-                    type="button"
-                    onClick={() => onSelectStore(store)}
-                    className={`btn flex-1 !justify-between !px-5 ${selected ? 'btn-primary' : 'btn-line'}`}
-                  >
-                    <span className="truncate text-left">{store.name}</span>
-                    <iconify-icon icon="solar:alt-arrow-right-linear" width="16"></iconify-icon>
-                  </button>
-
-                  {store.phone && (
-                    <a
-                      href={`tel:${store.phone.replace(/-/g, '')}`}
-                      onClick={() =>
-                        track(EVENTS.CONSULTATION_CLICK, {
-                          store_id: store.id,
-                          channel: 'phone',
-                          source: 'final',
-                        })
-                      }
-                      aria-label={`${store.name} 전화 문의`}
-                      className="btn btn-line btn-auto flex-shrink-0 !px-4"
-                    >
-                      <iconify-icon icon="solar:phone-linear" width="18"></iconify-icon>
-                      <span className="hidden sm:inline">전화 문의</span>
-                    </a>
-                  )}
-                </div>
+                <button
+                  type="button"
+                  onClick={() => onSelectStore(store)}
+                  className={`btn w-full !justify-between !px-5 ${selected ? 'btn-primary' : 'btn-line'}`}
+                >
+                  <span className="truncate text-left">{store.name}</span>
+                  <iconify-icon icon="solar:alt-arrow-right-linear" width="16"></iconify-icon>
+                </button>
               </Reveal>
             )
           })}

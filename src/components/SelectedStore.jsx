@@ -1,10 +1,12 @@
 import Reveal from './Reveal.jsx'
 import Section from './Section.jsx'
 import StoreUsageGuide from './StoreUsageGuide.jsx'
+import AppCta from './AppCta.jsx'
 import { formatNumber, monthlyPriceFor } from '../lib/format.js'
 import { BASE_MONTHLY_PRICE, ADD_ONS } from '../data/products.js'
 import { MAX_FACILITY_CHIPS } from '../data/stores.js'
-import { EVENTS, openChannel, track } from '../lib/tracking.js'
+import { EVENTS, openChannel } from '../lib/tracking.js'
+import { getAppInfo } from '../lib/appstore.js'
 
 /** 가능/불가 여부(boolean)를 소비자 문구로. null 이면 행을 만들지 않는다. */
 const yesNo = (v) => (v === true ? '가능' : v === false ? '미운영' : null)
@@ -13,7 +15,7 @@ const yesNo = (v) => (v === true ? '가능' : v === false ? '미운영' : null)
  * STEP 5 — 내가 고른 지점은 어떤 곳인데?
  *
  * 표시 우선순위
- *   지점명 → 월 구독가격 → 주소 → 운영시간 → 주차 → 전화
+ *   지점명 → 월 구독가격 → 주소 → 운영시간 → 주차
  *   → 주요시설 → 옵션 → CTA
  *
  * ⚠ 값이 null 인 항목은 행 자체를 렌더링하지 않는다.
@@ -41,7 +43,6 @@ export default function SelectedStore({ store, onSubscribe }) {
     { label: '위치 안내', value: store.locationNote },
     { label: '운영시간', value: store.hours },
     { label: '주차', value: store.parking },
-    { label: '상담문의', value: store.phone, type: 'tel' },
   ].filter((r) => r.value)
 
   const optionRows = [
@@ -67,6 +68,8 @@ export default function SelectedStore({ store, onSubscribe }) {
 
   // 선착순 장기권 — 가격 미확정(null)이거나 마감(active:false)이면 영역 자체를 만들지 않는다
   const offer = store.longTermOffer?.active ? store.longTermOffer : null
+  // 앱스토어 링크가 있는 지점은 앱 설치 CTA 가 메인 전환버튼이 된다
+  const hasApp = Boolean(getAppInfo(store))
 
   const facilities = store.facilities.slice(0, MAX_FACILITY_CHIPS)
   const hasAnyDetail =
@@ -108,18 +111,7 @@ export default function SelectedStore({ store, onSubscribe }) {
                   <div key={row.label} className="inforow">
                     <dt>{row.label}</dt>
                     {/* whitespace-pre-line — 운영시간처럼 여러 줄인 값을 그대로 보여준다 */}
-                    <dd className="whitespace-pre-line">
-                      {row.type === 'tel' ? (
-                        <a
-                          href={`tel:${String(row.value).replace(/-/g, '')}`}
-                          className="hover:underline"
-                        >
-                          {row.value}
-                        </a>
-                      ) : (
-                        row.value
-                      )}
-                    </dd>
+                    <dd className="whitespace-pre-line">{row.value}</dd>
                   </div>
                 ))}
               </dl>
@@ -180,11 +172,10 @@ export default function SelectedStore({ store, onSubscribe }) {
           >
             <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
               <span className="text-[13px] font-semibold text-mute">
-                {offer.label ? `${offer.label} 장기권` : '선착순 장기권'}
-                {offer.upcoming ? ' (예정)' : ''}
+                선착순 {offer.months}개월권{offer.upcoming ? ' (예정)' : ''}
               </span>
               <span className="tnum text-[15px] font-bold text-fog">
-                {offer.months}개월 {formatNumber(offer.price)}원
+                {formatNumber(offer.price)}원
               </span>
             </div>
             <p className="mt-2 t-caption">
@@ -195,23 +186,17 @@ export default function SelectedStore({ store, onSubscribe }) {
           </div>
         )}
 
-        {/* CTA */}
+        {/* CTA — 이 지점이 쓰는 앱으로 보낸다.
+            ⚠ 전화 상담 버튼을 두지 않는다. 상주 직원이 없는 지점이 있어
+               랜딩을 전화문의 중심으로 운영하지 않는다. */}
         <div className="card-foot flex flex-col gap-2.5">
-          <button type="button" onClick={onSubscribe} className="btn btn-primary">
-            {store.shortName} 시작하기
-          </button>
-
-          {/* 전화 상담 — 번호가 있는 지점만. 모바일에서 바로 연결된다. */}
-          {store.phone && (
-            <a
-              href={`tel:${store.phone.replace(/-/g, '')}`}
-              onClick={() =>
-                track(EVENTS.CONSULTATION_CLICK, { store_id: store.id, channel: 'phone' })
-              }
-              className="btn btn-line"
-            >
-              전화 상담하기
-            </a>
+          {hasApp ? (
+            <AppCta store={store} />
+          ) : (
+            // 앱스토어 링크가 아직 없는 지점만 기존 상담 동선을 유지한다
+            <button type="button" onClick={onSubscribe} className="btn btn-primary">
+              {store.shortName} 시작하기
+            </button>
           )}
 
           {channels.length > 0 && (

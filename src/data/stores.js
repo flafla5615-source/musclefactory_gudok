@@ -58,8 +58,7 @@ export const STORES = [
     shortName: '시청점',
     monthlyPrice: 48900,
     status: 'open',
-    // 장기권 가격 미확정 → null. 임의 생성 금지. 확정되면 아래 형태로 채운다.
-    longTermOffer: null,
+    longTermOffer: { months: 10, price: 428000, active: true },
     description: null,
     address: '경남 진주시 동진로 183 현대자동차 건물 2·3층',
     locationNote: null,
@@ -244,8 +243,7 @@ export const STORES = [
     shortName: '신진주역점',
     monthlyPrice: 48900,
     status: 'open',
-    // 장기권 가격 미확정 → null (장기권 영역 자체가 렌더링되지 않는다)
-    longTermOffer: null,
+    longTermOffer: { months: 10, price: 428000, active: true },
     description: null,
     address: '경남 진주시 개양로 112, 신진주역세권 줌테라스 2층',
     locationNote: null,
@@ -302,8 +300,7 @@ export const STORES = [
     shortName: '삼천포 본점',
     monthlyPrice: 48900,
     status: 'open',
-    // ⚠ 다음 달 428,000원으로 변경 예정. 그때 price 만 고치면 전 화면에 반영된다.
-    longTermOffer: { months: 10, price: 499000, active: true },
+    longTermOffer: { months: 10, price: 428000, active: true },
     description: '웨이트와 유산소 공간을 갖춘 삼천포 본점 구독 운영 지점.',
     address: '경남 사천시 주공로 18 2층',
     locationNote: null,
@@ -356,8 +353,7 @@ export const STORES = [
     shortName: '벌리점',
     monthlyPrice: 48900,
     status: 'open',
-    // ⚠ 다음 달 399,000원으로 변경 예정. 그때 price 만 고치면 전 화면에 반영된다.
-    longTermOffer: { months: 10, price: 499000, active: true },
+    longTermOffer: { months: 10, price: 428000, active: true },
     description: null,
     address: '경남 사천시 신항로 116 라움빌딩 3층',
     locationNote: null,
