@@ -24,6 +24,9 @@ import { formatNumber } from '../lib/format.js'
  *
  * 내용은 전부 stores.js 에서 온다. 이 파일에 지점명·특징·금액을 쓰지 않는다.
  */
+/** 오픈 예정 지점 수에 맞춰 열을 잡는다 (Tailwind 가 스캔하도록 문자열 그대로) */
+const GRID_COLS = { 1: 'md:grid-cols-1', 2: 'md:grid-cols-2', 3: 'md:grid-cols-3' }
+
 export default function ComingSoon() {
   const [openId, setOpenId] = useState(null)
 
@@ -40,11 +43,15 @@ export default function ComingSoon() {
       }
       description="구독 가능한 지점은 계속 늘어납니다."
     >
-      <div className="grid auto-rows-fr gap-3 md:grid-cols-2">
+      <div
+        className={`grid auto-rows-fr gap-3 ${GRID_COLS[COMING_SOON_STORES.length] || 'md:grid-cols-3'}`}
+      >
         {COMING_SOON_STORES.map((store, i) => {
           const open = openId === store.id
           const offer = store.longTermOffer?.active ? store.longTermOffer : null
           const gallery = store.facilityImages || []
+          // 사진·특징·가격이 전부 없는 지점은 펼칠 게 없으므로 아코디언을 만들지 않는다
+          const hasDetail = gallery.length > 0 || store.highlights?.length > 0 || Boolean(offer)
 
           return (
             <Reveal key={store.id} delay={i * 70} className="h-full">
@@ -61,9 +68,23 @@ export default function ComingSoon() {
                       style={{ objectPosition: '50% 32%' }}
                     />
                   ) : (
-                    <span className="flex h-full w-full flex-col items-center justify-center gap-2 text-mute-2">
-                      <iconify-icon icon="solar:gallery-linear" width="22"></iconify-icon>
-                      <span className="text-[11px]">센터 사진 준비 중</span>
+                    /* 실사진 미확보 — 다른 지점 사진·AI 이미지를 쓰지 않고
+                       브랜드 기반 타이포 placeholder 로 채운다 */
+                    <span
+                      className="flex h-full w-full flex-col items-center justify-center gap-1.5"
+                      style={{ background: 'var(--color-ink)' }}
+                    >
+                      <span
+                        className="font-display text-[15px] font-bold tracking-[0.14em]"
+                        style={{ color: store.brand.color }}
+                      >
+                        {store.brand.key}
+                      </span>
+                      {store.openLabel && (
+                        <span className="font-display text-[11px] font-semibold tracking-[0.12em] text-mute-2">
+                          {store.openLabel}
+                        </span>
+                      )}
                     </span>
                   )}
 
@@ -87,30 +108,48 @@ export default function ComingSoon() {
                     {store.name}
                   </h3>
 
+                  {store.openLabel && (
+                    <p
+                      className="mt-2 font-display text-[12.5px] font-bold tracking-[0.1em]"
+                      style={{ color: 'var(--color-accent-soft)' }}
+                    >
+                      {store.openLabel}
+                    </p>
+                  )}
+
                   {store.description && <p className="mt-2 t-body">{store.description}</p>}
 
-                  {/* 정보형 CTA — 결제로 이어지지 않는다 */}
-                  <div className="card-foot !mt-4">
-                    <button
-                      type="button"
-                      onClick={() => setOpenId(open ? null : store.id)}
-                      aria-expanded={open}
-                      aria-controls={`coming-${store.id}`}
-                      className="btn btn-line"
-                    >
-                      지점 정보 보기
-                      <iconify-icon
-                        icon="solar:alt-arrow-down-linear"
-                        width="15"
-                        style={{
-                          transform: open ? 'rotate(180deg)' : 'none',
-                          transition: 'transform .4s var(--ease-spring)',
-                        }}
-                      ></iconify-icon>
-                    </button>
-                  </div>
+                  <p className="mt-2.5 text-[13px] font-semibold leading-relaxed text-fog">
+                    곧 GYM PASS에서
+                    <br />
+                    만나보실 수 있습니다.
+                  </p>
 
-                  <div id={`coming-${store.id}`} hidden={!open} className="mt-4">
+                  {/* 정보형 CTA — 결제로 이어지지 않는다.
+                      보여줄 상세(사진·특징·장기권)가 있을 때만 만든다. */}
+                  {hasDetail && (
+                    <div className="card-foot !mt-4">
+                      <button
+                        type="button"
+                        onClick={() => setOpenId(open ? null : store.id)}
+                        aria-expanded={open}
+                        aria-controls={`coming-${store.id}`}
+                        className="btn btn-line"
+                      >
+                        지점 정보 보기
+                        <iconify-icon
+                          icon="solar:alt-arrow-down-linear"
+                          width="15"
+                          style={{
+                            transform: open ? 'rotate(180deg)' : 'none',
+                            transition: 'transform .4s var(--ease-spring)',
+                          }}
+                        ></iconify-icon>
+                      </button>
+                    </div>
+                  )}
+
+                  <div id={`coming-${store.id}`} hidden={!open || !hasDetail} className="mt-4">
                     {/* 시설 특징 */}
                     {store.highlights?.length > 0 && (
                       <ul className="flex flex-wrap gap-1.5">

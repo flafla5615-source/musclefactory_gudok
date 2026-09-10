@@ -244,6 +244,11 @@ export default function Hero({ basePrice, onSubscribe, onViewUsage }) {
                 이용방법 보기
               </button>
             </Reveal>
+
+            {/* 확장성 한 줄 — 메인 카피보다 강조하지 않는다 */}
+            <Reveal as="p" delay={330} className="mt-3.5 t-caption">
+              구독 가능 지점은 계속 늘어납니다.
+            </Reveal>
           </div>
         </div>
       </div>

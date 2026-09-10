@@ -24,6 +24,8 @@ export const BRANDS = {
  *   brand                BRANDS 참조
  *   name / shortName     전체 지점명 / 하단 고정 CTA 등에 쓰는 짧은 이름
  *   status               'open' 운영 중 | 'coming_soon' 오픈 예정
+ *   openLabel            오픈 예정 지점의 오픈 시점 (예: '2026.10 OPEN')
+ *                        확정 전이면 월 단위까지만. 날짜를 임의로 적지 않는다
  *   monthlyPrice         월 구독가. 현재 전 지점 48,900원 동일
  *   highlights           오픈 예정 지점의 대표 특징 3개 이하. 운영 지점은 없어도 된다
  *   longTermOffer        선착순 장기권. 이 페이지의 장기권 가격은 전부 여기서만 온다.
@@ -464,42 +466,19 @@ export const STORES = [
     links: {},
     subscriptionEnabled: true,
   },
-  /* ══════════════════════════════════════════════════════════
-     현재 오픈 예정(status: 'coming_soon') 지점은 없다.
-     ──────────────────────────────────────────────────────────
-     새 지점을 오픈 예정으로 올릴 때는 아래를 지키면 된다.
-       status: 'coming_soon' / subscriptionEnabled: false
-       → SUBSCRIPTION_STORES 에서 빠져 지점 선택 목록 · 선택 상세 ·
-         결제 CTA · 시설 섹션에 나타나지 않고, ComingSoon 섹션에만 노출된다.
-       longTermOffer 에 upcoming: true 를 주면 '오픈 시 예정가' 로 표기된다.
-       highlights 에 대표 특징을 3개 이하로 넣는다.
-     COMING_SOON_STORES 가 비면 ComingSoon 섹션은 통째로 렌더링되지 않는다.
-     가짜 다음 지점을 임의로 만들지 않는다.
-     ══════════════════════════════════════════════════════════ */
   {
-    /* COMING SOON → 정식 오픈 전환.
-       ⚠ 주소 · 운영시간 · 전화 · 세부 주차정책 · 시설 · 실사진 미확보 → null 유지.
-          임의 생성 금지. null 항목은 상세에서 행 자체가 렌더링되지 않는다.
-       ⚠ ctaUrl 이 null 이면 CTA 가 잘못된 페이지로 가지 않고 상담 시트를 연다. */
+    /* 2026-10 오픈 완료. 기존 구독 지점과 동일한 구매동선을 탄다.
+       ⚠ 주소 · 운영시간 · 전화 · 세부 주차정책 · 시설은 미확보라 null 유지.
+          임의 생성 금지. null 항목은 상세에서 행 자체가 렌더링되지 않는다. */
     id: 'mf-hyeoksin',
     brand: BRANDS.MUSCLE_FACTORY,
     name: '머슬팩토리24 혁신점',
     shortName: '혁신점',
-    // 오픈 전. subscriptionEnabled: false 라 지점 선택 목록·결제 CTA 에 나오지 않고
-    // ComingSoon 섹션에서만 안내된다.
-    status: 'coming_soon',
+    // 오픈 완료. 다른 운영 지점과 동일한 구독 동선을 탄다.
+    status: 'open',
     monthlyPrice: 48900,
-    // 카드에 한 줄로 노출되는 요약
     description: '약 500평대 대형 프리미엄 헬스장',
-    highlights: [
-      '넓은 유산소존',
-      '다양한 웨이트 머신',
-      '프리웨이트 · 파워랙존',
-      '리커버리존',
-      '개방감 있는 통창 운동공간',
-    ],
-    // 오픈 선착순 장기권 — upcoming: true 라 '예정' 으로 표기된다
-    longTermOffer: { months: 10, price: 428000, active: true, upcoming: true, label: '오픈 선착순' },
+    longTermOffer: { months: 10, price: 428000, active: true },
     address: null,
     locationNote: null,
     hours: null,
@@ -540,6 +519,118 @@ export const STORES = [
       { src: '/images/mf-hyeoksin/05.jpg', category: '머신 구성' },
       { src: '/images/mf-hyeoksin/06.jpg', category: '리커버리존' },
     ],
+    links: {},
+    subscriptionEnabled: true,
+  },
+  /* ══════════════════════════════════════════════════════════
+     오픈 예정 지점 (status: 'coming_soon')
+     ──────────────────────────────────────────────────────────
+     status: 'coming_soon' / subscriptionEnabled: false
+       → SUBSCRIPTION_STORES 에서 빠져 지점 선택 목록 · 선택 상세 ·
+         결제 CTA · 시설 섹션에 나타나지 않고, ComingSoon 섹션에만 노출된다.
+       → 구독 시트에서도 안내만 되고 앱스토어로 보내지 않는다.
+
+     ⚠ 가격 미확정 → monthlyPrice: null / longTermOffer: null.
+        다른 지점 가격(48,900 · 428,000)을 복사해 넣지 않는다.
+        COMING SOON 상태에서는 화면에 가격을 노출하지 않는다.
+     ⚠ 실사진 미확보 → thumbImage: null / facilityImages: [].
+        다른 지점 사진이나 AI 이미지를 절대 쓰지 않는다.
+        사진이 없으면 브랜드 기반 타이포 placeholder 로 표시된다.
+     ⚠ 오픈일이 월 단위까지만 확정 → openLabel 에 '2026.10 OPEN'.
+        며칠인지 임의로 적지 않는다.
+
+     오픈하면 이 객체에서
+       status: 'open' / subscriptionEnabled: true 로 바꾸고
+       monthlyPrice · longTermOffer · 사진 · usageGuide 를 채우면
+       그대로 기존 구독 지점과 같은 구매동선에 들어간다.
+     ══════════════════════════════════════════════════════════ */
+  {
+    id: 'mf-jinju-jeongchon',
+    brand: BRANDS.MUSCLE_FACTORY,
+    name: '머슬팩토리24 진주정촌점',
+    shortName: '진주정촌점',
+    status: 'coming_soon',
+    openLabel: '2026.10 OPEN',
+    monthlyPrice: null,
+    description: null,
+    highlights: [],
+    longTermOffer: null,
+    address: null,
+    locationNote: null,
+    hours: null,
+    parking: null,
+    phone: null,
+    mapUrl: null,
+    facilities: [],
+    floors: [],
+    threeMonthAvailable: null,
+    multiClubAvailable: null,
+    clothingAvailable: null,
+    lockerAvailable: null,
+    ctaUrl: null,
+    usageGuide: null,
+    thumbImage: null,
+    facilityImages: [],
+    links: {},
+    subscriptionEnabled: false,
+  },
+  {
+    id: 'mf-jinju-gyodae',
+    brand: BRANDS.MUSCLE_FACTORY,
+    name: '머슬팩토리24 진주교대점',
+    shortName: '진주교대점',
+    status: 'coming_soon',
+    openLabel: '2026.10 OPEN',
+    monthlyPrice: null,
+    description: null,
+    highlights: [],
+    longTermOffer: null,
+    address: null,
+    locationNote: null,
+    hours: null,
+    parking: null,
+    phone: null,
+    mapUrl: null,
+    facilities: [],
+    floors: [],
+    threeMonthAvailable: null,
+    multiClubAvailable: null,
+    clothingAvailable: null,
+    lockerAvailable: null,
+    ctaUrl: null,
+    usageGuide: null,
+    thumbImage: null,
+    facilityImages: [],
+    links: {},
+    subscriptionEnabled: false,
+  },
+  {
+    id: 'oldgym-sacheon',
+    brand: BRANDS.OLD_GYM,
+    name: '올드짐 사천점',
+    shortName: '사천점',
+    status: 'coming_soon',
+    openLabel: '2026.10 OPEN',
+    monthlyPrice: null,
+    description: null,
+    highlights: [],
+    longTermOffer: null,
+    address: null,
+    locationNote: null,
+    hours: null,
+    parking: null,
+    phone: null,
+    mapUrl: null,
+    facilities: [],
+    floors: [],
+    threeMonthAvailable: null,
+    multiClubAvailable: null,
+    clothingAvailable: null,
+    lockerAvailable: null,
+    ctaUrl: null,
+    usageGuide: null,
+    thumbImage: null,
+    facilityImages: [],
     links: {},
     subscriptionEnabled: false,
   },

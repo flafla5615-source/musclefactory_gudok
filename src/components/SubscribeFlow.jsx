@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import QRCode from 'qrcode'
-import { SUBSCRIPTION_STORES } from '../data/stores.js'
+import { COMING_SOON_STORES, SUBSCRIPTION_STORES } from '../data/stores.js'
 import { DEFAULT_USAGE_GUIDE } from '../data/content.js'
 import { formatNumber } from '../lib/format.js'
 import { BASE_MONTHLY_PRICE } from '../data/products.js'
@@ -213,6 +213,37 @@ export default function SubscribeFlow({ open, onClose, initialStore = null, onPi
                   </li>
                 ))}
               </ul>
+
+              {/* 오픈 예정 지점 — 안내만 한다.
+                  ⚠ 선택 대상이 아니다. 눌러도 앱스토어 구매로 보내지 않는다. */}
+              {COMING_SOON_STORES.length > 0 && (
+                <div
+                  className="mt-5 rounded-[14px] px-4 py-4"
+                  style={{ background: 'var(--color-ink)', border: '1px solid var(--color-line)' }}
+                >
+                  <p
+                    className="font-display text-[11px] font-bold tracking-[0.12em]"
+                    style={{ color: 'var(--color-accent-soft)' }}
+                  >
+                    COMING SOON
+                  </p>
+                  <ul className="mt-3 flex flex-col gap-2">
+                    {COMING_SOON_STORES.map((s) => (
+                      <li key={s.id} className="flex items-center justify-between gap-3">
+                        <span className="min-w-0 truncate text-[13.5px] font-semibold text-mute">
+                          {s.name}
+                        </span>
+                        {s.openLabel && (
+                          <span className="chip chip-quiet !h-[22px] flex-shrink-0 !px-2 !text-[10.5px]">
+                            {s.openLabel}
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-3 t-caption">오픈하면 이곳에서 바로 구독할 수 있습니다.</p>
+                </div>
+              )}
             </>
           ) : (
             /* ── 2단계 : 이 지점은 어떤 앱으로 구독하나 ────────── */
