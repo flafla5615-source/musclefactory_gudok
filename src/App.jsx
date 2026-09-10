@@ -125,7 +125,7 @@ export default function App() {
         return
       }
       // 다음으로 안 고른 단계로 안내
-      scrollToId(selectedStoreId ? 'options' : 'store')
+      scrollToId(selectedStoreId ? 'selected-store' : 'store')
     },
     [selectedStoreId],
   )
@@ -208,12 +208,16 @@ export default function App() {
         />
         <Stores selectedStoreId={selectedStoreId} onSelectStore={handleSelectStore} />
         <SelectedStore store={selectedStore} onSubscribe={() => handleSubscribe('selected-store')} />
-        <AddOns
+        {/* ⚠ 운동복 · 개인락커 부가서비스 비노출.
+            고객 화면은 월 48,900원 → 지점 선택 → 앱 설치 → 구독권 구매 한 줄기만 남긴다.
+            데이터(products.js ADD_ONS, stores.js clothingAvailable/lockerAvailable)는
+            지우지 않았으므로 아래 한 줄의 주석만 해제하면 그대로 돌아온다. */}
+        {/* <AddOns
           store={selectedStore}
           quote={quote}
           selectedOptionIds={selectedOptionIds}
           onToggleOption={handleToggleOption}
-        />
+        /> */}
         <Facility selectedStore={selectedStore} />
         <MemberInterview />
         <ComingSoon />

@@ -2,7 +2,7 @@ import Reveal from './Reveal.jsx'
 import Section from './Section.jsx'
 import StoreUsageGuide from './StoreUsageGuide.jsx'
 import { formatNumber, monthlyPriceFor } from '../lib/format.js'
-import { BASE_MONTHLY_PRICE, ADD_ONS } from '../data/products.js'
+import { BASE_MONTHLY_PRICE } from '../data/products.js'
 import { MAX_FACILITY_CHIPS } from '../data/stores.js'
 import { EVENTS, openChannel } from '../lib/tracking.js'
 
@@ -33,7 +33,6 @@ export default function SelectedStore({ store, onSubscribe }) {
   }
 
   const price = monthlyPriceFor(store, BASE_MONTHLY_PRICE)
-  const addOn = (id) => ADD_ONS.find((a) => a.id === id)
 
   // 값이 있는 행만 (우선순위 순서 그대로)
   const infoRows = [
@@ -43,25 +42,16 @@ export default function SelectedStore({ store, onSubscribe }) {
     { label: '주차', value: store.parking },
   ].filter((r) => r.value)
 
+  /* ⚠ 부가서비스(운동복 · 개인락커)는 고객 화면에 노출하지 않는다.
+     '월 48,900원에 포함' 처럼 오해될 문구도 쓰지 않는다.
+     stores.js 의 clothingAvailable / lockerAvailable 데이터는 그대로 두었으니
+     다시 팔게 되면 아래 주석만 되살리면 된다.
+     ⚠ 전지점 구독도 상품 비노출 기간이라 함께 감춰져 있다. */
   const optionRows = [
     { label: '3개월 구독권', value: yesNo(store.threeMonthAvailable) },
-    // 전지점 구독 상품 비노출 기간 — 지점 상세에도 표시하지 않는다.
-    // 상품이 다시 열리면 아래 한 줄의 주석만 해제하면 된다.
     // { label: '전지점 구독', value: yesNo(store.multiClubAvailable) },
-    {
-      label: '운동복',
-      value:
-        store.clothingAvailable === true
-          ? `월 ${formatNumber(addOn('wear').price)}원`
-          : yesNo(store.clothingAvailable),
-    },
-    {
-      label: '개인락커',
-      value:
-        store.lockerAvailable === true
-          ? `월 ${formatNumber(addOn('locker').price)}원`
-          : yesNo(store.lockerAvailable),
-    },
+    // { label: '운동복', value: ... clothingAvailable },
+    // { label: '개인락커', value: ... lockerAvailable },
   ].filter((r) => r.value)
 
   // 선착순 장기권 — 가격 미확정(null)이거나 마감(active:false)이면 영역 자체를 만들지 않는다

@@ -48,7 +48,7 @@ export const BENEFITS = [
   { id: 'start-month', icon: 'solar:calendar-mark-linear', title: '한 달부터 시작', description: '기간을 미리 정하지 않아도 됩니다.' },
   { id: 'no-lump-sum', icon: 'solar:wallet-money-linear', title: '큰 목돈 부담 감소', description: '한 번에 결제하지 않습니다.' },
   { id: 'my-store', icon: 'solar:map-point-linear', title: '가까운 지점 선택', description: '다닐 센터를 직접 고릅니다.' },
-  { id: 'add-ons', icon: 'solar:checklist-minimalistic-linear', title: '필요한 옵션만 추가', description: '운동복과 락커는 선택입니다.' },
+  { id: 'app-subscribe', icon: 'solar:smartphone-linear', title: '앱에서 바로 구독', description: '지점을 고르고 앱에서 시작합니다.' },
 ]
 
 /* ══════════════════════════════════════════════════════════════
@@ -112,7 +112,8 @@ const ALL_FAQ_CATEGORIES = [
   // 전지점 구독 상품 비노출에 맞춰 카테고리도 숨긴다 (products.js multiclub 참고)
   { id: 'multiclub', label: '전지점 이용', hidden: true },
   { id: 'refund', label: '환불·해지' },
-  { id: 'locker', label: '락커' },
+  // 운동복·개인락커 부가서비스 비노출에 맞춰 락커 카테고리도 숨긴다
+  { id: 'locker', label: '락커', hidden: true },
 ]
 
 const ALL_FAQS = [
@@ -178,9 +179,12 @@ const ALL_FAQS = [
     category: 'subscribe',
     question: '월 구독료는 얼마인가요?',
     answer:
-      'GYM PASS 월 구독료는 전 지점 월 48,900원입니다. 락커와 운동복은 별도 옵션입니다.',
+      'GYM PASS 월 구독료는 전 지점 월 48,900원입니다.',
   },
   {
+    /* ⚠ 운동복·개인락커 부가서비스 비노출 기간. 다시 팔면 hidden 만 지운다.
+       ⚠ '월 48,900원에 포함' / '무료 운동복' 처럼 바꿔 쓰지 않는다. */
+    hidden: true,
     id: 'options',
     category: 'subscribe',
     question: '락커와 운동복도 포함인가요?',
@@ -273,6 +277,7 @@ const ALL_FAQS = [
 
   /* ── 락커 ── */
   {
+    hidden: true,
     id: 'locker-return',
     category: 'locker',
     question: '락커 계약이 끝난 뒤 개인물품은 언제까지 가져가야 하나요?',
@@ -280,6 +285,7 @@ const ALL_FAQS = [
       '락커 계약 종료일로부터 7일 이내에 개인물품을 모두 회수해야 합니다. 7일이 지나도록 회수되지 않은 물품은 락커의 정상적인 운영을 위해 별도 장소로 반출하여 보관할 수 있습니다.',
   },
   {
+    hidden: true,
     id: 'locker-storage',
     category: 'locker',
     question: '보관된 물품은 언제까지 보관되나요?',

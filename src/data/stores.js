@@ -105,7 +105,7 @@ export const STORES = [
       { src: '/images/gymflex-cityhall/06.jpg', category: '사이클존' },
       { src: '/images/gymflex-cityhall/02.jpg', category: '스트레칭존' },
       { src: '/images/gymflex-cityhall/01.jpg', category: '건식 반신욕기' },
-      { src: '/images/gymflex-cityhall/04.jpg', category: '락커·파우더룸' },
+      { src: '/images/gymflex-cityhall/04.jpg', category: '탈의실 · 파우더룸' },
       { src: '/images/gymflex-cityhall/10.jpg', category: '라운지' },
     ],
     links: {
