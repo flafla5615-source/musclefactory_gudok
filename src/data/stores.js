@@ -413,7 +413,8 @@ export const STORES = [
     shortName: '진주강남점',
     status: 'open',
     monthlyPrice: 48900,
-    description: '약 500평대 규모의 진주 대형 프리미엄 헬스장. 다양한 외산 프리미엄 머신을 갖췄습니다.',
+    // 시설 특징은 길게 쓰지 않고 아래 facilities chip 으로만 보여준다
+    description: null,
     longTermOffer: { months: 10, price: 428000, active: true },
     address: null,
     locationNote: null,
@@ -421,7 +422,7 @@ export const STORES = [
     parking: '넓은 주차공간',
     phone: null,
     mapUrl: null,
-    facilities: [],
+    facilities: ['대형 프리미엄 피트니스', '다양한 프리미엄 머신'],
     floors: [],
     threeMonthAvailable: null,
     multiClubAvailable: null,
@@ -443,10 +444,18 @@ export const STORES = [
       signupUrl: null,
       note: null,
     },
-    // ⚠ 실사진 미제공 → placeholder 유지. 다른 지점 사진·AI 이미지 사용 금지.
-    //    사진을 받으면 public/images/mf-jinju-gangnam/ 에 넣고 아래 두 줄만 채운다.
-    thumbImage: null,
-    facilityImages: [],
+    /* 실사진 — 본사 제공 원본 7장. 리사이즈·크롭만 적용했고
+       보정·합성·인물 조작·타 지점 사진 사용은 없다.
+       대표(thumb) = 가로 전경 사진 중앙 크롭 400x400 */
+    thumbImage: '/images/mf-jinju-gangnam/thumb.jpg',
+    facilityImages: [
+      { src: '/images/mf-jinju-gangnam/01.jpg', category: '센터 전경' },
+      { src: '/images/mf-jinju-gangnam/02.jpg', category: '랙·프리웨이트존' },
+      { src: '/images/mf-jinju-gangnam/03.jpg', category: '하체 머신존' },
+      { src: '/images/mf-jinju-gangnam/04.jpg', category: '플레이트 머신존' },
+      { src: '/images/mf-jinju-gangnam/05.jpg', category: '머신존' },
+      { src: '/images/mf-jinju-gangnam/06.jpg', category: '웨이트 머신존' },
+    ],
     links: {},
     subscriptionEnabled: true,
   },
