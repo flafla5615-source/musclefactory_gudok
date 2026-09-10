@@ -53,12 +53,25 @@ export function storeUrlFor(appInfo, platform) {
   return null
 }
 
-/** '바디코디 앱에서 시작하기' — 앱명이 없으면 앱명 없이 표기한다 */
+/* ── CTA 문구 ───────────────────────────────────────────────
+   ⚠ '앱 설치' 처럼 목적이 불분명한 문구를 쓰지 않는다.
+      구독하러 가는 버튼이라는 것이 문구에서 바로 보여야 한다. */
+
+/** '바디코디 앱에서 구독하기' */
 export function appCtaLabel(appInfo) {
-  return appInfo?.appName ? `${appInfo.appName} 앱에서 시작하기` : '앱에서 시작하기'
+  return appInfo?.appName ? `${appInfo.appName} 앱에서 구독하기` : '앱에서 구독하기'
 }
 
-/** 하단 고정 CTA 용 짧은 문구 — '바디코디에서 시작하기' */
+/** 하단 고정 CTA 용 짧은 문구 — '바디코디에서 구독하기' */
 export function appCtaShortLabel(appInfo) {
-  return appInfo?.appName ? `${appInfo.appName}에서 시작하기` : '앱에서 시작하기'
+  return appInfo?.appName ? `${appInfo.appName}에서 구독하기` : '앱에서 구독하기'
 }
+
+/** 앱스토어로 보내는 버튼 — 설치가 목적이 아니라 구독이 목적임을 밝힌다 */
+export const INSTALL_CTA_LABEL = '앱 설치하고 구독하기'
+
+/** 지점 선택 전 메인 CTA */
+export const PICK_STORE_CTA_LABEL = '내 지점 선택하고 구독하기'
+
+/** 구독 흐름 요약 — HERO 에서 한 줄로 보여준다 */
+export const SUBSCRIBE_FLOW_SUMMARY = ['앱 설치', '회원가입', '구독권 구매', 'QR로 입장']

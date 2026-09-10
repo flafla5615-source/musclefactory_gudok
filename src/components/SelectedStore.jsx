@@ -1,12 +1,10 @@
 import Reveal from './Reveal.jsx'
 import Section from './Section.jsx'
 import StoreUsageGuide from './StoreUsageGuide.jsx'
-import AppCta from './AppCta.jsx'
 import { formatNumber, monthlyPriceFor } from '../lib/format.js'
 import { BASE_MONTHLY_PRICE, ADD_ONS } from '../data/products.js'
 import { MAX_FACILITY_CHIPS } from '../data/stores.js'
 import { EVENTS, openChannel } from '../lib/tracking.js'
-import { getAppInfo } from '../lib/appstore.js'
 
 /** 가능/불가 여부(boolean)를 소비자 문구로. null 이면 행을 만들지 않는다. */
 const yesNo = (v) => (v === true ? '가능' : v === false ? '미운영' : null)
@@ -68,8 +66,6 @@ export default function SelectedStore({ store, onSubscribe }) {
 
   // 선착순 장기권 — 가격 미확정(null)이거나 마감(active:false)이면 영역 자체를 만들지 않는다
   const offer = store.longTermOffer?.active ? store.longTermOffer : null
-  // 앱스토어 링크가 있는 지점은 앱 설치 CTA 가 메인 전환버튼이 된다
-  const hasApp = Boolean(getAppInfo(store))
 
   const facilities = store.facilities.slice(0, MAX_FACILITY_CHIPS)
   const hasAnyDetail =
@@ -190,14 +186,14 @@ export default function SelectedStore({ store, onSubscribe }) {
             ⚠ 전화 상담 버튼을 두지 않는다. 상주 직원이 없는 지점이 있어
                랜딩을 전화문의 중심으로 운영하지 않는다. */}
         <div className="card-foot flex flex-col gap-2.5">
-          {hasApp ? (
-            <AppCta store={store} />
-          ) : (
-            // 앱스토어 링크가 아직 없는 지점만 기존 상담 동선을 유지한다
-            <button type="button" onClick={onSubscribe} className="btn btn-primary">
-              {store.shortName} 시작하기
-            </button>
-          )}
+          {/* 시설사진을 보고 여기까지 내려온 고객도 바로 구독할 수 있어야 한다.
+              누르면 이 지점의 앱 안내(구독 전환 시트)로 이어진다. */}
+          <p className="tnum text-[13px] font-semibold text-mute">
+            월 {formatNumber(price)}원 · 앱에서 바로 구독할 수 있어요.
+          </p>
+          <button type="button" onClick={onSubscribe} className="btn btn-primary">
+            이 지점 구독하기
+          </button>
 
           {channels.length > 0 && (
             <div className={`grid gap-2.5 ${channels.length > 1 ? 'grid-cols-2' : ''}`}>

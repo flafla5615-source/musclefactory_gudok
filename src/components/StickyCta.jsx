@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { formatNumber } from '../lib/format.js'
 import {
+  PICK_STORE_CTA_LABEL,
   appCtaShortLabel,
   detectPlatform,
   getAppInfo,
@@ -45,7 +46,7 @@ export default function StickyCta({ store, quote, onSubscribe }) {
     ? appInfo
       ? appCtaShortLabel(appInfo)
       : `${store.shortName} 시작하기`
-    : '내 지점 선택하기'
+    : PICK_STORE_CTA_LABEL
   const amount = quote.calculable ? quote.total : quote.basePrice
 
   const handleClick = () => {

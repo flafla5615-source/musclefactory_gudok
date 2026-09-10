@@ -19,6 +19,7 @@ import FinalCta from './components/FinalCta.jsx'
 import Footer from './components/Footer.jsx'
 import StickyCta from './components/StickyCta.jsx'
 import ConsultSheet from './components/ConsultSheet.jsx'
+import SubscribeFlow from './components/SubscribeFlow.jsx'
 
 import { useReveal } from './hooks/useReveal.js'
 import { BASE_MONTHLY_PRICE } from './data/products.js'
@@ -56,6 +57,8 @@ export default function App() {
   const [selectedProductId, setSelectedProductId] = useState(null)
   const [selectedOptionIds, setSelectedOptionIds] = useState([])
   const [sheetOpen, setSheetOpen] = useState(false)
+  // 구독 전환 시트 — 이 랜딩에서 '구독하는 곳' 은 여기 하나뿐이다
+  const [flowOpen, setFlowOpen] = useState(false)
 
   const selectedStore = useMemo(
     () => (selectedStoreId ? getStore(selectedStoreId) : null),
@@ -148,9 +151,13 @@ export default function App() {
   )
 
   /**
-   * 구독 CTA — 모든 CTA 가 이 handler 하나를 쓴다.
+   * 구독 CTA — 모든 구독 버튼이 이 handler 하나를 쓴다.
+   *
    * 지점별 가입 URL(ctaUrl)이 확정되면 그쪽으로 보내고(UTM 유지),
-   * 아직 없으면 상담 시트를 연다. 가짜 URL 을 만들지 않는다.
+   * 아직 없으면 구독 전환 시트를 연다.
+   *   지점 미선택 → 시트가 '지점 선택' 단계부터 시작
+   *   지점 선택됨 → 시트가 그 지점의 앱 안내 단계부터 시작
+   * 가짜 URL 을 만들지 않는다.
    */
   const handleSubscribe = useCallback(
     (source) => {
@@ -162,15 +169,11 @@ export default function App() {
         price: quote.total ?? quote.basePrice,
       })
 
-      if (!selectedStoreId) {
-        scrollToId('store')
-        return
-      }
       if (selectedStore?.ctaUrl) {
         window.open(withUtm(selectedStore.ctaUrl), '_blank', 'noopener,noreferrer')
         return
       }
-      setSheetOpen(true)
+      setFlowOpen(true)
     },
     [selectedStoreId, selectedStore, selectedOptionIds, quote],
   )
@@ -235,6 +238,13 @@ export default function App() {
       <Footer />
 
       <StickyCta store={selectedStore} quote={quote} onSubscribe={() => handleSubscribe('sticky')} />
+
+      <SubscribeFlow
+        open={flowOpen}
+        onClose={() => setFlowOpen(false)}
+        initialStore={selectedStore}
+        onPickStore={handleSelectStore}
+      />
 
       <ConsultSheet
         open={sheetOpen}

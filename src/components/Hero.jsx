@@ -1,5 +1,6 @@
 import Reveal from './Reveal.jsx'
 import { formatNumber } from '../lib/format.js'
+import { PICK_STORE_CTA_LABEL, SUBSCRIBE_FLOW_SUMMARY } from '../lib/appstore.js'
 
 /**
  * HERO
@@ -191,13 +192,49 @@ export default function Hero({ basePrice, onSubscribe, onViewUsage }) {
               ))}
             </Reveal>
 
-            <Reveal delay={300} className="mt-7 flex flex-col gap-2.5 sm:flex-row sm:gap-3">
+            {/* 어디서 구독하는지 — 첫 화면에서 바로 알려준다.
+                광고를 보고 들어온 고객이 '여기서 결제하나?' 로 헤매지 않게
+                구매 경로가 앱이라는 것과 그 순서를 한 줄로 보여준다. */}
+            <Reveal
+              delay={270}
+              className="mt-6 rounded-[14px] px-4 py-3.5"
+              style={{
+                background: 'rgba(13,13,13,0.55)',
+                border: '1px solid var(--color-line-2)',
+                backdropFilter: 'blur(6px)',
+                WebkitBackdropFilter: 'blur(6px)',
+              }}
+            >
+              <p className="flex items-center gap-1.5 text-[13.5px] font-bold text-fog">
+                <iconify-icon
+                  icon="solar:smartphone-linear"
+                  width="16"
+                  style={{ color: 'var(--color-accent-soft)' }}
+                ></iconify-icon>
+                앱에서 간편하게 구독하세요
+              </p>
+              <ol className="mt-2 flex flex-wrap items-center gap-x-1.5 gap-y-1">
+                {SUBSCRIBE_FLOW_SUMMARY.map((step, i) => (
+                  <li key={step} className="flex items-center gap-1.5">
+                    {i > 0 && (
+                      <span aria-hidden="true" className="text-[11px] text-mute-2">
+                        →
+                      </span>
+                    )}
+                    <span className="text-[12.5px] font-medium text-mute">{step}</span>
+                  </li>
+                ))}
+              </ol>
+            </Reveal>
+
+            <Reveal delay={300} className="mt-5 flex flex-col gap-2.5 sm:flex-row sm:gap-3">
+              {/* HERO 에서 가장 중요한 CTA — 누르면 지점 선택 시트가 바로 열린다 */}
               <button
                 type="button"
                 onClick={onSubscribe}
                 className="btn btn-primary sm:btn-auto sm:!px-7"
               >
-                내 주변 지점 보기
+                {PICK_STORE_CTA_LABEL}
               </button>
               <button
                 type="button"

@@ -155,6 +155,7 @@ export const STORES = [
       steps: [
         '바디코디 앱 설치',
         '회원가입',
+        '이용 지점 선택',
         '구독권 구매',
         'QR로 입장',
       ],
@@ -211,6 +212,7 @@ export const STORES = [
       steps: [
         '바디코디 앱 설치',
         '회원가입',
+        '이용 지점 선택',
         '구독권 구매',
         'QR로 입장',
       ],
@@ -268,6 +270,7 @@ export const STORES = [
       steps: [
         '바디코디 앱 설치',
         '회원가입',
+        '이용 지점 선택',
         '구독권 구매',
         'QR로 입장',
       ],
@@ -323,6 +326,7 @@ export const STORES = [
       steps: [
         '바디코디 앱 설치',
         '회원가입',
+        '이용 지점 선택',
         '구독권 구매',
         'QR로 입장',
       ],
@@ -377,6 +381,7 @@ export const STORES = [
       steps: [
         '바디코디 앱 설치',
         '회원가입',
+        '이용 지점 선택',
         '구독권 구매',
         'QR로 입장',
       ],
@@ -434,7 +439,7 @@ export const STORES = [
       appType: 'bodycodi',
       entryMethod: null,
       headline: '바디코디 앱에서 가입하고 구독상품을 구매하세요.',
-      steps: ['바디코디 앱 설치', '회원가입', '구독권 구매', 'QR로 입장'],
+      steps: ['바디코디 앱 설치', '회원가입', '이용 지점 선택', '구독권 구매', 'QR로 입장'],
       // 다른 바디코디 지점과 동일한 검증된 링크. 새 URL 임의 생성 금지
       appStore: {
         ios: 'https://apps.apple.com/kr/app/id1557408918',
@@ -513,7 +518,7 @@ export const STORES = [
       appType: 'bodycodi',
       entryMethod: null,
       headline: '바디코디 앱에서 가입하고 구독상품을 구매하세요.',
-      steps: ['바디코디 앱 설치', '회원가입', '구독권 구매', 'QR로 입장'],
+      steps: ['바디코디 앱 설치', '회원가입', '이용 지점 선택', '구독권 구매', 'QR로 입장'],
       // 다른 바디코디 지점과 동일한 검증된 링크. 새 URL 임의 생성 금지
       appStore: {
         ios: 'https://apps.apple.com/kr/app/id1557408918',
