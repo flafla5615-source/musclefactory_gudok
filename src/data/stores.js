@@ -480,10 +480,21 @@ export const STORES = [
     brand: BRANDS.MUSCLE_FACTORY,
     name: '머슬팩토리24 혁신점',
     shortName: '혁신점',
-    status: 'open',
+    // 오픈 전. subscriptionEnabled: false 라 지점 선택 목록·결제 CTA 에 나오지 않고
+    // ComingSoon 섹션에서만 안내된다.
+    status: 'coming_soon',
     monthlyPrice: 48900,
-    description: '약 500평대 규모의 대형 프리미엄 헬스장. 다양한 외산 프리미엄 머신을 갖췄습니다.',
-    longTermOffer: { months: 10, price: 428000, active: true },
+    // 카드에 한 줄로 노출되는 요약
+    description: '약 500평대 대형 프리미엄 헬스장',
+    highlights: [
+      '넓은 유산소존',
+      '다양한 웨이트 머신',
+      '프리웨이트 · 파워랙존',
+      '리커버리존',
+      '개방감 있는 통창 운동공간',
+    ],
+    // 오픈 선착순 장기권 — upcoming: true 라 '예정' 으로 표기된다
+    longTermOffer: { months: 10, price: 428000, active: true, upcoming: true, label: '오픈 선착순' },
     address: null,
     locationNote: null,
     hours: null,
@@ -512,12 +523,20 @@ export const STORES = [
       signupUrl: null,
       note: null,
     },
-    // ⚠ 실사진 미제공 → placeholder 유지. 다른 지점 사진·AI 이미지 사용 금지.
-    //    사진을 받으면 public/images/mf-hyeoksin/ 에 넣고 아래 두 줄만 채운다.
-    thumbImage: null,
-    facilityImages: [],
+    /* 실사진 — 본사 제공 원본(중복 제외 16장) 중 6장 선별.
+       리사이즈·크롭만 적용. 보정·합성·인물 조작 없음.
+       ⚠ 강남점(mf-jinju-gangnam) 사진과 절대 섞지 않는다. */
+    thumbImage: '/images/mf-hyeoksin/thumb.jpg',
+    facilityImages: [
+      { src: '/images/mf-hyeoksin/01.jpg', category: '웨이트존 전경' },
+      { src: '/images/mf-hyeoksin/02.jpg', category: '유산소존' },
+      { src: '/images/mf-hyeoksin/03.jpg', category: '웨이트 머신존' },
+      { src: '/images/mf-hyeoksin/04.jpg', category: '프리웨이트 · 파워랙존' },
+      { src: '/images/mf-hyeoksin/05.jpg', category: '머신 구성' },
+      { src: '/images/mf-hyeoksin/06.jpg', category: '리커버리존' },
+    ],
     links: {},
-    subscriptionEnabled: true,
+    subscriptionEnabled: false,
   },
 ]
 
