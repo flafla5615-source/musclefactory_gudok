@@ -11,7 +11,16 @@
 
 export const BASE_MONTHLY_PRICE = 48900
 
-/** PRICE 섹션에서 나란히 비교하는 메인 상품 3종 */
+/* 고객에게 보여주는 상품
+   ──────────────────────────────────────────────
+   메인   월 구독 48,900원                (이 랜딩의 핵심 상품)
+   보조   선착순 10개월권                  stores.js longTermOffer 에서 관리
+                                          지점 상세에서만 보조로 노출
+
+   ⚠ 3개월 구독권은 판매하지 않으므로 데이터까지 삭제했다.
+   ⚠ 전지점 구독 · 12개월 회원권은 status: 'hidden' 으로 화면에서 완전히 빠진다.
+      '추후 공개' / 'COMING SOON' 같은 티저도 노출하지 않는다.
+      상품이 확정되면 별도 신규 상품으로 다시 공개한다. */
 export const PRODUCTS = [
   {
     id: 'monthly',
@@ -31,23 +40,6 @@ export const PRODUCTS = [
     status: 'available',
     // 비교표용
     compare: { duration: '월 단위', scope: '주 이용지점', payment: '정기결제' },
-  },
-  {
-    id: 'quarterly',
-    rank: 2,
-    badge: '3 MONTH',
-    name: '3개월 구독권',
-    price: null, // 미확정 — 임의 생성 금지
-    priceLabel: '가격 추후 공개',
-    priceUnit: null,
-    summary: '3개월 단위로 이용하는 상품',
-    specs: ['3개월 이용', '세부 정책 추후 공개'],
-    storePriceAware: false,
-    ctaLabel: '상품 정보 보기',
-    ctaIntent: 'consult',
-    recommended: false,
-    status: 'coming_soon',
-    compare: { duration: '3개월', scope: '정책 추후 공개', payment: '정책 추후 공개' },
   },
   {
     /* ⚠ 전지점 구독 — 가격·운영정책 변경 가능성이 있어 현재 전체 비노출.

@@ -16,7 +16,7 @@ export default function CampaignWhy() {
       </Reveal>
 
       <Reveal as="p" delay={80} className="mt-5 t-body !text-ink/65">
-        운동을 시작하는데 꼭 6개월, 12개월을 먼저 결제할 필요는 없습니다.
+        운동을 시작하는데 긴 약정을 먼저 결제할 필요는 없습니다.
         <br />한 달부터 시작하고, 계속 운동하고 싶다면 그대로 이어가세요.
       </Reveal>
 

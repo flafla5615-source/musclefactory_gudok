@@ -18,7 +18,7 @@ export const CAMPAIGN_POINTS = [
     id: 'no-contract',
     no: '01',
     title: '장기 회원권 없이\n한 달부터 시작',
-    description: '6개월, 12개월을 먼저 결제하지 않습니다.',
+    description: '긴 약정을 먼저 결제하지 않습니다.',
   },
   {
     id: 'auto-pay',
@@ -190,12 +190,6 @@ const ALL_FAQS = [
     question: '락커와 운동복도 포함인가요?',
     answer:
       '락커 및 운동복은 별도 옵션입니다. 운동복 월 11,000원, 개인락커 월 15,000원입니다.',
-  },
-  {
-    id: 'quarterly',
-    category: 'subscribe',
-    question: '3개월 상품은 언제 이용할 수 있나요?',
-    answer: '3개월 구독권은 가격과 세부 이용조건이 확정되는 대로 공개할 예정입니다.',
   },
 
   /* ── 이용·입장 ── */

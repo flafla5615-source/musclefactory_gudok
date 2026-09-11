@@ -14,7 +14,8 @@ import { PICK_STORE_CTA_LABEL, SUBSCRIBE_FLOW_SUMMARY } from '../lib/appstore.js
  * 시각 위계(의도적으로 이 순서로 읽히게 한다)
  *   1. 메인 카피  2. 월 48,900원부터  3. GYM PASS  4. OLDGYM × MUSCLE FACTORY24
  *
- * 지점목록 · 옵션 · 3개월 · 12개월 상품을 여기에 넣지 않는다.
+ * WARN 첫 화면 가격은 월 48,900원 하나뿐이다.
+ *      장기권 등 다른 상품 가격을 여기에 함께 나열하지 않는다.
  *
  * ⚠ 배경은 실제 지점 사진 2장(브랜드당 1장)이다.
  *    crop(object-fit: cover) 과 dark overlay 외의 가공을 하지 않는다.

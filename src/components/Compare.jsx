@@ -16,6 +16,9 @@ const FIELDS = [
 export default function Compare({ selectedStore }) {
   const [open, setOpen] = useState(false)
 
+  // 비교할 상품이 하나뿐이면 비교 자체가 의미 없다 (현재는 월 구독만 노출)
+  if (COMPARISON_ROWS.length < 2) return null
+
   const priceOf = (row) => {
     if (row.price === null) return '가격 추후 공개'
     if (row.storePriceAware && selectedStore && typeof selectedStore.monthlyPrice === 'number') {

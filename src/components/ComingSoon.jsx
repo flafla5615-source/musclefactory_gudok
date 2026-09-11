@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Reveal from './Reveal.jsx'
 import Section from './Section.jsx'
 import { COMING_SOON_STORES } from '../data/stores.js'
-import { formatNumber } from '../lib/format.js'
+import { formatNumber, perMonth } from '../lib/format.js'
 
 /**
  * 오픈 예정 지점
@@ -211,6 +211,11 @@ export default function ComingSoon() {
                             {offer.months}개월 {formatNumber(offer.price)}원
                           </span>
                         </div>
+                        {perMonth(offer.price, offer.months) !== null && (
+                          <p className="tnum mt-1 t-caption">
+                            월 환산 약 {formatNumber(perMonth(offer.price, offer.months))}원
+                          </p>
+                        )}
                         <p className="mt-2 t-caption">
                           오픈 선착순 혜택으로, 인원 마감 시 종료될 수 있습니다.
                         </p>

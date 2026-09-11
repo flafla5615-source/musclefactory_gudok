@@ -19,3 +19,15 @@ export const productPriceFor = (product, store, basePrice) => {
   if (product.storePriceAware) return monthlyPriceFor(store, basePrice)
   return product.price
 }
+
+/**
+ * 장기권의 월 환산 금액.
+ * ⚠ 딱 나누어떨어질 때만 값을 돌려준다.
+ *    소수점이 생기면 null → 화면에 '약 OO원' 을 아예 표시하지 않는다.
+ *    (부정확한 환산 금액을 보여주지 않기 위함)
+ */
+export function perMonth(price, months) {
+  if (typeof price !== 'number' || typeof months !== 'number' || months <= 0) return null
+  if (price % months !== 0) return null
+  return price / months
+}

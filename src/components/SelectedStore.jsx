@@ -1,13 +1,10 @@
 import Reveal from './Reveal.jsx'
 import Section from './Section.jsx'
 import StoreUsageGuide from './StoreUsageGuide.jsx'
-import { formatNumber, monthlyPriceFor } from '../lib/format.js'
+import { formatNumber, monthlyPriceFor, perMonth } from '../lib/format.js'
 import { BASE_MONTHLY_PRICE } from '../data/products.js'
 import { MAX_FACILITY_CHIPS } from '../data/stores.js'
 import { EVENTS, openChannel } from '../lib/tracking.js'
-
-/** 가능/불가 여부(boolean)를 소비자 문구로. null 이면 행을 만들지 않는다. */
-const yesNo = (v) => (v === true ? '가능' : v === false ? '미운영' : null)
 
 /**
  * STEP 5 — 내가 고른 지점은 어떤 곳인데?
@@ -47,12 +44,11 @@ export default function SelectedStore({ store, onSubscribe }) {
      stores.js 의 clothingAvailable / lockerAvailable 데이터는 그대로 두었으니
      다시 팔게 되면 아래 주석만 되살리면 된다.
      ⚠ 전지점 구독도 상품 비노출 기간이라 함께 감춰져 있다. */
-  const optionRows = [
-    { label: '3개월 구독권', value: yesNo(store.threeMonthAvailable) },
-    // { label: '전지점 구독', value: yesNo(store.multiClubAvailable) },
-    // { label: '운동복', value: ... clothingAvailable },
-    // { label: '개인락커', value: ... lockerAvailable },
-  ].filter((r) => r.value)
+  /* 고객에게 보여주는 상품은 '월 구독' 과 '선착순 10개월권' 둘뿐이다.
+     3개월 구독권은 판매하지 않아 데이터까지 제거했고,
+     전지점 구독 / 운동복 / 개인락커는 비노출이라 행을 만들지 않는다.
+     ('추후 공개' / '준비 중' 같은 티저도 넣지 않는다) */
+  const optionRows = []
 
   // 선착순 장기권 — 가격 미확정(null)이거나 마감(active:false)이면 영역 자체를 만들지 않는다
   const offer = store.longTermOffer?.active ? store.longTermOffer : null
@@ -156,7 +152,8 @@ export default function SelectedStore({ store, onSubscribe }) {
             className="mt-6 rounded-[12px] px-4 py-4"
             style={{ background: 'var(--color-ink)', border: '1px solid var(--color-line)' }}
           >
-            <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+            <p className="text-[12.5px] text-mute-2">오래 이용할 계획이라면?</p>
+            <div className="mt-2 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
               <span className="text-[13px] font-semibold text-mute">
                 선착순 {offer.months}개월권{offer.upcoming ? ' (예정)' : ''}
               </span>
@@ -164,6 +161,12 @@ export default function SelectedStore({ store, onSubscribe }) {
                 {formatNumber(offer.price)}원
               </span>
             </div>
+            {/* 월 환산은 딱 나누어떨어질 때만. 부정확한 금액은 표시하지 않는다 */}
+            {perMonth(offer.price, offer.months) !== null && (
+              <p className="tnum mt-1 t-caption">
+                월 환산 약 {formatNumber(perMonth(offer.price, offer.months))}원
+              </p>
+            )}
             <p className="mt-2 t-caption">
               {offer.upcoming
                 ? '오픈 시 적용 예정 가격이며 변경될 수 있습니다.'
