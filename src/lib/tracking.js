@@ -34,6 +34,58 @@ export const EVENTS = {
   CONSULTATION_CLICK: 'consultation_click',
   SIGNUP_START: 'signup_start',
   SIGNUP_COMPLETE: 'signup_complete',
+
+  /* 오프라인 전단 QR 유입 전용 */
+  FLYER_LANDING_VIEW: 'flyer_landing_view',
+
+  /* 바디코디 · 짐서폿 앱스토어로 나간 클릭.
+     ⚠ '앱으로 이동한 사람' 이지 '구독권을 구매한 사람' 이 아니다.
+        외부 앱의 가입·결제 완료 데이터를 받을 공식 경로가 확인되기 전까지
+        purchase / subscription_complete / payment_complete 같은
+        결제 완료 이벤트를 임의로 발생시키지 않는다. */
+  APP_OUTBOUND_CLICK: 'app_outbound_click',
+}
+
+/* ── 오프라인 전단 QR 식별 ──────────────────────────────────
+   전단 QR 목적지 = 운영 도메인 + 아래 UTM 3종.
+   이 조합으로 들어온 방문만 '전단 QR 유입' 으로 센다.
+   인스타 · 네이버 · 직접 유입과 섞이지 않는다. */
+export const FLYER_UTM = {
+  source: 'offline_flyer',
+  medium: 'qr',
+  campaign: 'gympass_flyer_202609',
+}
+
+/** 이 방문이 전단 QR 로 들어왔는가 (세션 내내 유지된다) */
+export function isFlyerTraffic() {
+  const utm = getUtm()
+  return utm.utm_source === FLYER_UTM.source && utm.utm_medium === FLYER_UTM.medium
+}
+
+/**
+ * 모든 이벤트에 붙는 유입 구분값.
+ *   offline_flyer  전단 QR
+ *   instagram / naver / ...  그 외 UTM 이 붙은 유입
+ *   direct         UTM 없이 들어온 방문
+ * ⚠ 개인정보는 담지 않는다. UTM 값만 쓴다.
+ */
+export function getTrafficSource() {
+  if (isFlyerTraffic()) return FLYER_UTM.source
+  return getUtm().utm_source || 'direct'
+}
+
+/* 같은 이벤트가 한 세션에서 과도하게 중복 집계되지 않도록 하는 잠금 */
+const firedOnce = new Set()
+
+/**
+ * 세션 동안 한 번만 보내야 하는 이벤트 (예: 랜딩 유입).
+ * key 를 주면 그 단위로 잠근다 (예: 지점+플랫폼 조합당 1회).
+ */
+export function trackOnce(eventName, payload = {}, key = eventName) {
+  if (firedOnce.has(key)) return false
+  firedOnce.add(key)
+  track(eventName, payload)
+  return true
 }
 
 /** URL 의 UTM 파라미터를 세션 동안 보존한다 */
@@ -98,6 +150,8 @@ export function track(eventName, payload = {}) {
     event: eventName,
     ...payload,
     ...getUtm(),
+    // 지점 상세 · 지점 선택 · 앱 이동까지 유입 구분이 끊기지 않게 항상 붙인다
+    traffic_source: getTrafficSource(),
     page_path: window.location.pathname,
   }
 
@@ -122,5 +176,16 @@ export function track(eventName, payload = {}) {
 export function openChannel(url, eventName, payload = {}) {
   if (!url) return
   track(eventName, { ...payload, destination: url })
+  window.open(withUtm(url), '_blank', 'noopener,noreferrer')
+}
+
+/**
+ * 앱스토어로 보내기 — 링크는 누를 때마다 열리지만
+ * 이벤트는 key(지점+플랫폼) 조합당 세션 1회만 기록한다.
+ * 같은 버튼을 여러 번 눌러도 '앱으로 이동한 사람' 수가 부풀지 않는다.
+ */
+export function openAppStore(url, payload = {}, key) {
+  if (!url) return
+  trackOnce(EVENTS.APP_OUTBOUND_CLICK, { ...payload, destination: url }, key)
   window.open(withUtm(url), '_blank', 'noopener,noreferrer')
 }

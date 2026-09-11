@@ -25,7 +25,16 @@ import { useReveal } from './hooks/useReveal.js'
 import { BASE_MONTHLY_PRICE } from './data/products.js'
 import { getStore } from './data/stores.js'
 import { buildQuote, isOptionAvailable } from './lib/pricing.js'
-import { EVENTS, captureUtm, track, withUtm } from './lib/tracking.js'
+import {
+  EVENTS,
+  captureUtm,
+  isFlyerTraffic,
+  track,
+  trackOnce,
+  withUtm,
+} from './lib/tracking.js'
+import { initAnalytics } from './lib/analytics.js'
+import { getAppInfo } from './lib/appstore.js'
 
 /**
  * ⚠ 선택 상태를 세션에 복원하지 않는다.
@@ -79,10 +88,18 @@ export default function App() {
   /* ── 초기화 ── */
   useEffect(() => {
     captureUtm()
+    initAnalytics()
     if (!landingTracked) {
       landingTracked = true
       track(EVENTS.LANDING_VIEW)
       track(EVENTS.PRODUCT_VIEW, { product_id: 'monthly' })
+
+      /* 오프라인 전단 QR 로 들어온 방문만 따로 센다.
+         일반 URL · 인스타 · 네이버 유입에서는 발생하지 않는다.
+         trackOnce 라 새로고침·재마운트로 중복 집계되지 않는다. */
+      if (isFlyerTraffic()) {
+        trackOnce(EVENTS.FLYER_LANDING_VIEW)
+      }
     }
     // 이전 방문의 선택을 복원하지 않는다 (위 주석 참고)
     try {
@@ -93,8 +110,10 @@ export default function App() {
   }, [])
 
   /* ── 지점 선택 ── */
+  /* 지점 선택은 어디서 눌렀든(지점 목록 · 구독 시트) 이 handler 하나를 거친다.
+     store_select 를 여기서만 기록해 중복 집계를 막는다. */
   const handleSelectStore = useCallback(
-    (store) => {
+    (store, source = 'store-list') => {
       setSelectedStoreId(store.id)
       // 그 지점에서 미운영인 옵션은 자동으로 해제한다
       setSelectedOptionIds((prev) => prev.filter((id) => isOptionAvailable(store, id)))
@@ -102,6 +121,9 @@ export default function App() {
         store_id: store.id,
         store_name: store.name,
         brand: store.brand.key,
+        // 이 지점이 어느 앱으로 이어지는지 (bodycodi / gymsupport)
+        app_type: getAppInfo(store)?.appType ?? null,
+        source,
       })
       window.setTimeout(() => scrollToId('selected-store'), 120)
     },

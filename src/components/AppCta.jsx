@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { EVENTS, openChannel, track } from '../lib/tracking.js'
+import { openAppStore } from '../lib/tracking.js'
 import {
   appCtaLabel,
   detectPlatform,
@@ -28,12 +28,20 @@ export default function AppCta({ store, className = 'btn btn-primary' }) {
   const directUrl = storeUrlFor(appInfo, platform)
   const label = appCtaLabel(appInfo)
 
+  /* ⚠ '앱스토어로 나갔다' 까지만 기록한다.
+     실제 가입·결제 완료는 외부 앱 데이터라 여기서 알 수 없다. */
   const go = (url, key) =>
-    openChannel(url, EVENTS.SIGNUP_START, {
-      store_id: store.id,
-      app: appInfo.appType,
-      platform: key,
-    })
+    openAppStore(
+      url,
+      {
+        store_id: store.id,
+        store_name: store.name,
+        app_type: appInfo.appType,
+        platform: key,
+        source: 'selected-store',
+      },
+      `app_outbound:${store.id}:${key}`,
+    )
 
   // 모바일 — 바로 해당 스토어로
   if (directUrl) {

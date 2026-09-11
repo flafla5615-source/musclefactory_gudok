@@ -89,10 +89,16 @@
     <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
 
     <!--
-      전환 추적 스크립트 삽입 위치.
-      Meta Pixel / GA4 / 네이버 전환스크립트는 실제 ID를 받은 뒤 이 위치에 추가한다.
+      전환 추적
+      ────────────────────────────────────────────────────────────
+      GA4 는 여기에 스니펫을 붙이지 않는다.
+      src/lib/analytics.js 가 환경변수 VITE_GA4_ID 를 읽어 gtag.js 를 로드한다.
+        Vercel → Settings → Environment Variables → VITE_GA4_ID = G-XXXXXXXXXX
+      ID 가 없으면 GA4 를 로드하지 않는다. (임의 ID 생성 금지)
+
+      Meta Pixel / 네이버 전환스크립트는 실제 ID를 받은 뒤 이 위치에 추가한다.
       src/lib/tracking.js 가 window.dataLayer / fbq / gtag 를 자동 감지하므로
-      스니펫만 붙이면 이벤트가 그대로 전달된다. (임의 ID 생성 금지)
+      스니펫만 붙이면 이벤트가 그대로 전달된다.
     -->
   </head>
   <body>

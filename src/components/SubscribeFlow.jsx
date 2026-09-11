@@ -5,7 +5,7 @@ import { DEFAULT_USAGE_GUIDE } from '../data/content.js'
 import { formatNumber } from '../lib/format.js'
 import { BASE_MONTHLY_PRICE } from '../data/products.js'
 import { monthlyPriceFor } from '../lib/format.js'
-import { EVENTS, openChannel, track } from '../lib/tracking.js'
+import { openAppStore } from '../lib/tracking.js'
 import {
   INSTALL_CTA_LABEL,
   detectPlatform,
@@ -84,19 +84,28 @@ export default function SubscribeFlow({ open, onClose, initialStore = null, onPi
     Array.isArray(guide.steps) && guide.steps.length > 0 ? guide.steps : DEFAULT_USAGE_GUIDE.steps
   const appName = appInfo?.appName || null
 
+  /* ⚠ store_select 는 여기서 쏘지 않는다.
+     onPickStore 가 App 의 handleSelectStore 를 부르고 거기서 한 번만 기록한다.
+     양쪽에서 쏘면 지점 선택이 2배로 집계된다. */
   const pick = (s) => {
     setStore(s)
-    onPickStore?.(s)
-    track(EVENTS.STORE_SELECT, { store_id: s.id, store_name: s.name, source: 'subscribe-flow' })
+    onPickStore?.(s, 'subscribe-flow')
   }
 
+  /* ⚠ '앱스토어로 나갔다' 까지만 기록한다.
+     실제 가입·결제 완료는 외부 앱 데이터라 여기서 알 수 없다. */
   const go = (url, key) =>
-    openChannel(url, EVENTS.SIGNUP_START, {
-      store_id: store.id,
-      app: appInfo?.appType ?? null,
-      platform: key,
-      source: 'subscribe-flow',
-    })
+    openAppStore(
+      url,
+      {
+        store_id: store.id,
+        store_name: store.name,
+        app_type: appInfo?.appType ?? null,
+        platform: key,
+        source: 'subscribe-flow',
+      },
+      `app_outbound:${store.id}:${key}`,
+    )
 
   const storeButtons = [
     appInfo?.ios && { key: 'ios', label: 'App Store', icon: 'solar:smartphone-linear', url: appInfo.ios },

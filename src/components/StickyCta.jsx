@@ -7,7 +7,7 @@ import {
   getAppInfo,
   storeUrlFor,
 } from '../lib/appstore.js'
-import { EVENTS, openChannel } from '../lib/tracking.js'
+import { openAppStore } from '../lib/tracking.js'
 
 /**
  * 하단 고정 CTA — 지점·상품·옵션 선택 state 를 그대로 반영한다.
@@ -52,11 +52,18 @@ export default function StickyCta({ store, quote, onSubscribe }) {
     if (!appInfo) return onSubscribe()
     const url = storeUrlFor(appInfo, detectPlatform())
     if (url) {
-      return openChannel(url, EVENTS.SIGNUP_START, {
-        store_id: store.id,
-        app: appInfo.appType,
-        source: 'sticky',
-      })
+      const pf = detectPlatform()
+      return openAppStore(
+        url,
+        {
+          store_id: store.id,
+          store_name: store.name,
+          app_type: appInfo.appType,
+          platform: pf,
+          source: 'sticky',
+        },
+        `app_outbound:${store.id}:${pf}`,
+      )
     }
     // 스토어를 특정할 수 없으면(데스크톱) 상세영역의 선택 UI 로 보낸다
     document.getElementById('selected-store')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
