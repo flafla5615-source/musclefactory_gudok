@@ -58,6 +58,10 @@ body {
   body { padding-bottom: 0; }
 }
 
+/* 공식 지원문서 페이지(/support · /terms · /privacy · /account-deletion ·
+   /subscription-cancel)는 하단 고정 CTA가 없으므로 여백을 두지 않는다 */
+body.doc-page { padding-bottom: 0; }
+
 ::selection { background: var(--color-accent); color: #fff; }
 
 /* ══════════════════════════════════════════════════════════════
