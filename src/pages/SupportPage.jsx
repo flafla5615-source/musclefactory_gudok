@@ -12,6 +12,7 @@ import {
   STORE_CHANNEL_NOTE,
   STORE_SUPPORT_CHANNELS,
   SUPPORT_APPS,
+  SUPPORT_CONTACT,
   SUPPORT_CONTACT_ROWS,
   SUPPORT_TOPICS,
   hasPartialStoreChannels,
@@ -21,7 +22,8 @@ import {
 /**
  * /support — 앱스토어 · 구글 플레이 '앱 지원 URL' 로 제출하는 페이지
  *
- * ⚠ 고객센터 전화 · 운영시간 · 이메일은 확정 전까지 표시하지 않는다.
+ * 고객문의 이메일은 본사 확정값이라 표시한다.
+ * ⚠ 고객센터 전화 · 운영시간은 아직 미확정이라 행 자체를 그리지 않는다.
  *    data/support.js 의 SUPPORT_CONTACT 에 값을 넣으면 자동으로 나타난다.
  *    '010-0000-0000' 같은 가짜 연락처를 절대 넣지 않는다.
  */
@@ -44,7 +46,16 @@ export default function SupportPage() {
 
       <DocSection no="02" title="고객센터 안내">
         {hasSupportContact ? (
-          <DocInfoRows rows={SUPPORT_CONTACT_ROWS} />
+          <>
+            <DocInfoRows rows={SUPPORT_CONTACT_ROWS} />
+            {/* 전화·운영시간이 아직 없으면 접수 창구를 오해하지 않게 한 줄 밝힌다 */}
+            {!SUPPORT_CONTACT.phone && (
+              <DocText>
+                현재 고객문의는 이메일로 접수하고 있습니다. 고객센터 전화와 운영시간은
+                준비되는 대로 이 페이지에 안내드립니다.
+              </DocText>
+            )}
+          </>
         ) : (
           <DocPending>
             고객센터 대표 전화 · 운영시간 · 고객문의 이메일은 준비되는 대로 이 페이지에

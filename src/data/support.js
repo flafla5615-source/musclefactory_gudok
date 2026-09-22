@@ -49,7 +49,8 @@ export function relatedLinks(currentId, onlyIds = null) {
 export const SUPPORT_CONTACT = {
   phone: null,
   hours: null,
-  email: null,
+  // 2026-09 본사 확정 — 고객문의 이메일
+  email: 'returnlifecompany@gmail.com',
 }
 
 export const SUPPORT_CONTACT_ROWS = [
