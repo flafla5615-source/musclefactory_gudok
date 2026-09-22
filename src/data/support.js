@@ -6,7 +6,7 @@
 
    ⚠ 확인되지 않은 값은 전부 null 로 둔다. (임의 생성 절대 금지)
       · 회사명 / 대표자 / 사업자등록번호 / 주소 / 대표번호
-      · 고객센터 전화 · 운영시간 · 이메일
+      · 고객문의 전화 · 운영시간 · 이메일
       · 개인정보 보호책임자 · 수집항목 · 보유기간 · 위탁업체
       · 앱 내 구독 해지 / 회원 탈퇴 메뉴 경로
       · 탈퇴 및 삭제 처리기간
@@ -24,11 +24,11 @@ import { getAppInfo } from '../lib/appstore.js'
    메인 랜딩 Footer · 각 지원페이지의 '관련 메뉴' 가 모두 이 배열을 쓴다.
    경로를 바꾸면 vite.config.js 의 input 과 해당 폴더의 index.html 도 함께 바꾼다. */
 export const SUPPORT_LINKS = [
-  { id: 'support', href: '/support', label: '고객센터' },
+  { id: 'support', href: '/support', label: '고객문의' },
   { id: 'terms', href: '/terms', label: '이용약관' },
   { id: 'privacy', href: '/privacy', label: '개인정보처리방침' },
   { id: 'account-deletion', href: '/account-deletion', label: '회원 탈퇴 안내' },
-  { id: 'subscription-cancel', href: '/subscription-cancel', label: '구독 해지·환불 안내' },
+  { id: 'subscription-cancel', href: '/subscription-cancel', label: '구독 해지 안내' },
 ]
 
 /** 현재 페이지를 뺀 나머지 메뉴 (원하는 순서만 골라 쓸 수도 있다) */
@@ -38,25 +38,30 @@ export function relatedLinks(currentId, onlyIds = null) {
   )
 }
 
-/* ══════════════ 고객센터 연락처 ══════════════
-   ⚠ 전부 미확인이다. 본사에서 확정값을 받으면 여기에만 채운다.
-      채우는 즉시 /support · 탈퇴 · 해지 페이지에 자동으로 나타난다.
+/* ══════════════ 고객문의 연락처 ══════════════
+   2026-09 본사 확정값. 여기에만 적고 화면에서는 이 값만 읽는다.
 
-   phone  예: '055-000-0000'  (지점 개별 전화번호를 여기에 쓰지 않는다)
-   hours  예: '평일 10:00 ~ 19:00 (주말·공휴일 휴무)'
-   email  예: 'support@example.com'
-          ⚠ 구글 플레이 데이터 삭제 정책상 이메일은 사실상 필수다. */
+   ⚠ 이 번호는 GYM PASS 고객문의 대표번호다.
+      지점 개별 전화번호(stores.js phone)를 여기에 쓰지 않는다.
+      랜딩(메인)에는 여전히 전화번호를 노출하지 않는다 — 지원페이지 전용이다.
+   ⚠ 운영시간(hours)은 대표 운영시간이 따로 없고 지점별로 다르다.
+      임의 시간을 만들지 않고 아래 SUPPORT_HOURS_NOTE 로 안내한다.
+      본사 공통 운영시간이 생기면 hours 에 넣으면 행이 자동으로 추가된다. */
 export const SUPPORT_CONTACT = {
-  phone: null,
+  phone: '010-6532-6061',
   hours: null,
-  // 2026-09 본사 확정 — 고객문의 이메일
   email: 'returnlifecompany@gmail.com',
 }
 
+/** 운영시간 안내 — 대표 운영시간 대신 지점 문의로 연결한다 */
+export const SUPPORT_HOURS_NOTE =
+  '시설 이용 및 운영시간은 지점별로 상이합니다. 시설 이용 및 운영시간에 관한 자세한 사항은 이용하시는 지점으로 문의해 주세요.'
+
 export const SUPPORT_CONTACT_ROWS = [
-  { label: '고객센터 전화', value: SUPPORT_CONTACT.phone, href: SUPPORT_CONTACT.phone ? `tel:${SUPPORT_CONTACT.phone.replace(/[^0-9+]/g, '')}` : null },
+  // tel: 은 하이픈을 포함한 원문 그대로 건다 (iOS · Android 모두 정상 인식)
+  { label: '전화', value: SUPPORT_CONTACT.phone, href: SUPPORT_CONTACT.phone ? `tel:${SUPPORT_CONTACT.phone}` : null },
   { label: '운영시간', value: SUPPORT_CONTACT.hours, href: null },
-  { label: '고객문의 이메일', value: SUPPORT_CONTACT.email, href: SUPPORT_CONTACT.email ? `mailto:${SUPPORT_CONTACT.email}` : null },
+  { label: '이메일', value: SUPPORT_CONTACT.email, href: SUPPORT_CONTACT.email ? `mailto:${SUPPORT_CONTACT.email}` : null },
 ].filter((r) => r.value)
 
 export const hasSupportContact = SUPPORT_CONTACT_ROWS.length > 0
@@ -150,6 +155,26 @@ export const APP_SELF_SERVICE = {
 }
 
 export const appStepsFor = (kind, appName) => APP_SELF_SERVICE[kind]?.[appName] || null
+
+/* ══════════════ 바디코디 공식 정책 연결 슬롯 ══════════════
+   GYM PASS 브랜디드 앱은 바디코디 기반으로 운영되며, 이용약관 ·
+   개인정보처리방침 · 회원탈퇴 · 구독 관련 기본 정책도 바디코디가 제공하는
+   정책과 절차를 적용하는 방향으로 확인되었다.
+
+   ⚠ 아직 '방향 확인' 단계이므로 소비자 화면에 "바디코디 정책이 적용됩니다" 라고
+      단정해서 쓰지 않는다. 확정 문구를 받기 전까지는 각 페이지가
+      '준비 중' 안내를 유지한다.
+   ⚠ GYM PASS 자체 서버 구조 · 별도 회원 DB · 자체 보유기간 · 위탁업체 ·
+      수집항목 · 앱 내 메뉴 경로를 임의로 만들지 않는다.
+
+   확정되면 아래 URL 을 채운다. 채우는 즉시 해당 페이지에
+   「전문 보기」 버튼이 자동으로 나타난다. (페이지 수정 불필요) */
+export const BODYCODI_POLICY = {
+  termsUrl: null,
+  privacyUrl: null,
+  accountDeletionUrl: null,
+  subscriptionCancelUrl: null,
+}
 
 /* ══════════════ /terms ══════════════
    ⚠ 이용약관 전문은 이 저장소에 없다. (legal.js TERMS_URL 도 null)

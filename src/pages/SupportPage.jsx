@@ -14,6 +14,7 @@ import {
   SUPPORT_APPS,
   SUPPORT_CONTACT,
   SUPPORT_CONTACT_ROWS,
+  SUPPORT_HOURS_NOTE,
   SUPPORT_TOPICS,
   hasPartialStoreChannels,
   hasSupportContact,
@@ -22,17 +23,17 @@ import {
 /**
  * /support — 앱스토어 · 구글 플레이 '앱 지원 URL' 로 제출하는 페이지
  *
- * 고객문의 이메일은 본사 확정값이라 표시한다.
- * ⚠ 고객센터 전화 · 운영시간은 아직 미확정이라 행 자체를 그리지 않는다.
- *    data/support.js 의 SUPPORT_CONTACT 에 값을 넣으면 자동으로 나타난다.
- *    '010-0000-0000' 같은 가짜 연락처를 절대 넣지 않는다.
+ * 전화 · 이메일은 본사 확정값이다. 값은 data/support.js SUPPORT_CONTACT 에서만 온다.
+ * ⚠ 대표 운영시간은 없다. 지점별로 다르므로 SUPPORT_HOURS_NOTE 로 안내하고
+ *    임의의 운영시간을 만들지 않는다.
+ * ⚠ '010-0000-0000' 같은 가짜 연락처를 절대 넣지 않는다.
  */
 export default function SupportPage() {
   return (
     <DocPage
       currentId="support"
-      title="GYM PASS 고객센터"
-      lead="GYM PASS 앱 및 서비스 이용 중 궁금한 사항을 고객센터를 통해 안내받을 수 있습니다."
+      title="GYM PASS 고객문의"
+      lead="GYM PASS 앱 및 서비스 이용 중 궁금한 사항을 고객문의를 통해 안내받을 수 있습니다."
     >
       <DocSection no="01" title="문의 가능 항목">
         <ul className="flex flex-wrap gap-1.5">
@@ -44,22 +45,17 @@ export default function SupportPage() {
         </ul>
       </DocSection>
 
-      <DocSection no="02" title="고객센터 안내">
+      <DocSection no="02" title="고객문의">
         {hasSupportContact ? (
           <>
             <DocInfoRows rows={SUPPORT_CONTACT_ROWS} />
-            {/* 전화·운영시간이 아직 없으면 접수 창구를 오해하지 않게 한 줄 밝힌다 */}
-            {!SUPPORT_CONTACT.phone && (
-              <DocText>
-                현재 고객문의는 이메일로 접수하고 있습니다. 고객센터 전화와 운영시간은
-                준비되는 대로 이 페이지에 안내드립니다.
-              </DocText>
-            )}
+            {/* 대표 운영시간이 없을 때만 — 지점별로 다르다는 사실을 밝힌다 */}
+            {!SUPPORT_CONTACT.hours && <DocPending>{SUPPORT_HOURS_NOTE}</DocPending>}
           </>
         ) : (
           <DocPending>
-            고객센터 대표 전화 · 운영시간 · 고객문의 이메일은 준비되는 대로 이 페이지에
-            안내드립니다. 그 전까지는 아래 지점 문의 채널로 접수해 주세요.
+            고객문의 전화 · 이메일은 준비되는 대로 이 페이지에 안내드립니다. 그 전까지는
+            아래 지점 문의 채널로 접수해 주세요.
           </DocPending>
         )}
       </DocSection>
@@ -67,7 +63,7 @@ export default function SupportPage() {
       {STORE_SUPPORT_CHANNELS.length > 0 && (
         <DocSection no="03" title="지점 문의">
           <DocText>
-            이용 중인 지점의 시설 · 출입 · 이용권 관련 문의는 해당 지점 채널에서 가장 빠르게
+            시설 이용 · 운영시간 · 출입 등 지점별 문의는 해당 지점 채널에서 가장 빠르게
             확인할 수 있습니다.
           </DocText>
           <div className="flex flex-col gap-3">

@@ -7,7 +7,7 @@ import DocPage, {
 } from '../components/support/DocPage.jsx'
 import { FAQS } from '../data/content.js'
 import { TERMS_URL } from '../data/legal.js'
-import { TERMS_DOC } from '../data/support.js'
+import { BODYCODI_POLICY, TERMS_DOC } from '../data/support.js'
 
 /**
  * /terms — GYM PASS 이용약관
@@ -80,6 +80,10 @@ function TermsClause({ faq }) {
 }
 
 export default function TermsPage() {
+  /* 약관 전문 링크 — 자체 URL 이 먼저, 없으면 바디코디 공식 약관 URL.
+     둘 다 null 이면 버튼을 만들지 않는다. (임의 URL 생성 금지) */
+  const officialUrl = TERMS_URL || BODYCODI_POLICY.termsUrl
+
   return (
     <DocPage
       currentId="terms"
@@ -89,14 +93,14 @@ export default function TermsPage() {
       lead="GYM PASS 구독서비스 이용에 적용되는 약관입니다."
     >
       <DocSection no="01" title="약관 전문 안내">
-        {TERMS_URL ? (
+        {officialUrl ? (
           <>
             <DocText>
               아래는 이용약관의 주요 사항을 안내한 것입니다. 전체 내용은 약관 전문에서 확인해
               주세요.
             </DocText>
             <a
-              href={TERMS_URL}
+              href={officialUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-line"
@@ -106,8 +110,8 @@ export default function TermsPage() {
           </>
         ) : (
           <DocPending>
-            이용약관 전문은 별도 문서로 관리되고 있으며, 게시 준비가 완료되는 대로 이 페이지에
-            전문을 공개합니다. 아래 내용은 약관의 주요 사항을 안내한 것으로 약관 전문을 대체하지
+            이용약관 전문은 별도 문서로 관리되고 있으며, 확정되는 대로 이 페이지에 전문 또는
+            공식 약관 링크를 게시합니다. 아래 내용은 약관의 주요 사항을 안내한 것으로 약관 전문을 대체하지
             않습니다.
           </DocPending>
         )}
@@ -144,7 +148,7 @@ export default function TermsPage() {
 
       <DocSection no="05" title="문의">
         <DocText>
-          약관 내용에 대해 궁금한 점이 있으면 고객센터로 문의해 주세요.
+          약관 내용에 대해 궁금한 점이 있으면 GYM PASS 고객문의로 연락해 주세요.
         </DocText>
       </DocSection>
     </DocPage>

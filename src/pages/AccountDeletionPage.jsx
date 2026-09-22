@@ -9,6 +9,7 @@ import DocPage, {
 } from '../components/support/DocPage.jsx'
 import {
   APP_SELF_SERVICE,
+  BODYCODI_POLICY,
   CANCEL_VS_DELETE,
   STORE_CHANNEL_NOTE,
   STORE_SUPPORT_CHANNELS,
@@ -99,16 +100,28 @@ export default function AccountDeletionPage() {
             )}
             <DocPending>
               앱 내 회원 탈퇴 메뉴의 정확한 위치는 확인되는 대로 이 페이지에 단계별로
-              안내드립니다. 그 전까지는 아래 고객센터 요청 방법으로 탈퇴 및 개인정보 삭제를
+              안내드립니다. 그 전까지는 아래 고객문의 요청 방법으로 탈퇴 및 개인정보 삭제를
               신청해 주세요.
             </DocPending>
           </>
+        )}
+
+        {/* 공식 회원 탈퇴 절차 URL 이 확정되면 자동으로 나타난다 */}
+        {BODYCODI_POLICY.accountDeletionUrl && (
+          <a
+            href={BODYCODI_POLICY.accountDeletionUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-line"
+          >
+            공식 회원 탈퇴 안내 보기
+          </a>
         )}
       </DocSection>
 
       <DocSection no="03" title="앱 이용이 어려운 경우">
         <DocText>
-          앱에서 직접 신청하기 어려운 경우 고객센터로 회원 탈퇴 및 개인정보 삭제를 요청할 수
+          앱에서 직접 신청하기 어려운 경우 고객문의로 회원 탈퇴 및 개인정보 삭제를 요청할 수
           있습니다.
         </DocText>
 
@@ -116,7 +129,7 @@ export default function AccountDeletionPage() {
           <DocInfoRows rows={SUPPORT_CONTACT_ROWS} />
         ) : (
           <DocPending>
-            고객센터 대표 연락처는 준비되는 대로 안내드립니다. 그 전까지는 이용 중인 지점
+            고객문의 연락처는 준비되는 대로 안내드립니다. 그 전까지는 이용 중인 지점
             채널로 요청해 주세요.
           </DocPending>
         )}

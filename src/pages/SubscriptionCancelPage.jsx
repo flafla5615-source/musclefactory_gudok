@@ -8,6 +8,7 @@ import DocPage, {
   DocText,
 } from '../components/support/DocPage.jsx'
 import {
+  BODYCODI_POLICY,
   CANCEL_VS_DELETE,
   STORE_CHANNEL_NOTE,
   STORE_SUPPORT_CHANNELS,
@@ -95,6 +96,18 @@ export default function SubscriptionCancelPage() {
             </DocPending>
           </>
         )}
+
+        {/* 공식 구독 해지 절차 URL 이 확정되면 자동으로 나타난다 */}
+        {BODYCODI_POLICY.subscriptionCancelUrl && (
+          <a
+            href={BODYCODI_POLICY.subscriptionCancelUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-line"
+          >
+            공식 구독 해지 안내 보기
+          </a>
+        )}
       </DocSection>
 
       <DocSection no="03" title="다음 정기결제 중단 기준">
@@ -141,14 +154,14 @@ export default function SubscriptionCancelPage() {
 
       <DocSection no="06" title="환불 신청 및 문의">
         <DocText>
-          환불 신청과 진행상황 확인은 고객센터 또는 이용 중인 지점 채널로 문의해 주세요.
+          환불 신청과 진행상황 확인은 고객문의 또는 이용 중인 지점 채널로 문의해 주세요.
         </DocText>
 
         {hasSupportContact ? (
           <DocInfoRows rows={SUPPORT_CONTACT_ROWS} />
         ) : (
           <DocPending>
-            고객센터 대표 연락처는 준비되는 대로 안내드립니다. 그 전까지는 이용 중인 지점
+            고객문의 연락처는 준비되는 대로 안내드립니다. 그 전까지는 이용 중인 지점
             채널로 문의해 주세요.
           </DocPending>
         )}

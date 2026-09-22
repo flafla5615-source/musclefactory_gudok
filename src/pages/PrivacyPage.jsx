@@ -6,6 +6,7 @@ import DocPage, {
   DocText,
 } from '../components/support/DocPage.jsx'
 import {
+  BODYCODI_POLICY,
   PRIVACY_POLICY,
   SUPPORT_CONTACT_ROWS,
   hasSupportContact,
@@ -47,16 +48,36 @@ export default function PrivacyPage() {
         ))
       ) : (
         <>
-          <DocSection title="게시 준비 안내">
-            <DocPending>
-              GYM PASS 브랜디드 앱의 개인정보처리방침은 현재 준비 중이며, 확정되는 즉시 이
-              페이지에 전문을 게시합니다. 게시 전까지 개인정보 관련 문의는 고객센터로 접수해
-              주시면 안내드립니다.
-            </DocPending>
-            <DocText>
-              확인되지 않은 수집항목 · 보유기간 · 위탁업체를 임의로 기재하지 않기 위해 전문
-              공개를 보류하고 있습니다.
-            </DocText>
+          <DocSection
+            title={BODYCODI_POLICY.privacyUrl ? '개인정보처리방침 전문' : '게시 준비 안내'}
+          >
+            {BODYCODI_POLICY.privacyUrl ? (
+              <>
+                <DocText>
+                  GYM PASS 앱의 개인정보처리방침 전문은 아래에서 확인할 수 있습니다.
+                </DocText>
+                <a
+                  href={BODYCODI_POLICY.privacyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-line"
+                >
+                  개인정보처리방침 전문 보기
+                </a>
+              </>
+            ) : (
+              <>
+                <DocPending>
+                  GYM PASS 브랜디드 앱의 개인정보처리방침은 현재 준비 중이며, 확정되는 즉시 이
+                  페이지에 전문 또는 공식 처리방침 링크를 게시합니다. 게시 전까지 개인정보 관련
+                  문의는 고객문의로 접수해 주시면 안내드립니다.
+                </DocPending>
+                <DocText>
+                  확인되지 않은 수집항목 · 보유기간 · 위탁업체를 임의로 기재하지 않기 위해 전문
+                  공개를 보류하고 있습니다.
+                </DocText>
+              </>
+            )}
           </DocSection>
 
           <DocSection title="게시 예정 항목">
@@ -85,7 +106,7 @@ export default function PrivacyPage() {
               <DocInfoRows rows={SUPPORT_CONTACT_ROWS} />
             ) : (
               <DocPending>
-                개인정보 관련 문의 연락처는 고객센터 페이지에서 안내드립니다.
+                개인정보 관련 문의 연락처는 고객문의 페이지에서 안내드립니다.
               </DocPending>
             )}
             <DocBox title="회원 탈퇴 및 개인정보 삭제를 원하시나요?" tone="quiet">
