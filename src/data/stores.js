@@ -26,9 +26,16 @@ export const BRANDS = {
  *   status               'open' 운영 중 | 'coming_soon' 오픈 예정
  *   openLabel            오픈 예정 지점의 오픈 시점 (예: '2026.10 OPEN')
  *                        확정 전이면 월 단위까지만. 날짜를 임의로 적지 않는다
+ *   listed               오픈 예정 지점을 고객 랜딩(COMING SOON)에 공개할지.
+ *                        false 면 데이터는 남기고 화면에서만 빠진다.
+ *                        일정이 확정되지 않은 지점을 공개하지 않기 위한 스위치
  *   monthlyPrice         월 구독가. 현재 전 지점 48,900원 동일
  *   highlights           오픈 예정 지점의 대표 특징 3개 이하. 운영 지점은 없어도 된다
- *   longTermOffer        선착순 장기권. 이 페이지의 장기권 가격은 전부 여기서만 온다.
+ *   longTermOffer        (은퇴) 과거 '선착순 10개월권' 필드. 전 지점 null 이며
+ *                        고객 화면에서 렌더링하지 않는다.
+ *                        장기권은 products.js 의 365 GYMPASS(12개월 428,000원)와
+ *                        ALL-IN-ONE 365 PASS 로 이전되었다.
+ *                        아래 남은 설명은 과거 구조 기록용이다.
  *                        { months, price, active, label?, upcoming? }
  *                        · 가격이 바뀌면 이 객체의 price 한 곳만 고치면
  *                          지점 상세 · 오픈 예정 카드에 동시에 반영된다.
@@ -60,7 +67,7 @@ export const STORES = [
     shortName: '시청점',
     monthlyPrice: 48900,
     status: 'open',
-    longTermOffer: { months: 10, price: 428000, active: true },
+    longTermOffer: null, // 과거 '선착순 10개월권' 해제 — 장기권은 products.js pass365(12개월)로 이전
     description: null,
     address: '경남 진주시 동진로 183 현대자동차 건물 2·3층',
     locationNote: null,
@@ -86,10 +93,15 @@ export const STORES = [
         '구독권 구매',
         '앱 QR로 입장',
       ],
-      // 앱스토어 링크는 검증 완료. QR · 가입링크는 미제공 → 임의 생성 금지
+      /* 짐서폿은 공식 다운로드 페이지 하나로 통일한다.
+         ⚠ App Store · Google Play 직접 링크를 고객 화면에 동시에 노출하지 않는다.
+            download 가 있으면 모든 화면(모바일 버튼 · PC QR · 하단 CTA)이
+            이 URL 하나만 쓴다. (appstore.js storeUrlFor 참고)
+         ⚠ 가입링크(signupUrl)는 미제공 → 임의 생성 금지 */
       appStore: {
-        ios: 'https://apps.apple.com/kr/app/id6497406116',
-        android: 'https://play.google.com/store/apps/details?id=com.gymsupport',
+        ios: null,
+        android: null,
+        download: 'https://www.gymss.co.kr/down1',
       },
       qrImage: null,
       signupUrl: null,
@@ -121,7 +133,7 @@ export const STORES = [
     shortName: '평거점',
     monthlyPrice: 48900,
     status: 'open',
-    longTermOffer: { months: 10, price: 428000, active: true },
+    longTermOffer: null, // 과거 '선착순 10개월권' 해제 — 장기권은 products.js pass365(12개월)로 이전
     description: null,
     address: '경남 진주시 순환로 539 오승빌딩 6·7층',
     locationNote: null,
@@ -191,7 +203,7 @@ export const STORES = [
     shortName: '보건대점',
     monthlyPrice: 48900,
     status: 'open',
-    longTermOffer: { months: 10, price: 399000, active: true },
+    longTermOffer: null, // 과거 '선착순 10개월권' 해제 — 장기권은 products.js pass365(12개월)로 이전
     description: null,
     address: '경남 진주시 북장대로 96 2층',
     locationNote: '상봉동 바다마트 건물 2층',
@@ -247,7 +259,7 @@ export const STORES = [
     shortName: '신진주역점',
     monthlyPrice: 48900,
     status: 'open',
-    longTermOffer: { months: 10, price: 428000, active: true },
+    longTermOffer: null, // 과거 '선착순 10개월권' 해제 — 장기권은 products.js pass365(12개월)로 이전
     description: null,
     address: '경남 진주시 개양로 112, 신진주역세권 줌테라스 2층',
     locationNote: null,
@@ -305,7 +317,7 @@ export const STORES = [
     shortName: '삼천포 본점',
     monthlyPrice: 48900,
     status: 'open',
-    longTermOffer: { months: 10, price: 428000, active: true },
+    longTermOffer: null, // 과거 '선착순 10개월권' 해제 — 장기권은 products.js pass365(12개월)로 이전
     description: '웨이트와 유산소 공간을 갖춘 삼천포 본점 구독 운영 지점.',
     address: '경남 사천시 주공로 18 2층',
     locationNote: null,
@@ -359,7 +371,7 @@ export const STORES = [
     shortName: '벌리점',
     monthlyPrice: 48900,
     status: 'open',
-    longTermOffer: { months: 10, price: 428000, active: true },
+    longTermOffer: null, // 과거 '선착순 10개월권' 해제 — 장기권은 products.js pass365(12개월)로 이전
     description: null,
     address: '경남 사천시 신항로 116 라움빌딩 3층',
     locationNote: null,
@@ -422,7 +434,7 @@ export const STORES = [
     monthlyPrice: 48900,
     // 시설 특징은 길게 쓰지 않고 아래 facilities chip 으로만 보여준다
     description: null,
-    longTermOffer: { months: 10, price: 428000, active: true },
+    longTermOffer: null, // 과거 '선착순 10개월권' 해제 — 장기권은 products.js pass365(12개월)로 이전
     address: null,
     locationNote: null,
     hours: null,
@@ -478,7 +490,7 @@ export const STORES = [
     status: 'open',
     monthlyPrice: 48900,
     description: '약 500평대 대형 프리미엄 헬스장',
-    longTermOffer: { months: 10, price: 428000, active: true },
+    longTermOffer: null, // 과거 '선착순 10개월권' 해제 — 장기권은 products.js pass365(12개월)로 이전
     address: null,
     locationNote: null,
     hours: null,
@@ -530,9 +542,10 @@ export const STORES = [
          결제 CTA · 시설 섹션에 나타나지 않고, ComingSoon 섹션에만 노출된다.
        → 구독 시트에서도 안내만 되고 앱스토어로 보내지 않는다.
 
-     ⚠ 가격 미확정 → monthlyPrice: null / longTermOffer: null.
-        다른 지점 가격(48,900 · 428,000)을 복사해 넣지 않는다.
+     ⚠ 가격 미확정 → monthlyPrice: null.
+        다른 지점 가격(48,900 등)을 복사해 넣지 않는다.
         COMING SOON 상태에서는 화면에 가격을 노출하지 않는다.
+     ⚠ 일정이 확정되지 않은 지점은 listed: false 로 두어 고객 랜딩에서 빼 둔다.
      ⚠ 실사진 미확보 → thumbImage: null / facilityImages: [].
         다른 지점 사진이나 AI 이미지를 절대 쓰지 않는다.
         사진이 없으면 브랜드 기반 타이포 placeholder 로 표시된다.
@@ -541,7 +554,7 @@ export const STORES = [
 
      오픈하면 이 객체에서
        status: 'open' / subscriptionEnabled: true 로 바꾸고
-       monthlyPrice · longTermOffer · 사진 · usageGuide 를 채우면
+       monthlyPrice · 사진 · usageGuide 를 채우면
        그대로 기존 구독 지점과 같은 구매동선에 들어간다.
      ══════════════════════════════════════════════════════════ */
   {
@@ -550,7 +563,11 @@ export const STORES = [
     name: '머슬팩토리24 진주정촌점',
     shortName: '진주정촌점',
     status: 'coming_soon',
-    openLabel: '2026.10 OPEN',
+    /* 2027년 11월 예상 — 일정이 확정되지 않아 고객 랜딩에 노출하지 않는다.
+       데이터는 지우지 않는다. 확정되면 listed: true + openLabel 만 채운다.
+       ⚠ 확정 전까지 openLabel 에 오픈 시점을 적지 않는다. */
+    listed: false,
+    openLabel: null,
     monthlyPrice: null,
     description: null,
     highlights: [],
@@ -580,6 +597,8 @@ export const STORES = [
     name: '머슬팩토리24 진주교대점',
     shortName: '진주교대점',
     status: 'coming_soon',
+    /* 현재 고객 랜딩에 공개하는 유일한 오픈 예정 지점 */
+    listed: true,
     openLabel: '2026.10 OPEN',
     monthlyPrice: null,
     description: null,
@@ -610,7 +629,10 @@ export const STORES = [
     name: '올드짐 사천점',
     shortName: '사천점',
     status: 'coming_soon',
-    openLabel: '2026.10 OPEN',
+    /* 2027년 1월 전후 예상 — 일정 미확정이라 고객 랜딩에 노출하지 않는다.
+       ⚠ 확정 전까지 openLabel 에 오픈 시점을 적지 않는다. */
+    listed: false,
+    openLabel: null,
     monthlyPrice: null,
     description: null,
     highlights: [],
@@ -641,8 +663,14 @@ export const MAX_FACILITY_CHIPS = 6
 
 export const SUBSCRIPTION_STORES = STORES.filter((s) => s.subscriptionEnabled)
 
-/** 오픈 예정 지점 — 운영 지점 목록 뒤에 안내용으로만 노출한다 */
-export const COMING_SOON_STORES = STORES.filter((s) => s.status === 'coming_soon')
+/**
+ * 오픈 예정 지점 — 운영 지점 목록 뒤에 안내용으로만 노출한다.
+ * ⚠ listed: false 인 지점은 일정 미확정이라 고객 화면에 내보내지 않는다.
+ *    (데이터는 stores 배열에 그대로 남아 있다)
+ */
+export const COMING_SOON_STORES = STORES.filter(
+  (s) => s.status === 'coming_soon' && s.listed !== false,
+)
 
 export const getStore = (id) => STORES.find((s) => s.id === id) || null
 

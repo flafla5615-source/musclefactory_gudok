@@ -4,8 +4,8 @@
    지점 · 상품 · 추가옵션 선택을 하나의 계산 로직으로 모은다.
    화면 컴포넌트는 계산을 직접 하지 않고 여기서 나온 결과만 그린다.
 
-   ⚠ 12개월 회원권(일시결제)은
-      월 예상 결제금액 계산에 섞지 않는다.
+   ⚠ 기간형 이용권(365 GYMPASS · ALL-IN-ONE 365 PASS)은
+      월 예상 결제금액 계산에 섞지 않는다. (priceUnit !== '월' → calculable: false)
    ══════════════════════════════════════════════════════════════ */
 
 import { ADD_ONS, BASE_MONTHLY_PRICE, getProduct } from '../data/products.js'
@@ -31,7 +31,7 @@ export function isOptionAvailable(store, optionId) {
   return field ? store[field] !== false : true
 }
 
-/** 월 단위로 결제되는 상품인지 (현재는 월 구독) */
+/** 월 단위로 결제되는 상품인지 (월 구독 · GYMPASS 통합 월 구독) */
 export function isMonthlyProduct(product) {
   return Boolean(product) && product.price !== null && product.priceUnit === '월'
 }

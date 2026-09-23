@@ -1,7 +1,8 @@
 import { formatNumber } from '../lib/format.js'
 
 /**
- * 상품 카드 — 3개 카드가 완전히 같은 규격을 쓴다.
+ * 상품 카드 — 같은 이용범위의 카드가 완전히 같은 규격을 쓴다.
+ * 기간 한정 상품은 카드를 키우지 않고 칩으로만 알린다.
  * 텍스트 길이가 달라도 CTA 위치가 흔들리지 않도록
  * .card(flex column) + .card-foot(margin-top:auto) 으로 하단 정렬한다.
  * 추천 상품은 카드를 키우지 않고 테두리 + 작은 칩으로만 강조한다.
@@ -17,8 +18,12 @@ export default function ProductCard({ product, price, selected, storeNote, onSel
       {/* 헤더 — 상품명 + 추천/예정 칩 (고정 높이로 아래 요소 위치를 맞춘다) */}
       <div className="flex min-h-[28px] items-start justify-between gap-3">
         <h3 className="t-card text-fog">{product.name}</h3>
-        {product.recommended && <span className="chip chip-accent">추천</span>}
-        {product.status === 'coming_soon' && <span className="chip chip-quiet">공개 예정</span>}
+        <span className="flex flex-shrink-0 flex-wrap justify-end gap-1.5">
+          {product.recommended && <span className="chip chip-accent">추천</span>}
+          {product.promotion?.chipLabel && (
+            <span className="chip chip-quiet">{product.promotion.chipLabel}</span>
+          )}
+        </span>
       </div>
 
       {/* 가격 — 모든 카드에서 같은 위치 */}

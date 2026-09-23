@@ -2,7 +2,6 @@ import { useState } from 'react'
 import Reveal from './Reveal.jsx'
 import Section from './Section.jsx'
 import { COMING_SOON_STORES } from '../data/stores.js'
-import { formatNumber, perMonth } from '../lib/format.js'
 
 /**
  * 오픈 예정 지점
@@ -15,9 +14,12 @@ import { formatNumber, perMonth } from '../lib/format.js'
  *      (지점 선택 state 에도 들어가지 않는다 — subscriptionEnabled: false)
  *    · 정보형 CTA '지점 정보 보기' 로만 펼친다
  *
- * ⚠ 카드 표면에는 가격을 노출하지 않는다.
- *    월 구독(48,900원)이 메인이고 장기권은 서브다.
- *    장기권 예정가는 '지점 정보 보기' 를 눌렀을 때만 보여준다.
+ * ⚠ 카드 표면에도 상세에도 가격을 노출하지 않는다.
+ *    오픈 예정 지점의 가격은 확정 전이므로 '오픈 시 안내' 로만 표기한다.
+ *    (과거 '오픈 선착순 장기권' 영역은 제거했다 — 장기권은 products.js 로 이전)
+ *
+ * ⚠ 일정이 확정되지 않은 지점은 stores.js 의 listed: false 로 걸러진다.
+ *    이 컴포넌트는 COMING_SOON_STORES 를 그대로 그린다.
  *
  * ⚠ 사진은 그 지점 폴더의 실사진만 쓴다. 지점 간 사진을 절대 섞지 않는다.
  *    사진이 없으면 placeholder 로 두고 다른 지점 사진·AI 이미지를 넣지 않는다.
@@ -43,15 +45,23 @@ export default function ComingSoon() {
       }
       description="구독 가능한 지점은 계속 늘어납니다."
     >
+      <div className="mb-5 flex items-center gap-2.5">
+        <span
+          className="font-display text-[11px] font-bold tracking-[0.14em]"
+          style={{ color: 'var(--color-accent-soft)' }}
+        >
+          NEXT GYM PASS
+        </span>
+        <span className="h-px flex-1" style={{ background: 'var(--color-line)' }} />
+      </div>
       <div
         className={`grid auto-rows-fr gap-3 ${GRID_COLS[COMING_SOON_STORES.length] || 'md:grid-cols-3'}`}
       >
         {COMING_SOON_STORES.map((store, i) => {
           const open = openId === store.id
-          const offer = store.longTermOffer?.active ? store.longTermOffer : null
           const gallery = store.facilityImages || []
-          // 사진·특징·가격이 전부 없는 지점은 펼칠 게 없으므로 아코디언을 만들지 않는다
-          const hasDetail = gallery.length > 0 || store.highlights?.length > 0 || Boolean(offer)
+          // 사진·특징이 전부 없는 지점은 펼칠 게 없으므로 아코디언을 만들지 않는다
+          const hasDetail = gallery.length > 0 || store.highlights?.length > 0
 
           return (
             <Reveal key={store.id} delay={i * 70} className="h-full">
@@ -193,34 +203,6 @@ export default function ComingSoon() {
                         <dd>오픈 시 안내</dd>
                       </div>
                     </dl>
-
-                    {/* 오픈 선착순 장기권 — 월 구독보다 낮은 위계로 (액센트 미사용) */}
-                    {offer && (
-                      <div
-                        className="mt-3 rounded-[12px] px-4 py-3.5"
-                        style={{
-                          background: 'var(--color-ink)',
-                          border: '1px solid var(--color-line)',
-                        }}
-                      >
-                        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-                          <span className="text-[13px] font-semibold text-mute">
-                            {offer.label ? `${offer.label} 장기권` : '선착순 장기권'}
-                          </span>
-                          <span className="tnum text-[15px] font-bold text-fog">
-                            {offer.months}개월 {formatNumber(offer.price)}원
-                          </span>
-                        </div>
-                        {perMonth(offer.price, offer.months) !== null && (
-                          <p className="tnum mt-1 t-caption">
-                            월 환산 약 {formatNumber(perMonth(offer.price, offer.months))}원
-                          </p>
-                        )}
-                        <p className="mt-2 t-caption">
-                          오픈 선착순 혜택으로, 인원 마감 시 종료될 수 있습니다.
-                        </p>
-                      </div>
-                    )}
 
                     <p className="mt-3 t-caption">
                       주소 · 운영시간 · 오픈일은 확정되면 안내드립니다.

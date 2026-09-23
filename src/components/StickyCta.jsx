@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { formatNumber } from '../lib/format.js'
+import { productPriceText } from '../lib/format.js'
 import {
   PICK_STORE_CTA_LABEL,
   appCtaShortLabel,
@@ -16,6 +16,9 @@ import { openAppStore } from '../lib/tracking.js'
  *   미선택      → 월 48,900원부터        / 내 지점 선택하기
  *   시청점      → 시청점 · 월 48,900원    / 짐서폿에서 시작하기
  *   평거점      → 평거점 · 월 48,900원    / 바디코디에서 시작하기
+ *
+ * ⚠ 금액은 상품 단위(priceUnit)에 맞춰 표기한다.
+ *    12개월 상품(365 GYMPASS · ALL-IN-ONE)에 '월' 을 붙이지 않는다.
  *
  * 버튼 문구는 선택 지점의 앱(stores.js usageGuide)에서 온다. 하드코딩하지 않는다.
  * 모바일 바(lg:hidden)이므로 기기 감지 결과대로 해당 스토어로 바로 보낸다.
@@ -47,6 +50,7 @@ export default function StickyCta({ store, quote, onSubscribe }) {
       : `${store.shortName} 시작하기`
     : PICK_STORE_CTA_LABEL
   const amount = quote.calculable ? quote.total : quote.basePrice
+  const amountText = productPriceText(amount, quote.priceUnit)
 
   const handleClick = () => {
     if (!appInfo) return onSubscribe()
@@ -93,12 +97,16 @@ export default function StickyCta({ store, quote, onSubscribe }) {
         <div className="flex min-w-0 flex-1 flex-col justify-center" style={{ height: '40px' }}>
           <span className="truncate text-[11px] leading-[14px] text-mute-2">{context || ' '}</span>
           <span className="tnum truncate text-[15px] font-bold leading-[20px] text-fog">
-            {amount === null ? (
+            {amountText === null ? (
               <span className="text-mute">가격 추후 공개</span>
             ) : (
               <>
-                월 <span style={{ color: 'var(--color-accent-soft)' }}>{formatNumber(amount)}원</span>
-                {!store && <span className="ml-1 text-[12px] font-medium text-mute">부터</span>}
+                <span style={{ color: 'var(--color-accent-soft)' }}>{amountText}</span>
+                {/* '부터' 는 지점에 따라 가격이 달라지는 상품(월 구독)에만 붙인다.
+                    365 GYMPASS · ALL-IN-ONE 처럼 단일가 상품에는 쓰지 않는다. */}
+                {!store && quote.product.storePriceAware && (
+                  <span className="ml-1 text-[12px] font-medium text-mute">부터</span>
+                )}
               </>
             )}
           </span>

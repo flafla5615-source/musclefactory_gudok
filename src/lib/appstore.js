@@ -12,20 +12,28 @@
    ══════════════════════════════════════════════════════════════ */
 
 /**
- * 이 지점의 앱 정보. 앱스토어 링크가 하나도 없으면 null 을 돌려준다.
- * @returns {{ appName: string|null, appType: string|null, ios: string|null, android: string|null }|null}
+ * 이 지점의 앱 정보. 연결할 링크가 하나도 없으면 null 을 돌려준다.
+ *
+ * download 가 있으면 그 하나로 통일한다 (짐서폿 공식 다운로드 페이지).
+ * iOS / Android 를 따로 나누지 않고 단일 버튼 · 단일 QR 로만 연결한다.
+ *
+ * @returns {{ appName, appType, ios, android, download, single: boolean }|null}
  */
 export function getAppInfo(store) {
   const guide = store?.usageGuide
+  const download = guide?.appStore?.download || null
   const ios = guide?.appStore?.ios || null
   const android = guide?.appStore?.android || null
-  if (!ios && !android) return null
+  if (!ios && !android && !download) return null
 
   return {
     appName: guide.appName || null,
     appType: guide.appType || null,
     ios,
     android,
+    download,
+    /** 단일 링크로 연결하는 앱인가 (App Store / Google Play 를 나누지 않는다) */
+    single: Boolean(download),
   }
 }
 
@@ -45,12 +53,31 @@ export function detectPlatform() {
   return 'desktop'
 }
 
-/** 해당 플랫폼의 스토어 URL. 없으면 남은 쪽으로 대체한다. */
+/**
+ * 이 기기에서 열 URL.
+ * 공식 다운로드 페이지(download)가 있으면 플랫폼과 무관하게 그 URL 하나만 쓴다.
+ * 없으면 기존처럼 기기에 맞는 앱스토어로 보낸다. (PC 는 null → QR 안내)
+ */
 export function storeUrlFor(appInfo, platform) {
   if (!appInfo) return null
+  if (appInfo.download) return appInfo.download
   if (platform === 'ios') return appInfo.ios || appInfo.android
   if (platform === 'android') return appInfo.android || appInfo.ios
   return null
+}
+
+/** QR · 단일 버튼이 가리킬 대표 URL */
+export function primaryAppUrl(appInfo) {
+  if (!appInfo) return null
+  return appInfo.download || appInfo.android || appInfo.ios || null
+}
+
+/**
+ * 단일 링크 앱의 설치 버튼 문구 — '짐서폿 앱 설치하기'
+ * App Store / Google Play 를 동시에 노출하지 않기 위한 단일 CTA.
+ */
+export function singleInstallLabel(appInfo) {
+  return appInfo?.appName ? `${appInfo.appName} 앱 설치하기` : INSTALL_CTA_LABEL
 }
 
 /* ── CTA 문구 ───────────────────────────────────────────────

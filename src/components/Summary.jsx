@@ -1,11 +1,16 @@
 import Reveal from './Reveal.jsx'
 import Section from './Section.jsx'
-import { formatNumber } from '../lib/format.js'
+import ProductTerms from './ProductTerms.jsx'
+import { formatNumber, productPriceText } from '../lib/format.js'
 
 /**
  * STEP 4 — 선택내용 확인
- * 지점 · 상품 · 추가옵션 · 월 예상 결제금액을 한 번에 보여주고 마지막 CTA 를 건다.
- * 선택하지 않은 옵션은 표시하지 않는다.
+ * 지점 · 상품 · 이용범위 · 예상 결제금액을 한 번에 보여주고 마지막 CTA 를 건다.
+ *
+ * ⚠ 금액은 상품 단위(월 / 12개월)에 맞춰 표기한다.
+ *    12개월 상품에 '월' 을 붙이지 않는다.
+ * ⚠ 이용범위(scopeLines)를 여기서도 한 번 더 보여준다.
+ *    'GYMPASS 통합 월 구독' 을 전 지점 무제한으로 오해하지 않게 하기 위함.
  */
 export default function Summary({ store, quote, hasProductSelection, onSubscribe, onPickStore }) {
   // 지점을 아직 안 골랐으면 요약 대신 지점 선택으로 유도한다
@@ -41,9 +46,7 @@ export default function Summary({ store, quote, hasProductSelection, onSubscribe
                 <span className="ml-1.5 text-[12px] text-mute-2">기본</span>
               )}
               <span className="ml-2 tnum text-mute">
-                {quote.basePrice === null
-                  ? '가격 추후 공개'
-                  : `${formatNumber(quote.basePrice)}원${quote.priceUnit ? ` / ${quote.priceUnit}` : ''}`}
+                {productPriceText(quote.basePrice, quote.priceUnit) || '가격 추후 공개'}
               </span>
             </dd>
           </div>
@@ -65,6 +68,11 @@ export default function Summary({ store, quote, hasProductSelection, onSubscribe
           )}
         </dl>
 
+        {/* 고른 이용권의 이용범위 — 결제 전 마지막 확인 */}
+        <div className="mt-4">
+          <ProductTerms product={quote.product} price={quote.basePrice} tone="quiet" />
+        </div>
+
         {/* 월 예상 결제금액 — 월 단위 상품일 때만 계산 */}
         {quote.calculable ? (
           <div
@@ -81,7 +89,9 @@ export default function Summary({ store, quote, hasProductSelection, onSubscribe
           </div>
         ) : (
           <p className="mt-4 t-caption">
-            선택하신 상품은 가격과 세부 정책이 확정된 뒤 안내드립니다.
+            {quote.basePrice === null
+              ? '선택하신 상품은 가격과 세부 정책이 확정된 뒤 안내드립니다.'
+              : '기간형 이용권은 매월 결제되지 않고 이용기간 전체가 한 번에 적용됩니다.'}
           </p>
         )}
 

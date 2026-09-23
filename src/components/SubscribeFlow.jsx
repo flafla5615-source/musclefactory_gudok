@@ -2,14 +2,16 @@ import { useEffect, useMemo, useState } from 'react'
 import QRCode from 'qrcode'
 import { COMING_SOON_STORES, SUBSCRIPTION_STORES } from '../data/stores.js'
 import { DEFAULT_USAGE_GUIDE } from '../data/content.js'
-import { formatNumber } from '../lib/format.js'
+import ProductTerms from './ProductTerms.jsx'
+import { formatNumber, monthlyPriceFor, productPriceFor } from '../lib/format.js'
 import { BASE_MONTHLY_PRICE } from '../data/products.js'
-import { monthlyPriceFor } from '../lib/format.js'
 import { openAppStore } from '../lib/tracking.js'
 import {
   INSTALL_CTA_LABEL,
   detectPlatform,
   getAppInfo,
+  primaryAppUrl,
+  singleInstallLabel,
   storeUrlFor,
 } from '../lib/appstore.js'
 
@@ -28,8 +30,14 @@ import {
  *    → PC:     실제 앱스토어 URL 로 만든 QR 을 보여준다.
  *
  * ⚠ 검증된 App Store / Google Play URL 외에 deep link 를 만들지 않는다.
+ *
+ * ⚠ 짐서폿(시청점)은 공식 다운로드 페이지 하나로만 연결한다.
+ *    App Store / Google Play 버튼을 동시에 노출하지 않고, PC QR 도 같은 URL 을 쓴다.
+ *
+ * ⚠ 앱으로 넘어가기 직전에 고른 이용권의 조건을 다시 보여준다.
+ *    'GYMPASS 통합 월 구독'(58,900원)을 전 지점 무제한으로 오해하지 않게 하기 위함.
  */
-export default function SubscribeFlow({ open, onClose, initialStore = null, onPickStore }) {
+export default function SubscribeFlow({ open, onClose, initialStore = null, quote = null, onPickStore }) {
   const [store, setStore] = useState(initialStore)
   const [qr, setQr] = useState(null)
 
@@ -56,8 +64,9 @@ export default function SubscribeFlow({ open, onClose, initialStore = null, onPi
   const isMobile = platform === 'ios' || platform === 'android'
   const directUrl = storeUrlFor(appInfo, platform)
 
-  // PC 에서만 QR 을 만든다. 실제 앱스토어 URL 을 그대로 인코딩한다 (장식용 QR 금지)
-  const qrTarget = appInfo ? appInfo.android || appInfo.ios : null
+  /* PC 에서만 QR 을 만든다. 실제 URL 을 그대로 인코딩한다 (장식용 QR 금지)
+     공식 다운로드 페이지가 있으면 QR 도 그 URL 을 쓴다. */
+  const qrTarget = primaryAppUrl(appInfo)
   useEffect(() => {
     if (!open || isMobile || !qrTarget) {
       setQr(null)
@@ -107,15 +116,25 @@ export default function SubscribeFlow({ open, onClose, initialStore = null, onPi
       `app_outbound:${store.id}:${key}`,
     )
 
-  const storeButtons = [
-    appInfo?.ios && { key: 'ios', label: 'App Store', icon: 'solar:smartphone-linear', url: appInfo.ios },
-    appInfo?.android && {
-      key: 'android',
-      label: 'Google Play',
-      icon: 'solar:play-circle-linear',
-      url: appInfo.android,
-    },
-  ].filter(Boolean)
+  /* 단일 다운로드 페이지가 있으면 버튼도 하나만 만든다 */
+  const storeButtons = appInfo?.single
+    ? [
+        {
+          key: 'download',
+          label: singleInstallLabel(appInfo),
+          icon: 'solar:download-minimalistic-linear',
+          url: appInfo.download,
+        },
+      ]
+    : [
+        appInfo?.ios && { key: 'ios', label: 'App Store', icon: 'solar:smartphone-linear', url: appInfo.ios },
+        appInfo?.android && {
+          key: 'android',
+          label: 'Google Play',
+          icon: 'solar:play-circle-linear',
+          url: appInfo.android,
+        },
+      ].filter(Boolean)
 
   return (
     <div
@@ -266,9 +285,20 @@ export default function SubscribeFlow({ open, onClose, initialStore = null, onPi
                 {appName ? `${appName} 앱에서 바로 구독하세요.` : '앱에서 바로 구독하세요.'}
               </p>
 
-              <p className="tnum mt-1.5 text-[13px] font-semibold text-mute">
-                월 {formatNumber(monthlyPriceFor(store, BASE_MONTHLY_PRICE))}원
-              </p>
+              {/* 앱으로 나가기 직전 — 고른 이용권의 조건을 마지막으로 확인시킨다 */}
+              {quote?.product ? (
+                <div className="mt-3">
+                  <ProductTerms
+                    product={quote.product}
+                    price={productPriceFor(quote.product, store, BASE_MONTHLY_PRICE)}
+                    tone="quiet"
+                  />
+                </div>
+              ) : (
+                <p className="tnum mt-1.5 text-[13px] font-semibold text-mute">
+                  월 {formatNumber(monthlyPriceFor(store, BASE_MONTHLY_PRICE))}원
+                </p>
+              )}
 
               {/* 절차 — stores.js usageGuide.steps 그대로 */}
               <ol className="mt-4">
@@ -290,10 +320,10 @@ export default function SubscribeFlow({ open, onClose, initialStore = null, onPi
                   {directUrl ? (
                     <button
                       type="button"
-                      onClick={() => go(directUrl, platform)}
+                      onClick={() => go(directUrl, appInfo.single ? 'download' : platform)}
                       className="btn btn-primary"
                     >
-                      {INSTALL_CTA_LABEL}
+                      {appInfo.single ? singleInstallLabel(appInfo) : INSTALL_CTA_LABEL}
                     </button>
                   ) : (
                     <p className="t-caption">이 지점의 앱 설치 안내는 준비 중입니다.</p>

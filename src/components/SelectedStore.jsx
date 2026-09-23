@@ -1,7 +1,8 @@
 import Reveal from './Reveal.jsx'
 import Section from './Section.jsx'
 import StoreUsageGuide from './StoreUsageGuide.jsx'
-import { formatNumber, monthlyPriceFor, perMonth } from '../lib/format.js'
+import ProductTerms from './ProductTerms.jsx'
+import { formatNumber, monthlyPriceFor, productPriceFor } from '../lib/format.js'
 import { BASE_MONTHLY_PRICE } from '../data/products.js'
 import { MAX_FACILITY_CHIPS } from '../data/stores.js'
 import { EVENTS, openChannel } from '../lib/tracking.js'
@@ -17,7 +18,7 @@ import { EVENTS, openChannel } from '../lib/tracking.js'
  *    '[정보 입력]' 같은 개발용 문구를 소비자 화면에 노출하지 않는다.
  * ⚠ 시설은 긴 문장으로 나열하지 않고 최대 6개 chip 으로만 보여준다.
  */
-export default function SelectedStore({ store, onSubscribe }) {
+export default function SelectedStore({ store, quote, onSubscribe }) {
   if (!store) {
     return (
       <Section id="selected-store" tone="ink-2">
@@ -42,20 +43,20 @@ export default function SelectedStore({ store, onSubscribe }) {
   /* ⚠ 부가서비스(운동복 · 개인락커)는 고객 화면에 노출하지 않는다.
      '월 48,900원에 포함' 처럼 오해될 문구도 쓰지 않는다.
      stores.js 의 clothingAvailable / lockerAvailable 데이터는 그대로 두었으니
-     다시 팔게 되면 아래 주석만 되살리면 된다.
-     ⚠ 전지점 구독도 상품 비노출 기간이라 함께 감춰져 있다. */
-  /* 고객에게 보여주는 상품은 '월 구독' 과 '선착순 10개월권' 둘뿐이다.
-     3개월 구독권은 판매하지 않아 데이터까지 제거했고,
-     전지점 구독 / 운동복 / 개인락커는 비노출이라 행을 만들지 않는다.
-     ('추후 공개' / '준비 중' 같은 티저도 넣지 않는다) */
+     다시 팔게 되면 아래 주석만 되살리면 된다. */
   const optionRows = []
 
-  // 선착순 장기권 — 가격 미확정(null)이거나 마감(active:false)이면 영역 자체를 만들지 않는다
-  const offer = store.longTermOffer?.active ? store.longTermOffer : null
+  /* ⚠ 과거 '선착순 10개월권'(stores.js longTermOffer) 영역은 제거했다.
+     장기권은 products.js 의 365 GYMPASS(12개월 428,000원) ·
+     ALL-IN-ONE 365 PASS 로 이전되어 상품 선택 영역에서만 다룬다.
+     같은 페이지에 10개월권과 12개월권이 함께 뜨는 모순을 막기 위함. */
 
   const facilities = store.facilities.slice(0, MAX_FACILITY_CHIPS)
   const hasAnyDetail =
     infoRows.length > 0 || facilities.length > 0 || store.floors.length > 0 || optionRows.length > 0
+
+  // 고른 이용권 — 앱으로 넘어가기 전에 조건을 한 번 더 보여준다
+  const product = quote?.product || null
 
   const channels = [
     store.mapUrl && { key: 'map', label: '길찾기', url: store.mapUrl },
@@ -143,46 +144,23 @@ export default function SelectedStore({ store, onSubscribe }) {
           <p className="mt-5 t-caption">지점 상세 정보는 순차적으로 공개됩니다.</p>
         )}
 
-        {/* 선착순 장기권 — 이 지점에 확정 가격이 있을 때만.
-            ⚠ 메인은 어디까지나 월 구독이다. 액센트 컬러를 쓰지 않고
-               월 구독가(19px)보다 작은 크기로 서브 옵션처럼 보여준다.
-            ⚠ 금액은 stores.js 의 longTermOffer.price 에서만 온다. 하드코딩 금지. */}
-        {offer && (
-          <div
-            className="mt-6 rounded-[12px] px-4 py-4"
-            style={{ background: 'var(--color-ink)', border: '1px solid var(--color-line)' }}
-          >
-            <p className="text-[12.5px] text-mute-2">오래 이용할 계획이라면?</p>
-            <div className="mt-2 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-              <span className="text-[13px] font-semibold text-mute">
-                선착순 {offer.months}개월권{offer.upcoming ? ' (예정)' : ''}
-              </span>
-              <span className="tnum text-[15px] font-bold text-fog">
-                {formatNumber(offer.price)}원
-              </span>
-            </div>
-            {/* 월 환산은 딱 나누어떨어질 때만. 부정확한 금액은 표시하지 않는다 */}
-            {perMonth(offer.price, offer.months) !== null && (
-              <p className="tnum mt-1 t-caption">
-                월 환산 약 {formatNumber(perMonth(offer.price, offer.months))}원
-              </p>
-            )}
-            <p className="mt-2 t-caption">
-              {offer.upcoming
-                ? '오픈 시 적용 예정 가격이며 변경될 수 있습니다.'
-                : '선착순 인원 마감 시 혜택이 종료될 수 있습니다.'}
-            </p>
-          </div>
-        )}
-
         {/* CTA — 이 지점이 쓰는 앱으로 보낸다.
             ⚠ 전화 상담 버튼을 두지 않는다. 상주 직원이 없는 지점이 있어
                랜딩을 전화문의 중심으로 운영하지 않는다. */}
         <div className="card-foot flex flex-col gap-2.5">
           {/* 시설사진을 보고 여기까지 내려온 고객도 바로 구독할 수 있어야 한다.
               누르면 이 지점의 앱 안내(구독 전환 시트)로 이어진다. */}
-          <p className="tnum text-[13px] font-semibold text-mute">
-            월 {formatNumber(price)}원 · 앱에서 바로 구독할 수 있어요.
+          {/* 결제 전 마지막 확인 — 고른 이용권의 이용범위를 다시 보여준다.
+              ⚠ 'GYMPASS 통합 월 구독' 을 전 지점 무제한으로 오해하지 않게 하는 지점이다. */}
+          {product && (
+            <ProductTerms
+              product={product}
+              price={productPriceFor(product, store, BASE_MONTHLY_PRICE)}
+              tone="quiet"
+            />
+          )}
+          <p className="text-[13px] font-semibold text-mute">
+            앱에서 바로 구독할 수 있어요.
           </p>
           <button type="button" onClick={onSubscribe} className="btn btn-primary">
             이 지점 구독하기

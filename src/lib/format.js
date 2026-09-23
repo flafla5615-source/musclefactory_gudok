@@ -31,3 +31,15 @@ export function perMonth(price, months) {
   if (price % months !== 0) return null
   return price / months
 }
+
+/**
+ * 상품 가격 표기.
+ *   월 단위 상품   → '월 48,900원'
+ *   기간형 상품    → '428,000원 / 12개월'
+ * ⚠ 12개월 상품에 '월 428,000원' 처럼 붙지 않도록 단위를 항상 함께 판단한다.
+ */
+export function productPriceText(price, unit) {
+  if (typeof price !== 'number') return null
+  if (unit === '월') return `월 ${formatNumber(price)}원`
+  return unit ? `${formatNumber(price)}원 / ${unit}` : `${formatNumber(price)}원`
+}

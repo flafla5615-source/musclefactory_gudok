@@ -11,7 +11,6 @@ import Facility from './components/Facility.jsx'
 import MemberInterview from './components/MemberInterview.jsx'
 import ComingSoon from './components/ComingSoon.jsx'
 import Benefits from './components/Benefits.jsx'
-import OpenEvent from './components/OpenEvent.jsx'
 import HowToUse from './components/HowToUse.jsx'
 import Faq from './components/Faq.jsx'
 import Summary from './components/Summary.jsx'
@@ -229,7 +228,11 @@ export default function App() {
           onSelectProduct={handleSelectProduct}
         />
         <Stores selectedStoreId={selectedStoreId} onSelectStore={handleSelectStore} />
-        <SelectedStore store={selectedStore} onSubscribe={() => handleSubscribe('selected-store')} />
+        <SelectedStore
+          store={selectedStore}
+          quote={quote}
+          onSubscribe={() => handleSubscribe('selected-store')}
+        />
         {/* ⚠ 운동복 · 개인락커 부가서비스 비노출.
             고객 화면은 월 48,900원 → 지점 선택 → 앱 설치 → 구독권 구매 한 줄기만 남긴다.
             데이터(products.js ADD_ONS, stores.js clothingAvailable/lockerAvailable)는
@@ -244,11 +247,10 @@ export default function App() {
         <MemberInterview />
         <ComingSoon />
         <Benefits />
-        {/* ⚠ 12개월 회원권 비노출 — 지점별 선착순 장기권(stores.js longTermOffer)과
-            같은 금액(399,000원)이 기간만 다르게 겹쳐 가격 모순이 생긴다.
-            다시 팔려면 products.js EVENT_PRODUCT.status 를 'available' 로 바꾸고
-            아래 한 줄의 주석을 해제하면 된다. */}
-        {/* <OpenEvent onConsult={handleConsult} /> */}
+        {/* ⚠ 과거 '12개월 회원권(399,000원)' 오픈이벤트 섹션은 제거했다.
+            2026-09 최신 정책에서 장기권은 products.js 의
+            365 GYMPASS(12개월 428,000원) · ALL-IN-ONE 365 PASS(598,000원)로
+            대체되었고, 상품 선택 영역에서 함께 다룬다. */}
         <HowToUse />
         <Faq />
         <Summary
@@ -269,6 +271,7 @@ export default function App() {
         open={flowOpen}
         onClose={() => setFlowOpen(false)}
         initialStore={selectedStore}
+        quote={quote}
         onPickStore={handleSelectStore}
       />
 

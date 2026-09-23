@@ -14,6 +14,10 @@ import { EVENTS, openChannel } from '../lib/tracking.js'
  * 앱 이름을 단정하지 않는 기본 흐름만 보여준다.
  *
  * 앱스토어 URL·QR 이미지는 제공되기 전까지 null 이며, 임의로 만들지 않는다.
+ *
+ * ⚠ usageGuide.appStore.download 가 있으면(짐서폿 공식 다운로드 페이지)
+ *    App Store / Google Play 를 나누지 않고 단일 버튼 하나로만 연결한다.
+ *    두 스토어 버튼이 고객 화면에 동시에 노출되지 않게 하기 위함.
  */
 export default function StoreUsageGuide({ store }) {
   if (!store) return null
@@ -26,11 +30,20 @@ export default function StoreUsageGuide({ store }) {
   const entryMethod = guide.entryMethod || DEFAULT_USAGE_GUIDE.entryMethod
   const headline = guide.headline || DEFAULT_USAGE_GUIDE.headline
 
-  // 앱 다운로드 링크 — 값이 있는 플랫폼만
-  const appStoreLinks = [
-    guide.appStore?.ios && { key: 'ios', label: 'App Store', url: guide.appStore.ios },
-    guide.appStore?.android && { key: 'android', label: 'Google Play', url: guide.appStore.android },
-  ].filter(Boolean)
+  /* 앱 다운로드 링크
+     download 가 있으면 그 하나만, 없으면 값이 있는 플랫폼만 */
+  const appStoreLinks = guide.appStore?.download
+    ? [
+        {
+          key: 'download',
+          label: appName ? `${appName} 앱 설치하기` : '앱 설치하기',
+          url: guide.appStore.download,
+        },
+      ]
+    : [
+        guide.appStore?.ios && { key: 'ios', label: 'App Store', url: guide.appStore.ios },
+        guide.appStore?.android && { key: 'android', label: 'Google Play', url: guide.appStore.android },
+      ].filter(Boolean)
 
   return (
     <div className="mt-3">
@@ -79,7 +92,9 @@ export default function StoreUsageGuide({ store }) {
           <div className="card-foot flex flex-col gap-2.5">
             {appStoreLinks.length > 0 && (
               <>
-                <p className="t-caption">{appName} 앱 다운로드</p>
+                {appStoreLinks.length > 1 && (
+                  <p className="t-caption">{appName} 앱 다운로드</p>
+                )}
                 <div className={`grid gap-2.5 ${appStoreLinks.length > 1 ? 'grid-cols-2' : ''}`}>
                   {appStoreLinks.map((link) => (
                     <button

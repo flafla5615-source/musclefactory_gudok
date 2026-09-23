@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { openAppStore } from '../lib/tracking.js'
+import { EVENTS, openAppStore, track } from '../lib/tracking.js'
 import {
   appCtaLabel,
   detectPlatform,
@@ -13,6 +13,10 @@ import {
  * 모바일  기기(iOS/Android)를 감지해 해당 스토어로 바로 이동
  * PC      한 번 누르면 App Store / Google Play 를 직접 고르게 한다
  *         (검증된 스토어 URL 외에 deep link 를 만들지 않기 때문)
+ *
+ * ⚠ 공식 다운로드 페이지(appStore.download)가 있는 지점(짐서폿 시청점)은
+ *    storeUrlFor 가 플랫폼과 무관하게 그 URL 을 돌려주므로
+ *    PC 에서도 스토어 선택 없이 단일 버튼으로 연결된다.
  *
  * ⚠ 앱명·URL 은 stores.js usageGuide 에서만 온다. 여기에 하드코딩하지 않는다.
  * ⚠ 앱스토어 링크가 없는 지점이면 아무것도 렌더링하지 않는다 (fallback 버튼은

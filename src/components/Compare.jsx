@@ -1,30 +1,27 @@
 import { useState } from 'react'
 import Reveal from './Reveal.jsx'
-import { COMPARISON_ROWS } from '../data/products.js'
-import { formatPrice } from '../lib/format.js'
-
-const FIELDS = [
-  { key: 'duration', label: '이용기간' },
-  { key: 'scope', label: '이용범위' },
-  { key: 'payment', label: '결제방식' },
-]
+import { formatPrice, productPriceText } from '../lib/format.js'
 
 /**
  * 상품 비교 — PC용 표를 모바일에 축소해 넣지 않는다.
- * 기본은 접어 두고, 펼치면 상품별 카드 형태로 핵심 4개 항목만 보여준다.
+ * 기본은 접어 두고, 펼치면 상품별 카드로 핵심 항목만 보여준다.
+ *
+ * 선택한 이용범위의 상품만 비교한다. 4개를 한 번에 나열하지 않는다.
+ * 비교 항목(이용기간 · 이용범위 · 결제/판매)은 products.js 의
+ * product.compare 배열에서 그대로 읽는다. 여기에 조건을 쓰지 않는다.
  */
-export default function Compare({ selectedStore }) {
+export default function Compare({ products = [], selectedStore }) {
   const [open, setOpen] = useState(false)
 
-  // 비교할 상품이 하나뿐이면 비교 자체가 의미 없다 (현재는 월 구독만 노출)
-  if (COMPARISON_ROWS.length < 2) return null
+  // 비교할 상품이 하나뿐이면 비교 자체가 의미 없다
+  if (products.length < 2) return null
 
-  const priceOf = (row) => {
-    if (row.price === null) return '가격 추후 공개'
-    if (row.storePriceAware && selectedStore && typeof selectedStore.monthlyPrice === 'number') {
-      return formatPrice(selectedStore.monthlyPrice)
+  const priceOf = (product) => {
+    if (product.price === null) return '가격 추후 공개'
+    if (product.storePriceAware && selectedStore && typeof selectedStore.monthlyPrice === 'number') {
+      return productPriceText(selectedStore.monthlyPrice, product.priceUnit)
     }
-    return formatPrice(row.price)
+    return productPriceText(product.price, product.priceUnit) || formatPrice(product.price)
   }
 
   return (
@@ -35,7 +32,7 @@ export default function Compare({ selectedStore }) {
         aria-expanded={open}
         className="btn btn-line"
       >
-        상품 비교하기
+        이용권 비교하기
         <iconify-icon
           icon="solar:alt-arrow-down-linear"
           width="16"
@@ -45,24 +42,24 @@ export default function Compare({ selectedStore }) {
 
       {open && (
         <div className="mt-4 grid gap-3 md:grid-cols-2">
-          {COMPARISON_ROWS.map((row) => (
-            <div key={row.id} className="card !p-5">
+          {products.map((product) => (
+            <div key={product.id} className="card !p-5">
               <div className="flex items-baseline justify-between gap-3">
-                <h3 className="text-[15px] font-bold text-fog">{row.name}</h3>
+                <h3 className="text-[15px] font-bold text-fog">{product.name}</h3>
                 <span
-                  className="tnum text-[15px] font-bold"
+                  className="tnum flex-shrink-0 text-[14px] font-bold"
                   style={{
-                    color: row.recommended ? 'var(--color-accent-soft)' : 'var(--color-fog)',
+                    color: product.recommended ? 'var(--color-accent-soft)' : 'var(--color-fog)',
                   }}
                 >
-                  {priceOf(row)}
+                  {priceOf(product)}
                 </span>
               </div>
               <dl className="mt-3">
-                {FIELDS.map((f) => (
-                  <div key={f.key} className="inforow !py-2.5">
-                    <dt className="!flex-[0_0_64px] !text-[12.5px]">{f.label}</dt>
-                    <dd className="!text-[13px] !text-mute">{row.compare[f.key]}</dd>
+                {(product.compare || []).map((row) => (
+                  <div key={row.label} className="inforow !py-2.5">
+                    <dt className="!flex-[0_0_64px] !text-[12.5px]">{row.label}</dt>
+                    <dd className="!text-[13px] !text-mute">{row.value}</dd>
                   </div>
                 ))}
               </dl>
