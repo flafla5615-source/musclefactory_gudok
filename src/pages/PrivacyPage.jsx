@@ -6,6 +6,7 @@ import DocPage, {
   DocText,
 } from '../components/support/DocPage.jsx'
 import {
+  BODYCODI_LABEL,
   BODYCODI_POLICY,
   PRIVACY_POLICY,
   SUPPORT_CONTACT_ROWS,
@@ -15,13 +16,13 @@ import {
 /**
  * /privacy — 개인정보처리방침
  *
- * ⚠ 앱이 실제로 수집하는 항목 · 보유기간 · 제3자 제공 · 수탁사(PG · 문자발송 ·
- *    출입시스템) · 바디코디 운영사 법인정보 · 개인정보 보호책임자를 확인하지 못했다.
- *    법률 문구를 임의로 완성하지 않는다. 가상의 처리방침을 공개하지 않는다.
+ * GYM PASS 브랜디드 앱은 바디코디 기반으로 운영되므로, 앱 이용과 관련된
+ * 개인정보 처리는 바디코디 공식 회원용 개인정보처리방침 원문을 링크로 안내한다.
  *
- *    확정 원문을 받으면 data/support.js 의 PRIVACY_POLICY 에서
- *      published: true / effectiveDate / sections[].body
- *    세 가지만 채우면 이 페이지가 전문 게시 상태로 바뀐다.
+ * ⚠ 방침 본문을 이 저장소에 복사해 이중관리하지 않는다.
+ * ⚠ GYM PASS 자체 서버·DB 운영 설명, 자체 수집항목, 자체 보유기간,
+ *    자체 위탁업체를 임의로 추가하지 않는다.
+ * ⚠ 공식 URL 이 없을 때만 '게시 준비 안내 + 게시 예정 항목' 으로 되돌아간다.
  */
 export default function PrivacyPage() {
   const { published, effectiveDate, sections } = PRIVACY_POLICY
@@ -54,7 +55,11 @@ export default function PrivacyPage() {
             {BODYCODI_POLICY.privacyUrl ? (
               <>
                 <DocText>
-                  GYM PASS 앱의 개인정보처리방침 전문은 아래에서 확인할 수 있습니다.
+                  GYM PASS 브랜디드 앱은 {BODYCODI_LABEL} 기반으로 운영됩니다.
+                </DocText>
+                <DocText>
+                  앱 이용과 관련된 개인정보 처리에 관한 자세한 내용은 {BODYCODI_LABEL} 공식
+                  회원용 개인정보처리방침에서 확인할 수 있습니다.
                 </DocText>
                 <a
                   href={BODYCODI_POLICY.privacyUrl}
@@ -62,7 +67,8 @@ export default function PrivacyPage() {
                   rel="noopener noreferrer"
                   className="btn btn-line"
                 >
-                  개인정보처리방침 전문 보기
+                  {BODYCODI_LABEL} 개인정보처리방침 전문 보기
+                  <iconify-icon icon="solar:arrow-right-up-linear" width="15"></iconify-icon>
                 </a>
               </>
             ) : (
@@ -80,6 +86,9 @@ export default function PrivacyPage() {
             )}
           </DocSection>
 
+          {/* 공식 방침 링크가 없을 때만 — 링크가 있으면 목차가 오히려
+              'GYM PASS 자체 방침을 따로 준비 중' 으로 읽혀 혼선을 준다 */}
+          {!BODYCODI_POLICY.privacyUrl && (
           <DocSection title="게시 예정 항목">
             <DocText>개인정보처리방침에는 아래 항목이 포함될 예정입니다.</DocText>
             <ol className="flex flex-col">
@@ -100,6 +109,7 @@ export default function PrivacyPage() {
               ))}
             </ol>
           </DocSection>
+          )}
 
           <DocSection title="개인정보 관련 문의">
             {hasSupportContact ? (

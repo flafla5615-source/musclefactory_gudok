@@ -156,25 +156,31 @@ export const APP_SELF_SERVICE = {
 
 export const appStepsFor = (kind, appName) => APP_SELF_SERVICE[kind]?.[appName] || null
 
-/* ══════════════ 바디코디 공식 정책 연결 슬롯 ══════════════
-   GYM PASS 브랜디드 앱은 바디코디 기반으로 운영되며, 이용약관 ·
-   개인정보처리방침 · 회원탈퇴 · 구독 관련 기본 정책도 바디코디가 제공하는
-   정책과 절차를 적용하는 방향으로 확인되었다.
+/* ══════════════ 바디코디 공식 정책 ══════════════
+   GYM PASS 브랜디드 앱은 바디코디 기반 브랜디드 앱으로 운영된다.
+   회원용 이용약관 · 개인정보처리방침 원문은 바디코디 공식 URL 을 그대로 쓴다.
 
-   ⚠ 아직 '방향 확인' 단계이므로 소비자 화면에 "바디코디 정책이 적용됩니다" 라고
-      단정해서 쓰지 않는다. 확정 문구를 받기 전까지는 각 페이지가
-      '준비 중' 안내를 유지한다.
-   ⚠ GYM PASS 자체 서버 구조 · 별도 회원 DB · 자체 보유기간 · 위탁업체 ·
-      수집항목 · 앱 내 메뉴 경로를 임의로 만들지 않는다.
+   ⚠ 바디코디 약관·방침 본문을 이 저장소에 복사해 이중관리하지 않는다.
+      원문이 개정되면 링크를 통해 자동으로 최신 내용이 보인다.
+   ⚠ GYM PASS 자체 서버 구조 · 별도 회원 DB · 자체 수집항목 · 자체 보유기간 ·
+      자체 위탁업체 · 앱 내 메뉴 경로를 임의로 만들지 않는다.
 
-   확정되면 아래 URL 을 채운다. 채우는 즉시 해당 페이지에
+   accountDeletionUrl / subscriptionCancelUrl 은 별도 공식 URL 이
+   확정되지 않아 null 이다. 값이 들어오면 해당 페이지에
    「전문 보기」 버튼이 자동으로 나타난다. (페이지 수정 불필요) */
 export const BODYCODI_POLICY = {
-  termsUrl: null,
-  privacyUrl: null,
+  /** 회원용 서비스 이용약관 */
+  termsUrl: 'https://bodycodi.com/member-term-2021/',
+  /** 회원용 개인정보처리방침 */
+  privacyUrl: 'https://bodycodi.com/member-privacy-2025/',
+  /** 회원탈퇴 전용 공식 URL — 미확정 */
   accountDeletionUrl: null,
+  /** 구독해지 전용 공식 URL — 미확정 */
   subscriptionCancelUrl: null,
 }
+
+/** 화면에 쓰는 공식 정책 제공자 표기 */
+export const BODYCODI_LABEL = '바디코디'
 
 /* ══════════════ /terms ══════════════
    ⚠ 이용약관 전문은 이 저장소에 없다. (legal.js TERMS_URL 도 null)

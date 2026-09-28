@@ -7,7 +7,7 @@ import DocPage, {
 } from '../components/support/DocPage.jsx'
 import { FAQS } from '../data/content.js'
 import { TERMS_URL } from '../data/legal.js'
-import { BODYCODI_POLICY, TERMS_DOC } from '../data/support.js'
+import { BODYCODI_LABEL, BODYCODI_POLICY, TERMS_DOC } from '../data/support.js'
 
 /**
  * /terms — GYM PASS 이용약관
@@ -80,9 +80,11 @@ function TermsClause({ faq }) {
 }
 
 export default function TermsPage() {
-  /* 약관 전문 링크 — 자체 URL 이 먼저, 없으면 바디코디 공식 약관 URL.
-     둘 다 null 이면 버튼을 만들지 않는다. (임의 URL 생성 금지) */
+  /* 약관 전문 링크 — 자체 URL 이 먼저, 없으면 바디코디 공식 회원용 약관 URL.
+     둘 다 null 이면 버튼을 만들지 않는다. (임의 URL 생성 금지)
+     ⚠ 바디코디 약관 본문을 이 파일에 복사하지 않는다. 링크로만 연결한다. */
   const officialUrl = TERMS_URL || BODYCODI_POLICY.termsUrl
+  const isBodycodiTerms = !TERMS_URL && Boolean(BODYCODI_POLICY.termsUrl)
 
   return (
     <DocPage
@@ -96,8 +98,9 @@ export default function TermsPage() {
         {officialUrl ? (
           <>
             <DocText>
-              아래는 이용약관의 주요 사항을 안내한 것입니다. 전체 내용은 약관 전문에서 확인해
-              주세요.
+              {isBodycodiTerms
+                ? `GYM PASS 브랜디드 앱은 ${BODYCODI_LABEL} 기반으로 운영됩니다. 앱 이용에 적용되는 회원용 서비스 이용약관 전문은 아래에서 확인할 수 있습니다. 이 페이지의 안내는 GYM PASS 구독상품의 주요 사항을 정리한 것으로 약관 전문을 대체하지 않습니다.`
+                : '아래는 이용약관의 주요 사항을 안내한 것입니다. 전체 내용은 약관 전문에서 확인해 주세요.'}
             </DocText>
             <a
               href={officialUrl}
@@ -105,7 +108,10 @@ export default function TermsPage() {
               rel="noopener noreferrer"
               className="btn btn-line"
             >
-              이용약관 전문 보기
+              {isBodycodiTerms
+                ? `${BODYCODI_LABEL} 공식 회원용 이용약관 전문 보기`
+                : '이용약관 전문 보기'}
+              <iconify-icon icon="solar:arrow-right-up-linear" width="15"></iconify-icon>
             </a>
           </>
         ) : (

@@ -9,6 +9,7 @@
      ② 365 GYMPASS             428,000원 / 12개월  등록한 지점 1곳
      ③ GYMPASS 통합 월 구독      58,900원  / 월      등록지점 무제한 + 타 지점 월 10회
      ④ ALL-IN-ONE 365 PASS     598,000원 / 12개월  32개 전 지점 (2026년 10월 한정)
+                                                   ⚠ 출시일 미정 → 현재 비노출
 
    ⚠ 428,000원은 더 이상 10개월 상품이 아니다.
       반드시 '12개월 / 365 GYMPASS' 로만 표기한다.
@@ -140,11 +141,14 @@ export const PRODUCTS = [
     ctaIntent: 'subscribe',
     recommended: false,
     status: 'available',
-    /* 10월 한정 프로모션
-       · 조기 종료  → active: false
-       · 기간 만료  → endDate 를 지나면 자동으로 화면에서 빠진다 */
+    /* 10월 한정 프로모션 — 현재 출시 전이라 고객 화면에 노출하지 않는다.
+       · 정확한 출시일이 확정되지 않아 active: false 로 둔다.
+         (출시 예정 시점을 임의로 날짜 고정하지 않는다)
+       · 출시가 확정되면 active: true 한 줄만 바꾸면 바로 공개된다.
+       · 가격 598,000원 · 12개월 · 32개 전 지점 · 10월 한정 정책은 그대로 유지.
+       · endDate 를 지나면 active 와 무관하게 자동으로 빠진다. */
     promotion: {
-      active: true,
+      active: false,
       label: '2026년 10월 한정',
       chipLabel: '10월 한정',
       endDate: '2026-10-31',
